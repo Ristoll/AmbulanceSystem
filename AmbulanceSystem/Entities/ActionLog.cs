@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmbulanceSystem.Core.Entities;
 
-public partial class Log
+public partial class ActionLog
 {
     [Key]
-    [Column("LogID")]
-    public int LogId { get; set; }
+    [Column("ActionLogLogID")]
+    public int ActionLogLogId { get; set; }
 
     [Column("PersonID")]
     public int PersonId { get; set; }
@@ -22,4 +20,10 @@ public partial class Log
     [ForeignKey("PersonId")]
     [InverseProperty("Logs")]
     public virtual Person Person { get; set; } = null!;
+
+    public ActionLog(string action, Person actionOwner)
+    {
+        this.Action = action;
+        this.Person = actionOwner;
+    }
 }

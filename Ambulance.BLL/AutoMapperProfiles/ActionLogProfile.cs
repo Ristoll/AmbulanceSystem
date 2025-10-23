@@ -4,10 +4,10 @@ using AutoMapper;
 
 namespace AmbulanceSystem.BLL.AutoMapperProfiles;
 
-public class LogProfile : Profile
+public class ActionLogProfile : Profile
 {
-    public LogProfile()
+    public ActionLogProfile()
     {
-        CreateMap<Log, LogModel>().ReverseMap();
+        CreateMap<ActionLog, ActionLogModel>().ReverseMap();
     }
 }

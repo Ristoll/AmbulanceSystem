@@ -20,6 +20,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IGenericRepository<ChronicDecease> chronicDeceaseRepository;
     private readonly IGenericRepository<Hospital> hospitalRepository;
     private readonly IGenericRepository<UsedItem> usedItemRepository;
+    private readonly IGenericRepository<ActionLog> logRepository;
 
     public IGenericRepository<Person> PersonRepository => personRepository ?? new GenericRepository<Person>(context);
     public IGenericRepository<Patient> PatientRepository => patientRepository ?? new GenericRepository<Patient>(context);
@@ -33,6 +34,7 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<ChronicDecease> ChronicDeceaseRepository => chronicDeceaseRepository ?? new GenericRepository<ChronicDecease>(context);
     public IGenericRepository<Hospital> HospitalRepository => hospitalRepository ?? new GenericRepository<Hospital>(context);
     public IGenericRepository<UsedItem> UsedItemRepository => usedItemRepository ?? new GenericRepository<UsedItem>(context);
+    public IGenericRepository<ActionLog> LogRepository => logRepository ?? new GenericRepository<ActionLog>(context);
 
     // public IGenericRepository<AbstractSecretCodeRealizator> SecretCodeRealizatorRepository => secretCodeRealizatorRepository ?? new GenericRepository<AbstractSecretCodeRealizator>(context);
 

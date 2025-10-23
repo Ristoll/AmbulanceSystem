@@ -18,6 +18,8 @@ public interface IUnitOfWork : IDisposable
     public IGenericRepository<Hospital> HospitalRepository { get; }
     public IGenericRepository<UsedItem> UsedItemRepository { get; }
 
+    public IGenericRepository<ActionLog> LogRepository { get; }
+
     //public IGenericRepository<AbstractSecretCodeRealizator> SecretCodeRealizatorRepository { get; }
 
     void Save();

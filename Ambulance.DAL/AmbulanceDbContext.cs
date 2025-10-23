@@ -43,7 +43,7 @@ public partial class AmbulanceDbContext : DbContext
 
     public virtual DbSet<ItemType> ItemTypes { get; set; }
 
-    public virtual DbSet<Log> Logs { get; set; }
+    public virtual DbSet<ActionLog> Logs { get; set; }
 
     public virtual DbSet<MedicalCard> MedicalCards { get; set; }
 
@@ -201,7 +201,7 @@ public partial class AmbulanceDbContext : DbContext
             entity.HasKey(e => e.ItemTypeId).HasName("PK__ItemType__F51540DB2895E86C");
         });
 
-        modelBuilder.Entity<Log>(entity =>
+        modelBuilder.Entity<ActionLog>(entity =>
         {
             entity.HasKey(e => e.LogId).HasName("PK__Logs__5E5499A8BE0AD6AE");
 

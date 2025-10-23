@@ -56,7 +56,7 @@ public partial class Person
     public virtual ICollection<Dispatcher> Dispatchers { get; set; } = new List<Dispatcher>();
 
     [InverseProperty("Person")]
-    public virtual ICollection<Log> Logs { get; set; } = new List<Log>();
+    public virtual ICollection<ActionLog> Logs { get; set; } = new List<ActionLog>();
 
     [InverseProperty("Person")]
     public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();
