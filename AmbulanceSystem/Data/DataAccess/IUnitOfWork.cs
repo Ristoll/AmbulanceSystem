@@ -5,7 +5,7 @@ namespace AmbulanceSystem.Core.Data;
 
 public interface IUnitOfWork : IDisposable
 {
-    //public IGenericRepository<AbstractUser> UserRepository { get; }
+    public IGenericRepository<Person> PersonRepository { get; }
     public IGenericRepository<Patient> PatientRepository { get; }
     public IGenericRepository<BrigadeMember> BrigadeMemberRepository { get; }
     public IGenericRepository<Dispatcher> DispatcherRepository { get; }

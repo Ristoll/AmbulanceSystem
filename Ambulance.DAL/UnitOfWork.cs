@@ -8,7 +8,7 @@ public class UnitOfWork : IUnitOfWork
     private bool disposedValue;
 
     private readonly AmbulanceDbContext context;
-    //private readonly IGenericRepository<AbstractUser> userRepository;
+    private readonly IGenericRepository<Person> personRepository;
     private readonly IGenericRepository<Patient> patientRepository;
     private readonly IGenericRepository<BrigadeMember> brigadeMemberRepository;
     private readonly IGenericRepository<Dispatcher> dispatcherRepository;
@@ -21,10 +21,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IGenericRepository<Hospital> hospitalRepository;
     private readonly IGenericRepository<UsedItem> usedItemRepository;
 
-
-    //private readonly IGenericRepository<AbstractSecretCodeRealizator> secretCodeRealizatorRepository;
-
-    //public IGenericRepository<AbstractUser> UserRepository => userRepository ?? new GenericRepository<AbstractUser>(context);
+    public IGenericRepository<Person> PersonRepository => personRepository ?? new GenericRepository<Person>(context);
     public IGenericRepository<Patient> PatientRepository => patientRepository ?? new GenericRepository<Patient>(context);
     public IGenericRepository<BrigadeMember> BrigadeMemberRepository => brigadeMemberRepository ?? new GenericRepository<BrigadeMember>(context);
     public IGenericRepository<Dispatcher> DispatcherRepository => dispatcherRepository ?? new GenericRepository<Dispatcher>(context);
