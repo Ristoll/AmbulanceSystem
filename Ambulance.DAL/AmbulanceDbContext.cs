@@ -203,7 +203,7 @@ public partial class AmbulanceDbContext : DbContext
 
         modelBuilder.Entity<ActionLog>(entity =>
         {
-            entity.HasKey(e => e.LogId).HasName("PK__Logs__5E5499A8BE0AD6AE");
+            entity.HasKey(e => e.ActionLogId).HasName("PK__Logs__5E5499A8BE0AD6AE");
 
             entity.HasOne(d => d.Person).WithMany(p => p.Logs)
                 .OnDelete(DeleteBehavior.ClientSetNull)

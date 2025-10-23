@@ -8,7 +8,7 @@ public partial class ActionLog
 {
     [Key]
     [Column("ActionLogLogID")]
-    public int ActionLogLogId { get; set; }
+    public int ActionLogId { get; set; }
 
     [Column("PersonID")]
     public int PersonId { get; set; }
