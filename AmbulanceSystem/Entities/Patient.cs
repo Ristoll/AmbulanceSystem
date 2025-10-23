@@ -15,13 +15,17 @@ public partial class Patient
     [Column("PersonID")]
     public int PersonId { get; set; }
 
+    [Column("MedicalCardID")]
+    public int MedicalCardId { get; set; }
+
     [InverseProperty("Patient")]
     public virtual ICollection<Call> Calls { get; set; } = new List<Call>();
 
-    [InverseProperty("Patient")]
-    public virtual ICollection<MedicalCard> MedicalCards { get; set; } = new List<MedicalCard>();
-
     [ForeignKey("PersonId")]
-    [InverseProperty("Patients")]
+    [InverseProperty("Patient")]
     public virtual Person Person { get; set; } = null!;
+
+    [ForeignKey("MedicalCardId")]
+    [InverseProperty("Patient")]
+    public virtual MedicalCard MedicalCard { get; set; } = null!;
 }

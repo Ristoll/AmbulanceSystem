@@ -14,6 +14,9 @@ public class BrigadeModel
     public int? CurrentCallId { get; set; }
     public string BrigadeStateName { get; set; } = string.Empty;
     public string BrigadeTypeName { get; set; } = string.Empty;
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public TimeSpan EstimatedArrival { get; set; }
     public List<BrigadeMemberModel>? Members { get; set; }
 }
 

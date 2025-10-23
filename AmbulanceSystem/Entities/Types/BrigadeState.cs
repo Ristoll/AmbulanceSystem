@@ -18,4 +18,13 @@ public partial class BrigadeState
 
     [InverseProperty("BrigadeState")]
     public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
+
+    /*Free = 1,
+    Assigned,
+    OnTheWay,
+    AtScene,
+    Transporting,
+    WaitingAtHospital,
+    Returning,
+    OutOfService*/
 }

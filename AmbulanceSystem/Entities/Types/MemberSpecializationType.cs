@@ -18,4 +18,11 @@ public partial class MemberSpecializationType
 
     [InverseProperty("MemberSpecializationType")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
+
+    /*Basic = 1,
+    Resuscitation,
+    Pediatric,
+    Obstetric,
+    Psychiatric,
+    Toxicology*/
 }

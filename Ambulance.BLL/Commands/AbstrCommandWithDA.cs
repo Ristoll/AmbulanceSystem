@@ -17,9 +17,9 @@ public abstract class AbstrCommandWithDA<TResult> : IBaseCommand<TResult>
         this.mapper = mapper;
     }
 
-    protected void LogAction(string actionDescription, Person actionOwner)
+    protected void LogAction(string actionDescription)
     {
-        var logEntry = new ActionLog(actionDescription, actionOwner);
+        var logEntry = new ActionLog(actionDescription);
 
         dAPoint.LogRepository.Add(logEntry);
         dAPoint.Save();

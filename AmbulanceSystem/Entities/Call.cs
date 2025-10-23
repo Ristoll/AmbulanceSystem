@@ -25,9 +25,10 @@ public partial class Call
     [Column("HospitalID")]
     public int? HospitalId { get; set; }
 
-    [StringLength(1)]
-    [Unicode(false)]
-    public string? UrgencyType { get; set; }
+    [Column("StatusID")]
+    public int? CallStatusId { get; set; }
+
+    public int UrgencyType { get; set; }
 
     [StringLength(200)]
     [Unicode(false)]
@@ -44,6 +45,10 @@ public partial class Call
 
     [Column(TypeName = "datetime")]
     public DateTime? CompletionTime { get; set; }
+
+    [StringLength(500)]
+    [Unicode(false)]
+    public string? Notes { get; set; }
 
     [InverseProperty("CurrentCall")]
     public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
@@ -63,4 +68,8 @@ public partial class Call
     [ForeignKey("PatientId")]
     [InverseProperty("Calls")]
     public virtual Patient Patient { get; set; } = null!;
+
+    [ForeignKey("CallStatusId")]
+    [InverseProperty("Calls")]
+    public virtual CallStatus CallStatus { get; set; } = null!;
 }

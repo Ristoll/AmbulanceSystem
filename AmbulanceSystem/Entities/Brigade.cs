@@ -4,11 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using AmbulanceSystem.Core.Entities.Types;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace AmbulanceSystem.Core.Entities;
 
 public partial class Brigade
 {
+    public event Action<int, int>? StateChanged;
+
     [Key]
     [Column("BrigadeID")]
     public int BrigadeId { get; set; }
@@ -24,6 +27,9 @@ public partial class Brigade
 
     [Column("CurrentCallID")]
     public int? CurrentCallId { get; set; }
+
+    [Column("Location")]
+    public Point? Location { get; set; }
 
     [InverseProperty("Brigade")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
@@ -43,4 +49,12 @@ public partial class Brigade
     [ForeignKey("HospitalId")]
     [InverseProperty("Brigades")]
     public virtual Hospital? Hospital { get; set; }
+    public void AssignToCall(int callId)
+    {
+        int oldStatus = BrigadeStateId;
+        BrigadeStateId = 2; // призначена
+        StateChanged?.Invoke(oldStatus, BrigadeStateId);
+
+        CurrentCallId = callId;
+    }
 }

@@ -18,4 +18,11 @@ public partial class BrigadeType
 
     [InverseProperty("BrigadeType")]
     public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
+    
+    /*Basic = 1,
+    Resuscitation,
+    Pediatric,
+    Obstetric,
+    Psychiatric,
+    Toxicology*/
 }

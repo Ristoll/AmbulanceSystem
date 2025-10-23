@@ -21,9 +21,9 @@ public partial class ActionLog
     [InverseProperty("Logs")]
     public virtual Person Person { get; set; } = null!;
 
-    public ActionLog(string action, Person actionOwner)
+    public ActionLog(string action)
     {
         this.Action = action;
-        this.Person = actionOwner;
+        this.PersonId = Person.PersonId;
     }
 }
