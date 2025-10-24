@@ -19,8 +19,8 @@ public interface IUnitOfWork : IDisposable
     public IGenericRepository<UsedItem> UsedItemRepository { get; }
 
     public IGenericRepository<ActionLog> LogRepository { get; }
-
-    //public IGenericRepository<AbstractSecretCodeRealizator> SecretCodeRealizatorRepository { get; }
+    public IGenericRepository<MedicalRecord> MedicalRecordRepository { get; }
+    public IGenericRepository<MedicalCard> MedicalCardRepository { get; }
 
     void Save();
 }

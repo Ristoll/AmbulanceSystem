@@ -9,7 +9,7 @@ public class MedicalRecordModel
     public int MedicalRecordId { get; set; }
     public int MedicalCardId { get; set; }
     public int BrigadeMemberId { get; set; }
-    public DateTime? DataTime { get; set; }
+    public DateTime? CreationDate { get; set; }
     public string? Diagnoses { get; set; }
     public string? Symptoms { get; set; }
     public string? Treatment { get; set; }

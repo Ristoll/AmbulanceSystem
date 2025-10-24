@@ -23,7 +23,7 @@ public partial class Person
 
     [StringLength(50)]
     [Unicode(false)]
-    public string? MiddleName { get; set; }
+    public string MiddleName { get; set; } = null!;
 
     public DateOnly? DateOfBirth { get; set; }
 

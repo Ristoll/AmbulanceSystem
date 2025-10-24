@@ -215,10 +215,6 @@ public partial class AmbulanceDbContext : DbContext
             entity.HasKey(e => e.MedicalCardId).HasName("PK__MedicalC__931EC2364A6F4869");
 
             entity.Property(e => e.CreationDate).HasDefaultValueSql("(getdate())");
-
-            entity.HasOne(d => d.Patient).WithMany(p => p.MedicalCards)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MedicalCa__Patie__3E52440B");
         });
 
         modelBuilder.Entity<MedicalRecord>(entity =>

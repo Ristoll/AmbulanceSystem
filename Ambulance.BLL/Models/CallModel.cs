@@ -16,6 +16,8 @@ public class CallModel
     public int UrgencyType { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
+    public string? AddressText { get; set; }
+    public string? Age { get; set; }
     public DateTime? StartCallTime { get; set; }
     public DateTime? EndCallTime { get; set; }
     public DateTime? ArrivalTime { get; set; }
