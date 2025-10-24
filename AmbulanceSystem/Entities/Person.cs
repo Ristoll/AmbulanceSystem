@@ -41,6 +41,12 @@ public partial class Person
 
     public Point? Address { get; set; }
 
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? Login { get; set; }
+
+    public string PasswordHash { get; set; }
+
     [Column("Image_Url")]
     [StringLength(200)]
     [Unicode(false)]

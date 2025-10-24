@@ -8,5 +8,6 @@ public interface IGenericRepository<T>
     public void Update(T entity);
     public void Remove(int id);
     public List<T> GetAll();
+    public T? FirstOrDefault(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
     public IQueryable<T> GetQueryable();
 }
