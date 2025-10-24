@@ -1,66 +1,101 @@
-﻿using AutoMapper;
+﻿using Ambulance.BLL.Models;
+using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core.Data;
 using AmbulanceSystem.Core.Entities;
+using AutoMapper;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
 public class CreatePCommand : AbstrCommandWithDA <bool>
 {
     override public string Name => "Створення Person";
-    private readonly string login;
-    private readonly string password;
+    private readonly PersonCreateModel createUserModel;
     private readonly int actionOwberID;
 
-    public CreatePCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, int actionOwberID, string login, string password)
+    public CreatePCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, int actionOwberID)
         : base(operateUnitOfWork, mapper)
     {
-        BaseDataChecker(actionOwberID, login, password);
+        ValidateModel(createUserModel);
 
-        this.login = login;
-        this.password = password;
+        this.createUserModel = createUserModel;
         this.actionOwberID = actionOwberID;
     }
 
     public override bool Execute()
     {
-        var alreadyExistingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == login);
+        var alreadyExistingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == createUserModel.Login);
 
         if (alreadyExistingPerson != null)
         {
             return false;
         }
 
-        var newPerson = new Person
-        {
-            Login = login,
-            PasswordHash = PasswordHasher.HashPassword(password)
-        };
+        // усі провірки пройдено = мапимо модель в ентіті
+        var newPerson = mapper.Map<Person>(createUserModel);
 
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
 
-        LogAction($"Був створений новий Person: {login}", actionOwberID);
+        LogAction($"Був створений новий Person: {newPerson.Login}", actionOwberID);
         return true;
     }
 
-    private void BaseDataChecker(int actionOwberID, string login, string password)
+    private void ValidateModel(PersonCreateModel createUserModel)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(login, "Логін не може бути пустим");
-        ArgumentNullException.ThrowIfNullOrEmpty(password, "Пароль не може бути пустим");
+        var errors = new List<string>();
 
-        if(actionOwberID < 0)
+        if (string.IsNullOrWhiteSpace(createUserModel.Name))
+            errors.Add("Ім'я користувача обов'язкове і не може бути порожнім");
+
+        if (string.IsNullOrWhiteSpace(createUserModel.Surname))
+            errors.Add("Прізвище користувача обов'язкове і не може бути порожнім");
+
+        if (string.IsNullOrWhiteSpace(createUserModel.Login))
         {
-            throw new ArgumentException("Ідентифікатор виконавця дії некоректний");
+            errors.Add("Логін користувача обов'язковий і не може бути порожнім");
+        }
+        else
+        {
+            // перевірка на унікальність логіну
+            var existingPerson = dAPoint.PersonRepository
+                .FirstOrDefault(p => p.Login == createUserModel.Login);
+
+            if (existingPerson != null)
+                errors.Add($"Користувач з логіном '{createUserModel.Login}' уже існує");
         }
 
-        if(login.Length < 5 || login.Length > 20)
+        if (!string.IsNullOrWhiteSpace(createUserModel.Email) &&
+            !Regex.IsMatch(createUserModel.Email, @"^\S+@\S+\.\S+$"))
         {
-            throw new ArgumentException("Логін повинен містити від 5 до 20 символів");
+            errors.Add("Невірний формат електронної пошти");
         }
 
-        if(password.Length < 8)
+        if (!string.IsNullOrWhiteSpace(createUserModel.PhoneNumber) &&
+            !Regex.IsMatch(createUserModel.PhoneNumber, @"^\+?\d{9,15}$"))
         {
-            throw new ArgumentException("Пароль повинен містити не менше 8 символів");
+            errors.Add("Невірний формат номеру телефону");
         }
+
+        if (string.IsNullOrWhiteSpace(createUserModel.Password) || createUserModel.Password.Length < 8)
+            errors.Add("Пароль повинен містити щонайменше 8 символів");
+
+        if (createUserModel.DateOfBirth.HasValue)
+        {
+            var dob = createUserModel.DateOfBirth.Value;
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            if (dob > today)
+                errors.Add("Дата народження не може бути в майбутньому");
+
+            var age = today.Year - dob.Year;
+
+            if (age > 120)
+                errors.Add("Вік користувача не може перевищувати 120 років");
+        }
+
+        if (errors.Any())
+            throw new ArgumentException($"Помилки валідації моделі: {string.Join("; ", errors)}");
     }
 }

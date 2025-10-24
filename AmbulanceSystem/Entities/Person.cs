@@ -27,9 +27,7 @@ public partial class Person
 
     public DateOnly? DateOfBirth { get; set; }
 
-    [StringLength(1)]
-    [Unicode(false)]
-    public string? Gender { get; set; }
+    public Gender Gender { get; set; } = Gender.Other;
 
     [StringLength(20)]
     [Unicode(false)]

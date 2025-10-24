@@ -288,6 +288,11 @@ public partial class AmbulanceDbContext : DbContext
             .HasConversion(
                 v => v.ToString(), // зберігатиме enum Role як строку, але при цьому залишиться тип Role коли витягнемо з бази
                 v => ParseUserRole(v)); // конвертуватиме строку назад в enum Role + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
+
+            entity.Property(e => e.Gender)
+           .HasConversion(
+               v => v.ToString(), // зберігатиме enum Gender як строку, але при цьому залишиться тип Role коли витягнемо з бази
+               v => ParseUserGender(v)); // конвертуватиме строку назад в enum Gender + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
         });
 
         modelBuilder.Entity<UnitType>(entity =>
@@ -305,6 +310,8 @@ public partial class AmbulanceDbContext : DbContext
 
     private static UserRole ParseUserRole(string? v)
         => !string.IsNullOrEmpty(v) && Enum.TryParse<UserRole>(v, out var result) ? result : UserRole.Unknown;
+    private static Gender ParseUserGender(string? v)
+        => !string.IsNullOrEmpty(v) && Enum.TryParse<Gender>(v, out var result) ? result : Gender.Other;
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

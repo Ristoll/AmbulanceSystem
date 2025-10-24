@@ -1,6 +1,6 @@
-﻿namespace AmbulanceSystem.DTO;
+﻿namespace Ambulance.BLL.Models;
 
-public class PersonCreateDto
+public class PersonCreateModel
 {
     public string Name { get; set; } = null!;
     public string Surname { get; set; } = null!;

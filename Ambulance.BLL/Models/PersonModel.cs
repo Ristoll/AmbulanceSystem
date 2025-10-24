@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using AmbulanceSystem.Core.Entities;
 
 namespace AmbulanceSystem.BLL.Models;
 
@@ -21,5 +17,6 @@ public class PersonModel
     public string? Login { get; set; }
     public string PasswordHash { get; set; }
     public string? ImageUrl { get; set; }
-}
 
+    public UserRole Role { get; set; } = UserRole.Unknown;
+}

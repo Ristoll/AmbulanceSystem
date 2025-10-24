@@ -15,4 +15,6 @@ public class PersonExtDTO
     public string? Login { get; set; }
     public string? password { get; set; } // чисто для передачі при створенні
     public string? ImageUrl { get; set; }
+
+    public string Role { get; set; } = null!;
 }
