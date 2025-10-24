@@ -23,8 +23,9 @@ public class AuthCommand : AbstrCommandWithDA<PersonExtModel>
         ArgumentNullException.ThrowIfNull(existingPerson, "Невірний логін або пароль");
 
         if (!PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash))
-            throw new ArgumentException("Невірний логін або пароль");
+            throw new UnauthorizedAccessException("Невірний логін або пароль");
 
         return mapper.Map<PersonExtModel>(existingPerson); // повертаємо модель потрібну нам, jwt токен буде потім
     }
+
 }

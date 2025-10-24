@@ -1,6 +1,6 @@
 ﻿namespace AmbulanceSystem.DTO;
 
-public class PersonCreateDto
+public class CreatePersonRequest
 {
     public string Name { get; set; } = null!;
     public string Surname { get; set; } = null!;
