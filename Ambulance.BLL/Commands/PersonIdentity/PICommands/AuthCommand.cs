@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core.Data;
-using AmbulanceSystem.Core.Entities;
+using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
-public class AuthCommand : AbstrCommandWithDA<Person>
+public class AuthCommand : AbstrCommandWithDA<PersonExtModel>
 {
     override public string Name => "Автентифікація Person";
     private readonly string login;
@@ -17,14 +17,14 @@ public class AuthCommand : AbstrCommandWithDA<Person>
         this.password = password;
     }
 
-    public override Person Execute()
+    public override PersonExtModel Execute()
     {
         var existingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == login);
         ArgumentNullException.ThrowIfNull(existingPerson, "Невірний логін або пароль");
 
-        var passwordValid = PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash);
-        ArgumentNullException.ThrowIfNull(passwordValid, "Невірний логін або пароль");
+        if (!PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash))
+            throw new ArgumentException("Невірний логін або пароль");
 
-        return existingPerson; // повертаємо дто, jwt токен буде потім
+        return mapper.Map<PersonExtModel>(existingPerson); // повертаємо модель потрібну нам, jwt токен буде потім
     }
 }

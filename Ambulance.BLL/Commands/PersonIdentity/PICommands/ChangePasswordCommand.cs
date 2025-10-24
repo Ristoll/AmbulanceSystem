@@ -1,64 +1,51 @@
-﻿using AutoMapper;
+﻿using Ambulance.BLL.Models;
 using AmbulanceSystem.Core.Data;
 using AmbulanceSystem.Core.Entities;
+using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
 public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 {
-    override public string Name => "Створення Person";
-    private readonly string oldPassword;
-    private readonly string newPassword;
-    private readonly Person actionOwber;
+    override public string Name => "Зміна паролю Person";
+    private readonly ChangePasswordModel changePasswordModel;
 
-    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, string PresonID, string oldPassword, string newPasswod)
+    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordModel changePasswordModel)
         : base(operateUnitOfWork, mapper)
     {
-        BaseDataChecker(PresonID, password);
+        BaseDataChecker(changePasswordModel);
 
-        ArgumentNullException.ThrowIfNull(actionOwber, "Виконавець дії відсутній");
-
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
-        this.actionOwber = actionOwber;
+        this.changePasswordModel = changePasswordModel;
     }
 
     public override bool Execute()
     {
-        var existingPerson = dAPoint.PersonRepository.GetAll()
-            .FirstOrDefault(p => p.Login == login);
+        var existingPerson = dAPoint.PersonRepository
+                .FirstOrDefault(p => p.PersonId == changePasswordModel.PersonID);
 
-        if (existingPerson != null)
+        ArgumentNullException.ThrowIfNull(existingPerson, "Користувач не знайдений");
+
+        if (!PasswordHasher.VerifyPassword(changePasswordModel.OldPassword, existingPerson.PasswordHash))
         {
-            return false;
+            throw new ArgumentException("Невірний старий пароль");
         }
 
-        var newPerson = new Person
-        {
-            Login = login,
-            PasswordHash = PasswordHasher.HashPassword(password)
-        };
+        existingPerson.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
 
-        dAPoint.PersonRepository.Add(newPerson);
-        dAPoint.Save();
-        LogAction($"Був створений новий Person: {login}", actionOwber);
+        dAPoint.Save(); // EF автоматично згенерує UPDATE тільки для PasswordHash
+        LogAction($"Був змінений пароль: {existingPerson.Login}", existingPerson.PersonId);
         return true;
     }
 
-    private void BaseDataChecker(string login, string password)
+    private void BaseDataChecker(ChangePasswordModel changePasswordModel)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(login, "Логін не може бути пустим");
-        ArgumentNullException.ThrowIfNullOrEmpty(password, "Пароль не може бути пустим");
+        ArgumentNullException.ThrowIfNull(changePasswordModel, "Модель зміни паролю відсутня");
 
-        if (login.Length < 5 || login.Length > 20)
-        {
-            throw new ArgumentException("Логін повинен містити від 5 до 20 символів");
-        }
+        if (string.IsNullOrWhiteSpace(changePasswordModel.OldPassword))
+            throw new ArgumentException("Старий пароль не може бути порожнім");
 
-        if (password.Length < 8)
-        {
-            throw new ArgumentException("Пароль повинен містити не менше 8 символів");
-        }
+        if (string.IsNullOrWhiteSpace(changePasswordModel.NewPassword) || changePasswordModel.NewPassword.Length < 8)
+            throw new ArgumentException("Новий пароль повинен містити не менше 8 символів");
     }
 }
 

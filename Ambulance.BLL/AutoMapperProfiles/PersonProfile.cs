@@ -9,7 +9,7 @@ public class PersonProfile : Profile
 {
     public PersonProfile()
     {
-        CreateMap<Person, PersonModel>().ReverseMap();
+        CreateMap<Person, PersonExtModel>();
 
         CreateMap<PersonCreateModel, Person>()
             .ForMember(dest => dest.Role,
