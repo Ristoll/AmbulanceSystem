@@ -25,13 +25,13 @@ public class PersonController : Controller
     }
 
     [HttpPost("create")]
-    [Authorize(Roles = "Admin")] // лише адміністратори можуть створювати
+    [Authorize(Roles = "Admin")] // одразу перевіряємо, чи є користувач адміністратором
     public IActionResult CreatePerson([FromBody] CreatePersonRequest request)
     {
         try
         {
             // отримуємо ID користувача, який виконав запит із JWT токена
-            var actionOwnerId = int.Parse(User.FindFirst("id")!.Value);
+            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
 
             var model = mapper.Map<PersonCreateModel>(request);
             var result = manager.CreatePerson(model, actionOwnerId);
@@ -43,16 +43,15 @@ public class PersonController : Controller
         }
     }
 
-
     [HttpPost("authetificate")]
-    public ActionResult<PersonExtDTO> Authetificate([FromBody] LoginRequest request)
+    public ActionResult<AuthResponseDto> Authetificate([FromBody] LoginRequest request)
     {
         try
         {
-            var user = manager.AuthPerson(request.Login, request.Password);
+            var response = manager.AuthPerson(request.Login, request.Password); // повертає базову інформацію про користувача з токеном
 
-            var userDto = mapper.Map<PersonExtDTO>(user);
-            return userDto;
+            var responseDto = mapper.Map<AuthResponseDto>(response);
+            return responseDto;
         }
         catch (UnauthorizedAccessException ex)
         {

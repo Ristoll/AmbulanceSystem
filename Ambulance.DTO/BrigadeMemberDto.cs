@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using AmbulanceSystem.Core.Entities.Types;
-
-namespace AmbulanceSystem.DTO;
+﻿namespace AmbulanceSystem.DTO;
 
 public class BrigadeMemberDto
 {

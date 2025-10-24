@@ -17,7 +17,7 @@ public class PersonIdentityCommandManager : AbstractCommandManager
         return ExecuteCommand(command, "Не вдалося створити користувача");
     }
 
-    public PersonExtModel AuthPerson(string login, string password)
+    public AuthResponseModel AuthPerson(string login, string password)
     {
         var command = new AuthCommand(unitOfWork, mapper, login, password);
         return ExecuteCommand(command, "Не вдалося автентифікувати користувача");

@@ -9,6 +9,10 @@ public class PersonProfile : Profile
 {
     public PersonProfile()
     {
+        CreateMap<Person, AuthResponseModel>()
+           .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()))
+           .ForMember(dest => dest.JwtToken, opt => opt.Ignore()); // токен згенеруємо окремо
+
         CreateMap<Person, PersonExtModel>();
 
         CreateMap<PersonCreateModel, Person>()

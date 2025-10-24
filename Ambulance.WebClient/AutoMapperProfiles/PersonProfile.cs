@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Models;
 using Ambulance.DTO;
-using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 
@@ -11,6 +11,6 @@ public class PersonProfile : Profile
     public PersonProfile()
     {
         CreateMap<CreatePersonRequest, PersonCreateModel>();
-        CreateMap<Person, PersonExtDTO>();
+        CreateMap<PersonExtModel, PersonExtDTO>();
     }
 }
