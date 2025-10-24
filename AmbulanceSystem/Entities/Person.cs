@@ -47,6 +47,10 @@ public partial class Person
 
     public string PasswordHash { get; set; } = null!;
 
+    [Required]
+    [Column("Role")]
+    public UserRole Role { get; set; } = UserRole.Unknown;
+
     [Column("Image_Url")]
     [StringLength(200)]
     [Unicode(false)]

@@ -283,6 +283,11 @@ public partial class AmbulanceDbContext : DbContext
             entity.Property(e => e.Gender).IsFixedLength();
 
             entity.Property(e => e.Address).HasColumnType("geography");
+
+            entity.Property(e => e.Role)
+            .HasConversion(
+                v => v.ToString(), // зберігатиме enum Role як строку, але при цьому залишиться тип Role коли витягнемо з бази
+                v => ParseUserRole(v)); // конвертуватиме строку назад в enum Role + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
         });
 
         modelBuilder.Entity<UnitType>(entity =>
@@ -297,6 +302,9 @@ public partial class AmbulanceDbContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
+    private static UserRole ParseUserRole(string? v)
+        => !string.IsNullOrEmpty(v) && Enum.TryParse<UserRole>(v, out var result) ? result : UserRole.Unknown;
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
