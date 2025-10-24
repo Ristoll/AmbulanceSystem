@@ -25,6 +25,6 @@ public class AuthCommand : AbstrCommandWithDA<Person>
         var passwordValid = PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash);
         ArgumentNullException.ThrowIfNull(passwordValid, "Невірний логін або пароль");
 
-        return existingPerson;
+        return existingPerson; // повертаємо дто, jwt токен буде потім
     }
 }

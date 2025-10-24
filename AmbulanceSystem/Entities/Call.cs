@@ -13,8 +13,13 @@ public partial class Call
     [Column("CallID")]
     public int CallId { get; set; }
 
-    [Column("CallerID")]
-    public int CallerId { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? CallerName { get; set; }
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? CallerSurname { get; set; }
 
     [Column("PatientID")]
     public int PatientId { get; set; }

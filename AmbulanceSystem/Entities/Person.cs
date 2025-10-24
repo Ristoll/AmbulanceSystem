@@ -43,9 +43,9 @@ public partial class Person
 
     [StringLength(20)]
     [Unicode(false)]
-    public string? Login { get; set; }
+    public string Login { get; set; } = null!;
 
-    public string PasswordHash { get; set; }
+    public string PasswordHash { get; set; } = null!;
 
     [Column("Image_Url")]
     [StringLength(200)]
