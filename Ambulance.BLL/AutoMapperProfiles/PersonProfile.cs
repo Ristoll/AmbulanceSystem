@@ -10,14 +10,15 @@ public class PersonProfile : Profile
     public PersonProfile()
     {
         CreateMap<Person, AuthResponseModel>()
-           .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()))
-           .ForMember(dest => dest.JwtToken, opt => opt.Ignore()); // токен згенеруємо окремо
+          .ForMember(dest => dest.Role,
+              opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : "Unknown"))
+          .ForMember(dest => dest.JwtToken, opt => opt.Ignore()); // токен згенеруємо окремо
 
         CreateMap<Person, PersonExtModel>();
 
         CreateMap<PersonCreateModel, Person>()
-            .ForMember(dest => dest.Role,
-                  opt => opt.MapFrom(src => ParseUserRole(src.Role))) // конвертація ролі-рядка  в enum
+             .ForMember(dest => dest.Role,
+                opt => opt.Ignore()) // тепер не Enum, тому Role встановлюємо вручну після збереження
             .ForMember(dest => dest.Gender,
                   opt => opt.MapFrom(src => ParseUserGender(src.Gender))) // конвертація гендеру-рядка в enum
              .ForMember(dest => dest.PasswordHash,
@@ -25,9 +26,6 @@ public class PersonProfile : Profile
     }
 
     // тимачасове рішення, далі винести в окремий клас конвертерів звідси та з контексту
-    private static UserRole ParseUserRole(string? v)
-        => !string.IsNullOrEmpty(v) && Enum.TryParse<UserRole>(v, out var result) ? result : UserRole.Unknown;
-
     private static Gender ParseUserGender(string? v)
         => !string.IsNullOrEmpty(v) && Enum.TryParse<Gender>(v, out var result) ? result : Gender.Other;
 }
