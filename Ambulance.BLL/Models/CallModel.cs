@@ -8,12 +8,14 @@ namespace AmbulanceSystem.BLL.Models;
 public class CallModel
 {
     public int CallId { get; set; }
-    public int CallerId { get; set; }
+    public int? CallerId { get; set; }
     public int PatientId { get; set; }
     public int DispatcherId { get; set; }
     public int? HospitalId { get; set; }
-    public string? UrgencyType { get; set; }
-    public string? Address { get; set; }
+    public int? CallStatusId { get; set; }
+    public int UrgencyType { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public DateTime? StartCallTime { get; set; }
     public DateTime? EndCallTime { get; set; }
     public DateTime? ArrivalTime { get; set; }
@@ -22,5 +24,7 @@ public class CallModel
     public string? PatientName { get; set; }
     public string? DispatcherName { get; set; }
     public string? HospitalName { get; set; }
+    public string? Notes { get; set; }
+    public TimeSpan EstimatedArrival { get; set; }
 }
 

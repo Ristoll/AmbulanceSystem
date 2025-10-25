@@ -1,4 +1,8 @@
-﻿namespace AmbulanceSystem.DTO;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace AmbulanceSystem.DTO;
 
 public class BrigadeDto
 {
@@ -9,6 +13,9 @@ public class BrigadeDto
     public int? CurrentCallId { get; set; }
     public string BrigadeStateName { get; set; } = string.Empty;
     public string BrigadeTypeName { get; set; } = string.Empty;
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public TimeSpan EstimatedArrival { get; set; }
     public List<BrigadeMemberDto>? Members { get; set; }
 }
 
