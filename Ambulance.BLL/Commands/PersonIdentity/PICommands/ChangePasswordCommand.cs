@@ -1,6 +1,6 @@
 ﻿using System;
 using Ambulance.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 

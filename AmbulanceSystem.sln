@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.Core", "Ambulance
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.DAL", "Ambulance.DAL\Ambulance.DAL.csproj", "{58324228-39C2-4448-92BB-7FB1951BCD31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.DTO", "Ambulance.DTO\Ambulance.DTO.csproj", "{BC608B22-93C9-4124-4ED4-0D8BA843F7FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.BLL", "Ambulance.BLL\Ambulance.BLL.csproj", "{150BA933-26E1-93D1-31D7-AEBB064BC4B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{58324228-39C2-4448-92BB-7FB1951BCD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58324228-39C2-4448-92BB-7FB1951BCD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58324228-39C2-4448-92BB-7FB1951BCD31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC608B22-93C9-4124-4ED4-0D8BA843F7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC608B22-93C9-4124-4ED4-0D8BA843F7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC608B22-93C9-4124-4ED4-0D8BA843F7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC608B22-93C9-4124-4ED4-0D8BA843F7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150BA933-26E1-93D1-31D7-AEBB064BC4B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150BA933-26E1-93D1-31D7-AEBB064BC4B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150BA933-26E1-93D1-31D7-AEBB064BC4B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150BA933-26E1-93D1-31D7-AEBB064BC4B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

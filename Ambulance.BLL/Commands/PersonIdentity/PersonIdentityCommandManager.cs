@@ -1,7 +1,7 @@
 ﻿using Ambulance.BLL.Commands.PersonIdentity;
 using Ambulance.BLL.Models;
 using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands;

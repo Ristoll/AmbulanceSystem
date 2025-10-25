@@ -26,6 +26,6 @@ public class PersonProfile : Profile
     }
 
     // тимачасове рішення, далі винести в окремий клас конвертерів звідси та з контексту
-    private static Gender ParseUserGender(string? v)
-        => !string.IsNullOrEmpty(v) && Enum.TryParse<Gender>(v, out var result) ? result : Gender.Other;
+    //private static Gender ParseUserGender(string? v)
+    //   => !string.IsNullOrEmpty(v) && Enum.TryParse<Gender>(v, out var result) ? result : Gender.Other;
 }

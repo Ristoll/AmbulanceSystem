@@ -1,4 +1,4 @@
-﻿using AmbulanceSystem.Core.Data;
+﻿using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 
@@ -17,9 +17,9 @@ public abstract class AbstrCommandWithDA<TResult> : IBaseCommand<TResult>
         this.mapper = mapper;
     }
 
-    protected void LogAction(string actionDescription, int actionOwberID)
+    protected void LogAction(string actionDescription, int actionOwnerID)
     {
-        var actionOwner = dAPoint.PersonRepository.FirstOrDefault(p => p.PersonId == actionOwberID);
+        Person? actionOwner = dAPoint.PersonRepository.FirstOrDefault(p => p.PersonId == actionOwnerID);
 
         ArgumentNullException.ThrowIfNull(actionOwner, "Виконавець дії відсутній");
 

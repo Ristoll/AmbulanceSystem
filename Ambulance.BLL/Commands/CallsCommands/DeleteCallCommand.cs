@@ -1,5 +1,5 @@
 ﻿using Ambulance.BLL.Commands;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 
@@ -22,14 +22,14 @@ namespace Ambulance.BLL.Commands.CallsCommands
             var call = dAPoint.CallRepository.GetById(callId);
             if (call == null)
             {
-                LogAction($"{Name}: виклик з ID {callId} не знайдено");
+                LogAction($"{Name}: виклик з ID {callId} не знайдено", 3);
                 return false;
             }
 
             dAPoint.CallRepository.Remove(callId);
             dAPoint.Save();
 
-            LogAction($"{Name}: виклик № {callId} видалено");
+            LogAction($"{Name}: виклик № {callId} видалено", 3);
             return true;
         }
     }

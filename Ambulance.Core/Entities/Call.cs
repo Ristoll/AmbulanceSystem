@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
-namespace Ambulance.Core.Entities;
+namespace AmbulanceSystem.Core.Entities;
 
 public partial class Call
 {
@@ -25,13 +26,11 @@ public partial class Call
     [Unicode(false)]
     public string? Phone { get; set; }
 
-    [StringLength(1)]
-    [Unicode(false)]
-    public string? UrgencyType { get; set; }
+    public int UrgencyType { get; set; }
 
     [StringLength(200)]
     [Unicode(false)]
-    public string? Address { get; set; }
+    public Point? Address { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? StartCallTime { get; set; }
@@ -45,6 +44,9 @@ public partial class Call
     [Column(TypeName = "datetime")]
     public DateTime? CompletionTime { get; set; }
 
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? Notes { get; set; }
     [InverseProperty("CurrentCall")]
     public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
 

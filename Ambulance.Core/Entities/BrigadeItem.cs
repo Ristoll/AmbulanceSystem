@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ambulance.Core.Entities;
+namespace AmbulanceSystem.Core.Entities;
 
 [Keyless]
 public partial class BrigadeItem

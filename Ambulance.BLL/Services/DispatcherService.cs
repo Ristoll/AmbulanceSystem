@@ -1,5 +1,5 @@
 ﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using System;
@@ -10,6 +10,8 @@ namespace Ambulance.BLL.Services
 {
     public class DispatcherService
     {
+        //брати локацію з моделі бригади
+
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
@@ -40,8 +42,7 @@ namespace Ambulance.BLL.Services
 
             var freeTeams = mapper.Map<List<BrigadeModel>>(teams
                 .Where(b => b.BrigadeStateId == 1
-                         && b.BrigadeTypeId == brigadeTypeId
-                         && b.Location != null));
+                         && b.BrigadeTypeId == brigadeTypeId));
 
             if (!freeTeams.Any())
                 return new List<BrigadeModel>();

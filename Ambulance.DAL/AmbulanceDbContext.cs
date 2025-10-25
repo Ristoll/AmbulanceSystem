@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AmbulanceSystem.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;

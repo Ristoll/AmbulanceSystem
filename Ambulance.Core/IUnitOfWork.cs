@@ -1,8 +1,6 @@
-﻿using Ambulance.Core.Entities;
-using AmbulanceSystem.Core.Entities;
-using AmbulanceSystem.Core.Entities.Types;
+﻿using AmbulanceSystem.Core.Entities;
 
-namespace AmbulanceSystem.Core.Data;
+namespace AmbulanceSystem.Core;
 
 public interface IUnitOfWork : IDisposable
 {

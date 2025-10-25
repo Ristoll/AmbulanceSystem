@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Models;
 using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AutoMapper;
 using System.Net.Sockets;
 using System.Security.Cryptography;

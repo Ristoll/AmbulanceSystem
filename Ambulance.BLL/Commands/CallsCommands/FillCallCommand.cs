@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Commands;
 using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using NetTopologySuite.Geometries;
@@ -27,7 +27,7 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         var call = dAPoint.CallRepository.GetById(callModel.CallId);
         if (call == null)
         {
-            LogAction($"{Name}: виклик з ID {callModel.CallId} не знайдено");
+            LogAction($"{Name}: виклик з ID {callModel.CallId} не знайдено", 3);
             return false;
         }
 
@@ -37,23 +37,13 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         call.PatientId = callModel.PatientId;
         call.HospitalId = callModel.HospitalId;
         call.UrgencyType = callModel.UrgencyType;
-
-        if (callModel.Latitude.HasValue && callModel.Longitude.HasValue)
-        {
-            call.Address = new Point(callModel.Longitude.Value, callModel.Latitude.Value)
-            {
-                SRID = 4326 // стандарт WGS84
-            };
-        }
-        else
-        {
-            call.Address = null;
-        }
+        call.Phone = callModel.Phone;
+        call.Address = callModel.Address;
 
         dAPoint.CallRepository.Update(call);
         dAPoint.Save();
 
-        LogAction($"{Name} № {call.CallId}");
+        LogAction($"{Name} № {call.CallId}", 3);
         return true;
     }
 }

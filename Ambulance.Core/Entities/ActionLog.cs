@@ -4,10 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ambulance.Core.Entities;
+namespace AmbulanceSystem.Core.Entities;
 
 public partial class ActionLog
 {
+    public ActionLog(string actionDescription, Person actionOwner)
+    {
+        Action = actionDescription;
+        Person = actionOwner;
+    }
+
     [Key]
     [Column("ActionLogID")]
     public int ActionLogId { get; set; }

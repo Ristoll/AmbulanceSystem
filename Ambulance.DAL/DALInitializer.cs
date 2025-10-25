@@ -1,5 +1,5 @@
 ﻿using Ambulance.Core.Entities;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AmbulanceSystem.DAL;

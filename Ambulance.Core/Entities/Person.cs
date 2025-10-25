@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
-namespace Ambulance.Core.Entities;
+namespace AmbulanceSystem.Core.Entities;
 
 public partial class Person
 {

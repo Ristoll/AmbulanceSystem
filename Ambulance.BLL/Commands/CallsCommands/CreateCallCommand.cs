@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Commands;
 using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using System;
@@ -33,7 +33,7 @@ public class CreateCallCommand : AbstrCommandWithDA<bool>
 
         dAPoint.CallRepository.Add(newCall);
         dAPoint.Save();
-        LogAction($"{Name} № {newCall.CallId}");
+        LogAction($"{Name} № {newCall.CallId}", 3);
         return true;
     }
 }
