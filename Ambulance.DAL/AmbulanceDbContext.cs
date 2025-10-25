@@ -23,8 +23,6 @@ public partial class AmbulanceDbContext : DbContext
 
     public virtual DbSet<BrigadeItem> BrigadeItems { get; set; }
 
-    public virtual DbSet<BrigadeMember> BrigadeMembers { get; set; }
-
     public virtual DbSet<BrigadeMemberRole> BrigadeMemberRoles { get; set; }
 
     public virtual DbSet<BrigadeState> BrigadeStates { get; set; }
@@ -50,8 +48,6 @@ public partial class AmbulanceDbContext : DbContext
     public virtual DbSet<MedicalRecord> MedicalRecords { get; set; }
 
     public virtual DbSet<MemberSpecializationType> MemberSpecializationTypes { get; set; }
-
-    public virtual DbSet<Patient> Patients { get; set; }
 
     public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
 
@@ -102,27 +98,6 @@ public partial class AmbulanceDbContext : DbContext
                 .HasConstraintName("FK__BrigadeIt__ItemI__7A672E12");
         });
 
-        modelBuilder.Entity<BrigadeMember>(entity =>
-        {
-            entity.HasKey(e => e.BrigadeMemberId).HasName("PK__BrigadeM__C9F8EBE09BDDE5EE");
-
-            entity.HasOne(d => d.Brigade).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__Briga__6EF57B66");
-
-            entity.HasOne(d => d.MemberSpecializationType).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__Membe__70DDC3D8");
-
-            entity.HasOne(d => d.Person).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__Perso__6E01572D");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__RoleI__6FE99F9F");
-        });
-
         modelBuilder.Entity<BrigadeMemberRole>(entity =>
         {
             entity.HasKey(e => e.RoleId).HasName("PK__BrigadeM__8AFACE3AE2A7509A");
@@ -156,10 +131,6 @@ public partial class AmbulanceDbContext : DbContext
                 .HasConstraintName("FK__Calls__Dispatche__5CD6CB2B");
 
             entity.HasOne(d => d.Hospital).WithMany(p => p.Calls).HasConstraintName("FK__Calls__HospitalI__5DCAEF64");
-
-            entity.HasOne(d => d.Patient).WithMany(p => p.Calls)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Calls__PatientID__5BE2A6F2");
         });
 
         modelBuilder.Entity<ChronicDecease>(entity =>
@@ -215,10 +186,6 @@ public partial class AmbulanceDbContext : DbContext
             entity.HasKey(e => e.MedicalCardId).HasName("PK__MedicalC__931EC2364A6F4869");
 
             entity.Property(e => e.CreationDate).HasDefaultValueSql("(getdate())");
-
-            entity.HasOne(d => d.Patient).WithMany(p => p.MedicalCards)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MedicalCa__Patie__3E52440B");
         });
 
         modelBuilder.Entity<MedicalRecord>(entity =>
@@ -283,6 +250,16 @@ public partial class AmbulanceDbContext : DbContext
             entity.Property(e => e.Gender).IsFixedLength();
 
             entity.Property(e => e.Address).HasColumnType("geography");
+
+            entity.Property(e => e.Role)
+            .HasConversion(
+                v => v.ToString(), // зберігатиме enum Role як строку, але при цьому залишиться тип Role коли витягнемо з бази
+                v => ParseUserRole(v)); // конвертуватиме строку назад в enum Role + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
+
+            entity.Property(e => e.Gender)
+           .HasConversion(
+               v => v.ToString(), // зберігатиме enum Gender як строку, але при цьому залишиться тип Role коли витягнемо з бази
+               v => ParseUserGender(v)); // конвертуватиме строку назад в enum Gender + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
         });
 
         modelBuilder.Entity<UnitType>(entity =>
@@ -297,6 +274,9 @@ public partial class AmbulanceDbContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
+    private static Gender ParseUserGender(string? v)
+        => !string.IsNullOrEmpty(v) && Enum.TryParse<Gender>(v, out var result) ? result : Gender.Other;
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

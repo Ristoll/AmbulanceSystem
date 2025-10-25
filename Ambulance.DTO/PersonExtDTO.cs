@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Ambulance.DTO;
 
-namespace AmbulanceSystem.DTO;
-
-public class PersonDto
+public class PersonExtDTO
 {
     public int PersonId { get; set; }
     public string Name { get; set; } = null!;
@@ -15,8 +10,8 @@ public class PersonDto
     public string? Gender { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
+    public string? Login { get; set; }
     public string? ImageUrl { get; set; }
-}
 
+    public string Role { get; set; } = null!;
+}

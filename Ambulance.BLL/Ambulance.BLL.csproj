@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AmbulanceSystem\AmbulanceSystem.Core.csproj" />
+    <ProjectReference Include="..\Ambulance.DTO\Ambulance.DTO.csproj" />
+    <ProjectReference Include="..\Ambulance.ExternalServices\Ambulance.ExternalServices.csproj" />
   </ItemGroup>
 
 </Project>

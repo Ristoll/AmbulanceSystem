@@ -9,8 +9,6 @@ public class UnitOfWork : IUnitOfWork
 
     private readonly AmbulanceDbContext context;
     private readonly IGenericRepository<Person> personRepository;
-    private readonly IGenericRepository<Patient> patientRepository;
-    private readonly IGenericRepository<BrigadeMember> brigadeMemberRepository;
     private readonly IGenericRepository<Dispatcher> dispatcherRepository;
 
     private readonly IGenericRepository<Allergy> allergyRepository;
@@ -23,8 +21,6 @@ public class UnitOfWork : IUnitOfWork
     private readonly IGenericRepository<ActionLog> logRepository;
 
     public IGenericRepository<Person> PersonRepository => personRepository ?? new GenericRepository<Person>(context);
-    public IGenericRepository<Patient> PatientRepository => patientRepository ?? new GenericRepository<Patient>(context);
-    public IGenericRepository<BrigadeMember> BrigadeMemberRepository => brigadeMemberRepository ?? new GenericRepository<BrigadeMember>(context);
     public IGenericRepository<Dispatcher> DispatcherRepository => dispatcherRepository ?? new GenericRepository<Dispatcher>(context);
     public IGenericRepository<Allergy> BidRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
     public IGenericRepository<Brigade> BrigadeRepository => brigadeRepository ?? new GenericRepository<Brigade>(context);

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace AmbulanceSystem.DTO;
 
-namespace AmbulanceSystem.DTO;
 public class MedicalCardDto
 {
     public int MedicalCardId { get; set; }

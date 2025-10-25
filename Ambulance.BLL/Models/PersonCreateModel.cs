@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Ambulance.BLL.Models;
 
-namespace AmbulanceSystem.BLL.Models;
-
-public class PersonModel
+public class PersonCreateModel
 {
-    public int PersonId { get; set; }
     public string Name { get; set; } = null!;
     public string Surname { get; set; } = null!;
     public string? MiddleName { get; set; }
@@ -15,8 +9,9 @@ public class PersonModel
     public string? Gender { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
+    public string Login { get; set; } = null!;
+    public string Password { get; set; } = null!; // чисто для передачі при створенні
     public string? ImageUrl { get; set; }
-}
 
+    public string Role { get; set; } = null!; // буде визначатися при створенні
+}
