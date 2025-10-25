@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.Core", "AmbulanceCore\Ambulance.Core.csproj", "{965B205E-D059-495B-AAE6-6C25594C329A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.Core", "Ambulance.Core\Ambulance.Core.csproj", "{337CC3A8-2CEE-413E-838A-3299CAFF5A50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.DAL", "Ambulance.DAL\Ambulance.DAL.csproj", "{58324228-39C2-4448-92BB-7FB1951BCD31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{965B205E-D059-495B-AAE6-6C25594C329A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{965B205E-D059-495B-AAE6-6C25594C329A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{965B205E-D059-495B-AAE6-6C25594C329A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{965B205E-D059-495B-AAE6-6C25594C329A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{337CC3A8-2CEE-413E-838A-3299CAFF5A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337CC3A8-2CEE-413E-838A-3299CAFF5A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337CC3A8-2CEE-413E-838A-3299CAFF5A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337CC3A8-2CEE-413E-838A-3299CAFF5A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58324228-39C2-4448-92BB-7FB1951BCD31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58324228-39C2-4448-92BB-7FB1951BCD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58324228-39C2-4448-92BB-7FB1951BCD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58324228-39C2-4448-92BB-7FB1951BCD31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

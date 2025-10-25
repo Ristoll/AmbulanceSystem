@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace Ambulance.Core.Entities;
 
@@ -46,6 +47,8 @@ public partial class Person
     [StringLength(100)]
     [Unicode(false)]
     public string? Email { get; set; }
+
+    public Geometry? Address { get; set; }
 
     [Column("Image_Url")]
     [StringLength(200)]
