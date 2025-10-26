@@ -246,6 +246,11 @@ public partial class AmbulanceDbContext : DbContext
             entity.HasKey(e => e.PersonId).HasName("PK__People__AA2FFB85F329FA5E");
 
             entity.HasOne(d => d.UserRole).WithMany(p => p.People).HasConstraintName("FK__People__Image_Ur__398D8EEE");
+
+            entity.Property(e => e.Gender)
+          .HasConversion(
+              v => v.ToString(), // зберігатиме enum Gender як строку, але при цьому залишиться тип Role коли витягнемо з бази
+              v => EnumConverters.ParseUserGender(v)); // конвертуватиме строку назад в enum Gender + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
         });
 
         modelBuilder.Entity<UserRole>(entity =>

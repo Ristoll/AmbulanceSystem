@@ -1,12 +1,13 @@
 ﻿using Ambulance.BLL.Models;
+using Ambulance.ExternalServices;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
+using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using System.Net.Sockets;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using AmbulanceSystem.Core.Entities;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -28,42 +29,20 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
         var existingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == login);
         ArgumentNullException.ThrowIfNull(existingPerson, "Невірний логін або пароль");
 
-        if (!PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash))
+        if (!PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash!)) // припускаємо, що PasswordHash не null до корекції БД
             throw new UnauthorizedAccessException("Невірний логін або пароль");
 
         var result = mapper.Map<AuthResponseModel>(existingPerson);
-        result.JwtToken = GenerateJwtToken(existingPerson); // генерація токена окремо
 
-        return result;
-    }
-
-    // тимчасове рішення, пізніше винести в окремий сервіс
-    public string GenerateJwtToken(Person user)
-    {
-        var header = new { alg = "HS256", typ = "JWT" };
-
-        var payload = new
+        var payload = new Dictionary<string, object>
         {
-            sub = user.PersonId, // тема токену
-            name = user.Login,
-            role = user.Role.ToString()
+            ["sub"] = existingPerson.PersonId,
+            ["login"] = existingPerson.Login!, // тимчасово припускаємо, що Login не null до корекції БД
+            ["role"] = existingPerson.UserRole?.Name ?? "Unknown"
         };
 
-        string headerJson = JsonSerializer.Serialize(header);
-        string payloadJson = JsonSerializer.Serialize(payload);
+        result.JwtToken = JWTService.GenerateJwtToken(payload); // генерація токена окремо
 
-        string headerEncoded = StaticSC.Base64UrlEncode(headerJson);
-        string payloadEncoded = StaticSC.Base64UrlEncode(payloadJson);
-
-        string unsignedToken = $"{headerEncoded}.{payloadEncoded}";
-
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(StaticSC.secretcode));
-        var signature = hmac.ComputeHash(Encoding.UTF8.GetBytes(unsignedToken));
-
-        string signatureEncoded = StaticSC.Base64UrlEncode(signature); // без JSON
-
-        string jwt = $"{headerEncoded}.{payloadEncoded}.{signatureEncoded}";
-
-        return jwt;
+        return result;
     }
 }

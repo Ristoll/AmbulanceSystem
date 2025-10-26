@@ -39,7 +39,7 @@ public partial class Person
 
     [StringLength(20)]
     [Unicode(false)]
-    public string? Gender { get; set; }
+    public Gender Gender { get; set; } = Gender.Other;
 
     [Unicode(false)]
     public string? PasswordHash { get; set; }
