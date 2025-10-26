@@ -1,7 +1,8 @@
+using Ambulance.BLL;
+using Ambulance.ExternalServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Ambulance.BLL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = false, // покищо не перевіряємо час життя токена
         ValidateIssuerSigningKey = true, // підпис токена буде перевірятися
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StaticSC.secretcode)) // ключ для перевірки підпису токена
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode)) // ключ для перевірки підпису токена
     };
 });
 
