@@ -1,4 +1,5 @@
 ﻿using Ambulance.BLL.Models;
+using Ambulance.Core;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -12,13 +13,12 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
     private readonly PersonCreateModel createUserModel;
     private readonly int actionOwberID;
 
-    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, int actionOwberID)
-        : base(operateUnitOfWork, mapper)
+    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, IUserContext userContext)
+        : base(operateUnitOfWork, mapper, userContext)
     {
         ValidateModel(createUserModel);
 
         this.createUserModel = createUserModel;
-        this.actionOwberID = actionOwberID;
     }
 
     public override bool Execute()
@@ -36,7 +36,7 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
 
-        LogAction($"Був створений новий Person: {newPerson.Login}", actionOwberID);
+        LogAction($"Був створений новий Person: {newPerson.Login}");
         return true;
     }
 

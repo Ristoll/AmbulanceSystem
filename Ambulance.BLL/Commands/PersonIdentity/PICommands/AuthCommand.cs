@@ -1,4 +1,5 @@
 ﻿using Ambulance.BLL.Models;
+using Ambulance.Core;
 using Ambulance.ExternalServices;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
@@ -17,8 +18,8 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
     private readonly string login;
     private readonly string password;
 
-    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, string login, string password)
-        : base(operateUnitOfWork, mapper)
+    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, string login, string password)
+        : base(operateUnitOfWork, mapper, userContext)
     {
         this.login = login;
         this.password = password;

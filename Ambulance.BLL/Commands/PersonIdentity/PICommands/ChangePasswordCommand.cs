@@ -1,8 +1,9 @@
-﻿using System;
-using Ambulance.BLL.Models;
+﻿using Ambulance.BLL.Models;
+using Ambulance.Core;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
+using System;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -11,30 +12,35 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
     override public string Name => "Зміна паролю Person";
     private readonly ChangePasswordModel changePasswordModel;
 
-    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordModel changePasswordModel)
-        : base(operateUnitOfWork, mapper)
+    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, ChangePasswordModel changePasswordModel)
+        : base(operateUnitOfWork, mapper, userContext)
     {
         BaseDataChecker(changePasswordModel);
 
         this.changePasswordModel = changePasswordModel;
     }
-
     public override bool Execute()
     {
-        var existingPerson = dAPoint.PersonRepository
-                .FirstOrDefault(p => p.PersonId == changePasswordModel.PersonID);
+        if (userContext.CurrentUserId == null)
+            return false;
 
-        ArgumentNullException.ThrowIfNull(existingPerson, "Користувач не знайдений");
+        int personId = userContext.CurrentUserId.Value;
+        var person = dAPoint.PersonRepository.GetById(personId);
 
-        if (!PasswordHasher.VerifyPassword(changePasswordModel.OldPassword, existingPerson.PasswordHash))
+        if (person == null)
+            throw new InvalidOperationException("Користувача не знайдено");
+
+        if (string.IsNullOrEmpty(person.PasswordHash) ||
+            !PasswordHasher.VerifyPassword(changePasswordModel.OldPassword, person.PasswordHash))
         {
             throw new ArgumentException("Невірний старий пароль");
         }
 
-        existingPerson.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
+        person.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
 
         dAPoint.Save(); // EF автоматично згенерує UPDATE тільки для PasswordHash
-        LogAction($"Був змінений пароль: {existingPerson.Login}", existingPerson.PersonId);
+        LogAction($"Був змінений пароль: {person.Login}");
+
         return true;
     }
 

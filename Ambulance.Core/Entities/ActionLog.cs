@@ -8,10 +8,10 @@ namespace AmbulanceSystem.Core.Entities;
 
 public partial class ActionLog
 {
-    public ActionLog(string actionDescription, Person actionOwner)
+    public ActionLog(string actionDescription, int actionOwner)
     {
         Action = actionDescription;
-        Person = actionOwner;
+        PersonId = actionOwner;
     }
 
     [Key]

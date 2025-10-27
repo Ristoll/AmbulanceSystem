@@ -1,5 +1,6 @@
-﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+﻿using Ambulance.Core;
+using AmbulanceSystem.BLL.Models;
+using AmbulanceSystem.Core;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace Ambulance.BLL.Commands.CallsCommands
 {
     public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
     {
-        private readonly PatientModel patientModel;
+        private readonly PersonExtModel patientModel;
 
-        public CreateMedicalCardCommand(PatientModel patientModel, IUnitOfWork operateUnitOfWork, IMapper mapper) 
-            :base(operateUnitOfWork, mapper)
+        public CreateMedicalCardCommand(PersonExtModel patientModel, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext) 
+            :base(operateUnitOfWork, mapper, userContext)
         {
             this.patientModel = patientModel;
         }
@@ -23,10 +24,10 @@ namespace Ambulance.BLL.Commands.CallsCommands
 
         public override bool Execute()
         {
-            var patient = dAPoint.PatientRepository.GetById(patientModel.PatientId);
+            var patient = dAPoint.PersonRepository.GetById(patientModel.PersonId);
             MedicalCardModel medicalCardModel = new MedicalCardModel
             {
-                PatientId = patientModel.PatientId,
+                PatientId = patientModel.PersonId,
                 CreationDate = DateTime.Now
             };
             return true;

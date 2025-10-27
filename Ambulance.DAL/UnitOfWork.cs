@@ -32,7 +32,7 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<Call> CallRepository => callRepository ?? new GenericRepository<Call>(context);
     public IGenericRepository<ChronicDecease> ChronicDeceaseRepository => chronicDeceaseRepository ?? new GenericRepository<ChronicDecease>(context);
     public IGenericRepository<Hospital> HospitalRepository => hospitalRepository ?? new GenericRepository<Hospital>(context);
-    public IGenericRepository<ActionLog> LogRepository => logRepository ?? new GenericRepository<ActionLog>(context);
+    public IGenericRepository<ActionLog> ActionLogRepository => logRepository ?? new GenericRepository<ActionLog>(context);
     public IGenericRepository<MedicalRecord> MedicalRecordRepository => medicalRecordRepository ?? new GenericRepository<MedicalRecord>(context);
     public IGenericRepository<MedicalCard> MedicalCardRepository => medicalCardRepository ?? new GenericRepository<MedicalCard>(context);
     public IGenericRepository<Item> ItemRepository => itemRepository ?? new GenericRepository<Item>(context);

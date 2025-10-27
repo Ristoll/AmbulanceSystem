@@ -1,6 +1,6 @@
-﻿using Ambulance.BLL.Commands;
+﻿using Ambulance.Core;
 using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using System;
@@ -9,16 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ambulance.BLL.Commands.BrigadeCommands
+namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
     internal class CreateMedicalRecordCommand : AbstrCommandWithDA<bool>
     {
         private readonly MedicalRecordModel medicalRecordModel;
 
 
-        public CreateMedicalRecordCommand(MedicalRecordModel medicalCardModel, IUnitOfWork operateUnitOfWork, IMapper mapper) : base(operateUnitOfWork, mapper)
+        public CreateMedicalRecordCommand(MedicalRecordModel medicalCardModel, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext) 
+            : base(operateUnitOfWork, mapper, userContext)
         {
-            this.medicalRecordModel = medicalCardModel;
+            medicalRecordModel = medicalCardModel;
         }
 
         public override string Name => "Створення медичного запису";

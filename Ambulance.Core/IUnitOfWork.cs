@@ -4,7 +4,7 @@ namespace AmbulanceSystem.Core;
 
 public interface IUnitOfWork : IDisposable
 {
-    public IGenericRepository<ActionLog> LogRepository { get; }
+    public IGenericRepository<ActionLog> ActionLogRepository { get; }
     public IGenericRepository<Allergy> AllergyRepository { get; }
     public IGenericRepository<Brigade> BrigadeRepository { get; }
     public IGenericRepository<BrigadeItem> BrigadeItemRepository { get; }

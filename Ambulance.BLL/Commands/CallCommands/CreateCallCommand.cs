@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Commands;
+﻿using Ambulance.Core;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ambulance.BLL.Commands.CallsCommands;
+namespace Ambulance.BLL.Commands.CallCommands;
 public class CreateCallCommand : AbstrCommandWithDA<bool>
 {
     private readonly CallModel callModel;
 
     public override string Name => "Створення виклику";
-    public CreateCallCommand(CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper)
+    public CreateCallCommand(CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
+        : base(unitOfWork, mapper, userContext)
     {
         this.callModel = callModel;
     }
@@ -33,7 +33,7 @@ public class CreateCallCommand : AbstrCommandWithDA<bool>
 
         dAPoint.CallRepository.Add(newCall);
         dAPoint.Save();
-        LogAction($"{Name} № {newCall.CallId}", 3);
+        LogAction($"{Name} № {newCall.CallId}");
         return true;
     }
 }
