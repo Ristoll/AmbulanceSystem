@@ -11,6 +11,7 @@ public class PatientModel
     public int PersonId { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string SecondName { get; set; } = string.Empty;
+    public string MiddleName { get; set; } = string.Empty;
     public List<string> Allergies { get; set; } = new List<string>();
     public List<string> ChronicDiseases { get; set; } = new List<string>();
     public List<CallModel> Calls { get; set; } = new List<CallModel>();
