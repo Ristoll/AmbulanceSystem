@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 namespace Ambulance.BLL.Commands.CallCommands;
 public class FillCallCommand : AbstrCommandWithDA<bool>
 {
-    private readonly PersonCreateModel personCreateModel;
+    private readonly PersonCreateModel? personCreateModel;
     private readonly CallModel callModel;
     public override string Name => "Заповнення виклику";
-    public FillCallCommand(PersonCreateModel personCreateModel, CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
+    public FillCallCommand(PersonCreateModel? personCreateModel, CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
         : base(unitOfWork, mapper, userContext)
     {
         this.callModel = callModel;
@@ -35,32 +35,51 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         }
 
         // Перевірка пацієнта
-        var patient = dAPoint.PersonRepository.GetById(callModel.PatientId);
-        if (patient == null)
+        Person? patient = null;
+        if (callModel.PatientId != null)
         {
-            var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateModel, userContext);
-            createPersonCommand.Execute();
-            
-            patient = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == personCreateModel.Login);
+            int callPatientId = callModel.PatientId.Value;
+            patient = dAPoint.PersonRepository.GetById(callPatientId);
 
-            if (patient == null)
-                throw new InvalidOperationException("Не вдалося створити пацієнта");
-        }
-        var patientModel = mapper.Map<PersonExtModel>(patient);
-        // Перевірка медкарти
-        var medCard = dAPoint.MedicalCardRepository.GetById(patient.PersonId);
-        if (medCard == null)
-        {
-            var createMedCardCommand = new CreateMedicalCardCommand(patientModel, dAPoint, mapper, userContext);
-            createMedCardCommand.Execute();
+            if (patient == null && personCreateModel != null)
+            {
+                var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateModel, userContext);
+                bool personCreated = createPersonCommand.Execute();
+
+                if (!personCreated)
+                {
+                    patient = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == personCreateModel.Login);
+                    if (patient == null)
+                        throw new InvalidOperationException("Не вдалося створити пацієнта");
+                }
+                else
+                {
+                    patient = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == personCreateModel.Login)
+                              ?? throw new InvalidOperationException("Не вдалося створити пацієнта");
+                }
+            }
+
+            if (patient != null)
+            {
+                var medCard = dAPoint.MedicalCardRepository.GetById(patient.PersonId);
+                if (medCard == null)
+                {
+                    var createMedCardCommand = new CreateMedicalCardCommand(patient.PersonId, dAPoint, mapper, userContext);
+                    createMedCardCommand.Execute();
+                }
+
+                call.PatientId = patient.PersonId;
+            }
+            else
+            {
+                throw new InvalidOperationException("Пацієнт не знайдений і не створений");
+            }
         }
 
         // Заповнення виклику
         call.EndCallTime = DateTime.Now;
         call.Notes = callModel.Notes;
         call.DispatcherId = callModel.DispatcherId;
-        call.PatientId = patient.PersonId;
-        call.HospitalId = callModel.HospitalId;
         call.UrgencyType = callModel.UrgencyType;
         call.Phone = callModel.Phone;
         call.Address = callModel.Address;
@@ -71,6 +90,8 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         LogAction($"{Name} № {call.CallId}");
         return true;
     }
+
+
 
 
 }

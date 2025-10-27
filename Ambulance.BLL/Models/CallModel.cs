@@ -9,7 +9,7 @@ namespace AmbulanceSystem.BLL.Models;
 public class CallModel
 {
     public int CallId { get; set; }
-    public int PatientId { get; set; }
+    public int? PatientId { get; set; }
     public int DispatcherId { get; set; }
     public int? HospitalId { get; set; }
     public int? CallStatusId { get; set; }

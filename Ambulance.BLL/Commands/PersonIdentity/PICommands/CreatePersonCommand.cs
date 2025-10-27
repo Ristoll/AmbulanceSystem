@@ -11,7 +11,6 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
 {
     override public string Name => "Створення Person";
     private readonly PersonCreateModel createUserModel;
-    private readonly int actionOwberID;
 
     public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, IUserContext userContext)
         : base(operateUnitOfWork, mapper, userContext)

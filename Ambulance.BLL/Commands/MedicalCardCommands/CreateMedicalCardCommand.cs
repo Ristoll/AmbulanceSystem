@@ -1,36 +1,44 @@
 ﻿using Ambulance.Core;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
+using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.CallsCommands
 {
     public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
     {
-        private readonly PersonExtModel patientModel;
+        private readonly int patientId;
 
-        public CreateMedicalCardCommand(PersonExtModel patientModel, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext) 
-            :base(operateUnitOfWork, mapper, userContext)
+        public CreateMedicalCardCommand(int patientId, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext)
+            : base(operateUnitOfWork, mapper, userContext)
         {
-            this.patientModel = patientModel;
+            this.patientId = patientId;
         }
 
         public override string Name => "Створення медичної картки";
 
         public override bool Execute()
         {
-            var patient = dAPoint.PersonRepository.GetById(patientModel.PersonId);
-            MedicalCardModel medicalCardModel = new MedicalCardModel
+            // Перевірка, чи медкарта вже існує
+            var existingCard = dAPoint.MedicalCardRepository.GetById(patientId);
+            if (existingCard != null)
+                return false; // Карта вже існує
+
+            // Створення сутності медкарти
+            var medicalCard = new MedicalCard
             {
-                PatientId = patientModel.PersonId,
+                PersonId = patientId,
                 CreationDate = DateTime.Now
             };
+
+            dAPoint.MedicalCardRepository.Add(medicalCard);
+            dAPoint.Save();
+
+            LogAction($"{Name} для пацієнта {patientId}");
             return true;
         }
     }
 }
+
