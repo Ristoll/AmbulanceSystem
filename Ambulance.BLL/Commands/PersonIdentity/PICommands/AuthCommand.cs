@@ -44,6 +44,7 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
 
         result.JwtToken = JWTService.GenerateJwtToken(payload); // генерація токена окремо
 
+        LogAction($"{Name}: Person {existingPerson.Login} автентифікувался");
         return result;
     }
 }

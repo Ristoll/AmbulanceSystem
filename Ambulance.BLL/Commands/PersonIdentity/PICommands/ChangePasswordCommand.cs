@@ -39,7 +39,7 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
         person.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
 
         dAPoint.Save(); // EF автоматично згенерує UPDATE тільки для PasswordHash
-        LogAction($"Був змінений пароль: {person.Login}");
+        LogAction($"{Name}: Був змінений пароль: {person.Login}");
 
         return true;
     }

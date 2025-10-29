@@ -25,7 +25,7 @@ public abstract class AbstrCommandWithDA<TResult> : IBaseCommand<TResult>
         var personId = userContext.CurrentUserId;
 
         if (personId == null)
-            throw new InvalidOperationException("Не вдалося визначити користувача для логування дії.");
+            throw new InvalidOperationException("Не вдалося визначити користувача для логування дії");
 
         var log = new ActionLog(actionDescription, personId.Value);
         dAPoint.ActionLogRepository.Add(log);

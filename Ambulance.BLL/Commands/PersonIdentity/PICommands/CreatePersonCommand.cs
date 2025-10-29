@@ -37,7 +37,7 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
 
         if (roleEntity == null)
         {
-            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена у системі.");
+            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена у системі");
         }
 
         newPerson.UserRole = roleEntity;
@@ -45,7 +45,7 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
 
-        LogAction($"Був створений новий Person: {newPerson.Login}");
+        LogAction($"{Name}: Був створений новий Person: {newPerson.Login}");
         return true;
     }
 

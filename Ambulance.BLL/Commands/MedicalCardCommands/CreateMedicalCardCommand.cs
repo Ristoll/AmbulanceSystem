@@ -1,9 +1,7 @@
 ﻿using Ambulance.Core;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using System;
 
 namespace Ambulance.BLL.Commands.CallsCommands
 {
