@@ -16,5 +16,6 @@ public interface IUnitOfWork : IDisposable
     public IGenericRepository<MedicalCard> MedicalCardRepository { get; }
     public IGenericRepository<MedicalRecord> MedicalRecordRepository { get; }
     public IGenericRepository<Person> PersonRepository { get; }
+    public IGenericRepository<UserRole> UserRoleRepository { get; }
     void Save();
 }

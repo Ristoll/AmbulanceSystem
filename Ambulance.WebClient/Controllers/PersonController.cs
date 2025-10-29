@@ -34,8 +34,27 @@ public class PersonController : Controller
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
 
             var model = mapper.Map<PersonCreateModel>(request);
-            var result = manager.CreatePerson(model, actionOwnerId);
+            bool result = manager.CreatePerson(model, actionOwnerId);
             return result ? Ok() : BadRequest("Не вдалося створити користувача");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("create-patient")]
+    [Authorize(Roles = "Dispatcher")]
+    public IActionResult CreatePatient([FromBody] CreatePersonRequest request)
+    {
+        try
+        {
+            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
+
+            var model = mapper.Map<PersonCreateModel>(request);
+            model.UserRole = "Patient"; // жорстко встановлюємо роль
+            bool result = manager.CreatePerson(model, actionOwnerId);
+            return result ? Ok() : BadRequest("Не вдалося створити пацієнта");
         }
         catch (Exception ex)
         {

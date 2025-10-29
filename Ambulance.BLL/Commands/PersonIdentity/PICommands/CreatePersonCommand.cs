@@ -26,11 +26,21 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
 
         if (alreadyExistingPerson != null)
         {
-            return false;
+            throw new ArgumentException($"Користувач з логіном '{createUserModel.Login}' уже існує");
         }
 
         // усі провірки пройдено = мапимо модель в ентіті
         var newPerson = mapper.Map<Person>(createUserModel);
+
+        var roleEntity = dAPoint.UserRoleRepository
+            .FirstOrDefault(r => r.Name == createUserModel.Role);
+
+        if (roleEntity == null)
+        {
+            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена у системі.");
+        }
+
+        newPerson.UserRole = roleEntity;
 
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
