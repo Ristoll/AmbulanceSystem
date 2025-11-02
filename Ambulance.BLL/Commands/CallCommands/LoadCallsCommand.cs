@@ -1,5 +1,4 @@
-﻿using Ambulance.Core;
-using AmbulanceSystem.BLL.Models;
+﻿using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -12,8 +11,8 @@ namespace Ambulance.BLL.Commands.CallCommands
     {
         public override string Name => "Отримати всі виклики";
 
-        public LoadCallsCommand(IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
-            : base(unitOfWork, mapper, userContext)
+        public LoadCallsCommand(IUnitOfWork unitOfWork, IMapper mapper)
+            : base(unitOfWork, mapper)
         {
         }
 
@@ -21,8 +20,6 @@ namespace Ambulance.BLL.Commands.CallCommands
         {
             var calls = dAPoint.CallRepository.GetAll().ToList();
             var callsModels = calls.Select(c => mapper.Map<CallModel>(c)).ToList();
-
-            LogAction($"{Name}: отримано {callsModels.Count} викликів");
 
             return callsModels;
         }

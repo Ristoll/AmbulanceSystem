@@ -18,6 +18,7 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
         this.changePasswordModel = changePasswordModel;
         this.personId = personId;
     }
+
     public override bool Execute()
     {
         var person = dAPoint.PersonRepository.GetById(personId);

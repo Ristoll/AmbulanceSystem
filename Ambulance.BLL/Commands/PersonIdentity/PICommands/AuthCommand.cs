@@ -2,6 +2,7 @@
 using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -15,7 +16,7 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
         : base(operateUnitOfWork, mapper)
     {
         ArgumentNullException.ThrowIfNull(login, "Логін не може бути null");
-        ArgumentNullException.ThrowIfNull(password, "Пароль не може бути null");    
+        ArgumentNullException.ThrowIfNull(password, "Пароль не може бути null");
 
         this.login = login;
         this.password = password;
@@ -23,11 +24,14 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
 
     public override AuthResponseModel Execute()
     {
-        var existingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == login);
-        ArgumentNullException.ThrowIfNull(existingPerson, "Невірний логін або пароль");
+        var existingPerson = dAPoint.PersonRepository.GetQueryable()
+            .Include(p => p.UserRole)
+            .FirstOrDefault(p => p.Login == login);
 
-        if (!PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash!)) // припускаємо, що PasswordHash не null до корекції БД
+        if (existingPerson == null || !PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash!))
+        {
             throw new UnauthorizedAccessException("Невірний логін або пароль");
+        }
 
         var result = mapper.Map<AuthResponseModel>(existingPerson);
 

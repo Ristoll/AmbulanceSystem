@@ -26,4 +26,13 @@ public abstract class AbstrCommandWithDA<TResult> : IBaseCommand<TResult>
     }
 
     public abstract TResult Execute();
+
+    protected void ValidateIn(int actionPersonId)
+    {
+        var existingActionPerson = dAPoint.PersonRepository
+            .FirstOrDefault(p => p.PersonId == actionPersonId);
+
+        if (existingActionPerson == null)
+            throw new ArgumentException($"Некоректний виконавець дії '{actionPersonId}'");
+    }
 }

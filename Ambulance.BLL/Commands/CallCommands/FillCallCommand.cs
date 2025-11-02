@@ -18,6 +18,7 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
 {
     private readonly PersonCreateModel? personCreateModel;
     private readonly CallModel callModel;
+
     public override string Name => "Заповнення виклику";
     public FillCallCommand(PersonCreateModel? personCreateModel, CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
         : base(unitOfWork, mapper, userContext)

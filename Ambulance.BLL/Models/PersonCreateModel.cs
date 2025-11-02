@@ -1,4 +1,6 @@
-﻿namespace Ambulance.BLL.Models;
+﻿using Ambulance.Core.Entities;
+
+namespace Ambulance.BLL.Models;
 
 public class PersonCreateModel
 {
@@ -13,5 +15,5 @@ public class PersonCreateModel
     public string Password { get; set; } = null!; // чисто для передачі при створенні
     public string? ImageUrl { get; set; }
 
-    public string Role { get; set; } = null!; // буде визначатися при створенні
+    public int RoleId { get; set; } // надсилаємо тільки Id
 }

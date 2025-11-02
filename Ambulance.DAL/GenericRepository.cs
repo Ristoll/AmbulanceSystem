@@ -54,6 +54,6 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public IQueryable<TEntity> GetQueryable()
     {
-        return entities.AsQueryable();
+        return entities.AsQueryable(); // повертає запит, який ще не виконано
     }
 }

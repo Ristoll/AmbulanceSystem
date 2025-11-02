@@ -26,12 +26,10 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         var newPerson = mapper.Map<Person>(createUserModel);
 
         var roleEntity = dAPoint.UserRoleRepository
-            .FirstOrDefault(r => r.Name == createUserModel.Role);
+            .FirstOrDefault(r => r.UserRoleId == createUserModel.RoleId);
 
         if (roleEntity == null)
-        {
-            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена у системі");
-        }
+            throw new ArgumentException($"Роль з Id '{createUserModel.RoleId}' не знайдена");
 
         newPerson.UserRole = roleEntity;
 

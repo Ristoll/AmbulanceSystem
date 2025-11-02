@@ -1,4 +1,6 @@
-﻿namespace AmbulanceSystem.BLL.Models;
+﻿using Ambulance.Core.Entities;
+
+namespace AmbulanceSystem.BLL.Models;
 
 public class PersonExtModel
 {
@@ -13,5 +15,5 @@ public class PersonExtModel
     public string Login { get; set; } = null!;
     public string? ImageUrl { get; set; }
 
-    public string Role { get; set; } = null!;
+    public UserRoleViewModel Role { get; set; } = null!;
 }

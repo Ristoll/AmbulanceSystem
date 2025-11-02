@@ -15,7 +15,7 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
     public DeletePersonCommand(IUnitOfWork unitOfWork, IMapper mapper, int deletePersonId, int actionPersonId)
         : base(unitOfWork, mapper)
     {
-        ValidateIn(deletePersonId, actionPersonId);
+        ValidateIn(actionPersonId);
 
         this.deletePersonId = deletePersonId;
         this.actionPersonId = actionPersonId;
@@ -35,24 +35,5 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
 
         LogAction($"{Name}: персона з ID {deletePersonId} видалена", actionPersonId);
         return true;
-    }
-
-    protected void ValidateIn(int deletePersonId, int actionPersonId)
-    {
-        if (deletePersonId <= 0)
-        {
-            throw new ArgumentException("Некоректний ID користувача для видалення");
-        }
-
-        if (actionPersonId <= 0)
-        {
-            throw new ArgumentException("Некоректний ID виконавця");
-        }
-
-        var existingActionPerson = dAPoint.PersonRepository
-            .FirstOrDefault(p => p.PersonId == actionPersonId);
-
-        if (existingActionPerson == null)
-            throw new ArgumentException($"Некоректний виконавець дії '{actionPersonId}'");
     }
 }
