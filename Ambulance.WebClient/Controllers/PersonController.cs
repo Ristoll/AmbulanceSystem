@@ -52,7 +52,7 @@ public class PersonController : Controller
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
 
             var model = mapper.Map<PersonCreateModel>(request);
-            model.UserRole = "Patient"; // жорстко встановлюємо роль
+            model.Role = "Patient"; // жорстко встановлюємо роль
             bool result = manager.CreatePerson(model, actionOwnerId);
             return result ? Ok() : BadRequest("Не вдалося створити пацієнта");
         }

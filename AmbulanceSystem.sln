@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.DTO", "Ambulance.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.BLL", "Ambulance.BLL\Ambulance.BLL.csproj", "{150BA933-26E1-93D1-31D7-AEBB064BC4B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WebClient", "Ambulance.WebClient\Ambulance.WebClient.csproj", "{3293D098-A50D-9518-B0DB-75C9818EEB61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WebAPI", "Ambulance.WebClient\Ambulance.WebAPI.csproj", "{3293D098-A50D-9518-B0DB-75C9818EEB61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.ExternalServices", "Ambulance.ExternalServices\Ambulance.ExternalServices.csproj", "{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.API", "Ambulance.API\Ambulance.API.csproj", "{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WSAPI", "Ambulance.API\Ambulance.WSAPI.csproj", "{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

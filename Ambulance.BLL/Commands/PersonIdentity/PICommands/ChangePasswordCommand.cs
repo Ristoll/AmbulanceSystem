@@ -1,9 +1,6 @@
 ﻿using Ambulance.BLL.Models;
-using Ambulance.Core;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using System;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -11,20 +8,18 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 {
     override public string Name => "Зміна паролю Person";
     private readonly ChangePasswordModel changePasswordModel;
+    private readonly int personId;
 
-    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, ChangePasswordModel changePasswordModel)
-        : base(operateUnitOfWork, mapper, userContext)
+    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordModel changePasswordModel, int personId)
+        : base(operateUnitOfWork, mapper)
     {
-        BaseDataChecker(changePasswordModel);
+        ValidateIn(changePasswordModel, personId);
 
         this.changePasswordModel = changePasswordModel;
+        this.personId = personId;
     }
     public override bool Execute()
     {
-        if (userContext.CurrentUserId == null)
-            return false;
-
-        int personId = userContext.CurrentUserId.Value;
         var person = dAPoint.PersonRepository.GetById(personId);
 
         if (person == null)
@@ -39,13 +34,16 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
         person.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
 
         dAPoint.Save(); // EF автоматично згенерує UPDATE тільки для PasswordHash
-        LogAction($"{Name}: Був змінений пароль: {person.Login}");
+        LogAction($"{Name}: Був змінений пароль: {person.Login}", personId);
 
         return true;
     }
 
-    private void BaseDataChecker(ChangePasswordModel changePasswordModel)
+    private void ValidateIn(ChangePasswordModel changePasswordModel, int personId)
     {
+        if (personId <= 0)
+            throw new ArgumentException("Некоректний ID користувача для зміни паролю");
+
         ArgumentNullException.ThrowIfNull(changePasswordModel, "Модель зміни паролю відсутня");
 
         if (string.IsNullOrWhiteSpace(changePasswordModel.OldPassword))
@@ -55,4 +53,3 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
             throw new ArgumentException("Новий пароль повинен містити не менше 8 символів");
     }
 }
-

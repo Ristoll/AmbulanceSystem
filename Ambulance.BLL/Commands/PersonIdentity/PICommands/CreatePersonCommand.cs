@@ -1,5 +1,4 @@
 ﻿using Ambulance.BLL.Models;
-using Ambulance.Core;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -11,25 +10,19 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
 {
     override public string Name => "Створення Person";
     private readonly PersonCreateModel createUserModel;
+    private readonly int personId;
 
-    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, IUserContext userContext)
-        : base(operateUnitOfWork, mapper, userContext)
+    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, int personId)
+        : base(operateUnitOfWork, mapper)
     {
-        ValidateModel(createUserModel);
+        ValidateIn(createUserModel, personId);
 
         this.createUserModel = createUserModel;
+        this.personId = personId;
     }
 
     public override bool Execute()
     {
-        var alreadyExistingPerson = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == createUserModel.Login);
-
-        if (alreadyExistingPerson != null)
-        {
-            throw new ArgumentException($"Користувач з логіном '{createUserModel.Login}' уже існує");
-        }
-
-        // усі провірки пройдено = мапимо модель в ентіті
         var newPerson = mapper.Map<Person>(createUserModel);
 
         var roleEntity = dAPoint.UserRoleRepository
@@ -45,12 +38,18 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
 
-        LogAction($"{Name}: Був створений новий Person: {newPerson.Login}");
+        LogAction($"{Name}: Був створений новий Person: {newPerson.Login}", personId);
         return true;
     }
 
-    private void ValidateModel(PersonCreateModel createUserModel)
+    protected void ValidateIn(PersonCreateModel createUserModel, int actPersonId)
     {
+        var existingActionPerson = dAPoint.PersonRepository
+            .FirstOrDefault(p => p.PersonId == actPersonId);
+
+        if (existingActionPerson == null)
+            throw new ArgumentException($"Некоректний виконавець дії '{actPersonId}'");
+
         var errors = new List<string>();
 
         if (string.IsNullOrWhiteSpace(createUserModel.Name))

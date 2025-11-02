@@ -1,14 +1,7 @@
 ﻿using Ambulance.BLL.Models;
-using Ambulance.Core;
 using Ambulance.ExternalServices;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using System;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -18,9 +11,12 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
     private readonly string login;
     private readonly string password;
 
-    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, string login, string password)
-        : base(operateUnitOfWork, mapper, userContext)
+    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, string login, string password)
+        : base(operateUnitOfWork, mapper)
     {
+        ArgumentNullException.ThrowIfNull(login, "Логін не може бути null");
+        ArgumentNullException.ThrowIfNull(password, "Пароль не може бути null");    
+
         this.login = login;
         this.password = password;
     }
@@ -44,7 +40,7 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
 
         result.JwtToken = JWTService.GenerateJwtToken(payload); // генерація токена окремо
 
-        LogAction($"{Name}: Person {existingPerson.Login} автентифікувался");
+        LogAction($"{Name}: Person {existingPerson.Login} автентифікувався", existingPerson.PersonId);
         return result;
     }
 }
