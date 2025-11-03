@@ -9,7 +9,7 @@ public class LoadPersonsCommand : AbstrCommandWithDA<List<PersonExtModel>>
 {
     private readonly int actionPersonId;
 
-    public override string Name => "Отримання всіх користувачів";
+    public override string Name => "Отримання всіх Person";
 
     public LoadPersonsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, int actionPersonId)
         : base(operateUnitOfWork, mapper)
