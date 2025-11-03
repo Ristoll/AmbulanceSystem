@@ -42,8 +42,7 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 
     private void ValidateIn(ChangePasswordModel changePasswordModel, int personId)
     {
-        if (personId <= 0)
-            throw new ArgumentException("Некоректний ID користувача для зміни паролю");
+        base.ValidateIn(personId); // перевірка існування personId
 
         ArgumentNullException.ThrowIfNull(changePasswordModel, "Модель зміни паролю відсутня");
 
@@ -52,5 +51,8 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 
         if (string.IsNullOrWhiteSpace(changePasswordModel.NewPassword) || changePasswordModel.NewPassword.Length < 8)
             throw new ArgumentException("Новий пароль повинен містити не менше 8 символів");
+
+        if (changePasswordModel.OldPassword == changePasswordModel.NewPassword)
+            throw new ArgumentException("Паролі не повинны збігатися");
     }
 }
