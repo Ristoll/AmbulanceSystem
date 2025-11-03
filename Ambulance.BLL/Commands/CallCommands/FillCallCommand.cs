@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Commands.CallsCommands;
 using Ambulance.BLL.Commands.PersonIdentity;
-using Ambulance.BLL.Models;
+using Ambulance.BLL.Models.PersonModels;
 using Ambulance.Core;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;

@@ -1,5 +1,6 @@
 ﻿using Ambulance.BLL.Commands.PersonIdentity;
 using Ambulance.BLL.Models;
+using Ambulance.BLL.Models.PersonModels;
 using AmbulanceSystem.Core;
 using AutoMapper;
 

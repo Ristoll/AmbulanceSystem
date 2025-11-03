@@ -1,6 +1,6 @@
 ﻿using Ambulance.BLL.Models;
+using Ambulance.BLL.Models.PersonModels;
 using Ambulance.Core.Entities;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 
@@ -10,13 +10,14 @@ public class PersonProfile : Profile
 {
     public PersonProfile()
     {
+        CreateMap<Person, PersonExtModel>();
+        CreateMap<Person, PersonProfileModel>();
+
         CreateMap<Person, AuthResponseModel>()
           .ForMember(dest => dest.UserRole,
               opt => opt.MapFrom(src => src.UserRole != null ? src.UserRole.Name : "Unknown")) // тут достатньо саме тільки ролі
           .ForMember(dest => dest.JwtToken, opt => opt.Ignore()); // токен згенеруємо окремо
-
-        CreateMap<Person, PersonExtModel>();
-
+        
         CreateMap<PersonCreateModel, Person>()
             .ForMember(dest => dest.UserRole, opt => opt.Ignore())
             .ForMember(dest => dest.Gender,

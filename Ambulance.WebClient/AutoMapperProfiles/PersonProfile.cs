@@ -1,6 +1,5 @@
-﻿using Ambulance.BLL.Models;
+﻿using Ambulance.BLL.Models.PersonModels;
 using Ambulance.DTO;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 

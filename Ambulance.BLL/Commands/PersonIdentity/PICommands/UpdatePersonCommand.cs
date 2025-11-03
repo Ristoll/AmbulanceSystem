@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Models;
+﻿using Ambulance.BLL.Models.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
