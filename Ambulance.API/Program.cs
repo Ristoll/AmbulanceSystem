@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContext, UserContext>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

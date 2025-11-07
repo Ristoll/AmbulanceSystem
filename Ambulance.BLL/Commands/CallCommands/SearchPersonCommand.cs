@@ -1,5 +1,7 @@
 ﻿using Ambulance.Core;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
+using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -9,32 +11,25 @@ using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.CallCommands
 {
-    internal class SearchPersonCommand : AbstrCommandWithDA<bool>
+    internal class SearchPersonCommand : AbstrCommandWithDA<Person?>
     {
-        private readonly string firstName;
-        private readonly string lastName;
-        private readonly string middleName;
-        private readonly DateOnly birthDate;
-        public SearchPersonCommand(string firstName, string lastName, string middleName, DateOnly birthDate, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext) 
-            : base(operateUnitOfWork, mapper, userContext)
+        private readonly PersonProfileDTO personProfileDTO;
+        public SearchPersonCommand(PersonProfileDTO personProfileDTO, IUnitOfWork operateUnitOfWork, IMapper mapper) 
+            : base(operateUnitOfWork, mapper)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.middleName = middleName;
-            this.birthDate = birthDate;
+            this.personProfileDTO = personProfileDTO;
         }
 
         public override string Name => "Пошук людини";
 
-        public override bool Execute()
+        public override Person? Execute()
         {
-            var person = dAPoint.PersonRepository.GetAll()
+            return dAPoint.PersonRepository.GetAll()
                 .FirstOrDefault(p =>
-                    string.Equals(p.Name, firstName, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(p.Surname, lastName, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(p.MiddleName, middleName, StringComparison.OrdinalIgnoreCase) &&
-                    p.DateOfBirth.HasValue && p.DateOfBirth.Value == birthDate);
-            return person != null;
+                    string.Equals(p.Name, personProfileDTO.Name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.Surname, personProfileDTO.Surname, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.MiddleName, personProfileDTO.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                    p.DateOfBirth.HasValue && p.DateOfBirth.Value == personProfileDTO.DateOfBirth);
         }
     }
 }

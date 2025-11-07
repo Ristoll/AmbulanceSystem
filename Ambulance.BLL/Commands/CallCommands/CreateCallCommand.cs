@@ -1,5 +1,5 @@
 ﻿using Ambulance.Core;
-using AmbulanceSystem.BLL.Models;
+using AmbulanceSystem.DTO;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -12,28 +12,24 @@ using System.Threading.Tasks;
 namespace Ambulance.BLL.Commands.CallCommands;
 public class CreateCallCommand : AbstrCommandWithDA<bool>
 {
-    private readonly CallModel callModel;
+    private readonly CallDto callDto;
+    private readonly int personId;
 
     public override string Name => "Створення виклику";
-    public CreateCallCommand(CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
-        : base(unitOfWork, mapper, userContext)
+    public CreateCallCommand(CallDto callModel, IUnitOfWork unitOfWork, IMapper mapper, int personId)
+        : base(unitOfWork, mapper)
     {
-        this.callModel = callModel;
+        this.callDto = callModel;
+        this.personId = personId;
     }
 
     public override bool Execute()
     {
-        var newCallModel = new CallModel
-        {
-            StartCallTime = DateTime.Now,
-            DispatcherId = callModel.DispatcherId
-        };
+        var call= mapper.Map<Call>(callDto);
 
-        var newCall= mapper.Map<Call>(newCallModel);
-
-        dAPoint.CallRepository.Add(newCall);
+        dAPoint.CallRepository.Add(call);
         dAPoint.Save();
-        LogAction($"{Name} № {newCall.CallId}");
+        LogAction($"{Name} № {call.CallId}", personId);
         return true;
     }
 }

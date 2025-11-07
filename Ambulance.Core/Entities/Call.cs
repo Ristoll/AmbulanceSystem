@@ -30,7 +30,9 @@ public partial class Call
 
     [StringLength(200)]
     [Unicode(false)]
-    public Point? Address { get; set; }
+    public string? Address { get; set; }
+
+    Point? Location { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? StartCallTime { get; set; }

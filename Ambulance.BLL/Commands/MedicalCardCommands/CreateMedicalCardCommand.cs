@@ -8,11 +8,13 @@ namespace Ambulance.BLL.Commands.CallsCommands
     public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
     {
         private readonly int patientId;
+        private readonly int actorId;
 
-        public CreateMedicalCardCommand(int patientId, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext)
-            : base(operateUnitOfWork, mapper, userContext)
+        public CreateMedicalCardCommand(int patientId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+            : base(operateUnitOfWork, mapper)
         {
             this.patientId = patientId;
+            this.actorId = actorId;
         }
 
         public override string Name => "Створення медичної картки";
@@ -34,7 +36,7 @@ namespace Ambulance.BLL.Commands.CallsCommands
             dAPoint.MedicalCardRepository.Add(medicalCard);
             dAPoint.Save();
 
-            LogAction($"{Name} для пацієнта {patientId}");
+            LogAction($"{Name} для пацієнта {patientId}", actorId);
             return true;
         }
     }

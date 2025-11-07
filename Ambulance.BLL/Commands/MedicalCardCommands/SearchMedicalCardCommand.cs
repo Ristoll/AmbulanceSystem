@@ -10,11 +10,13 @@ namespace Ambulance.BLL.Commands.CallsCommands
     public class SearchMedicalCardCommand : AbstrCommandWithDA<bool>
     {
         private readonly int personId;
+        private readonly int actorId;
 
-        public SearchMedicalCardCommand(int personId, IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext) 
-            :base(operateUnitOfWork, mapper, userContext)
+        public SearchMedicalCardCommand(int personId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper) 
+            :base(operateUnitOfWork, mapper)
         {
             this.personId = personId;
+            this.actorId = actorId;
         }
 
         public override string Name => "Пошук медичної картки";
@@ -25,12 +27,12 @@ namespace Ambulance.BLL.Commands.CallsCommands
                 .FirstOrDefault(mc => mc.PersonId == personId);
             if (medicalCard != null)
             {
-                LogAction($"{Name}: Медична картка знайдена для особи з ID {personId}");
+                LogAction($"{Name}: Медична картка знайдена для особи з ID {personId}", actorId);
                 return true;
             }
             else
             {
-                LogAction($"{Name}: Медична картка не знайдена для особи з ID {personId}");
+                LogAction($"{Name}: Медична картка не знайдена для особи з ID {personId}", actorId);
                 return false;
             }
         }

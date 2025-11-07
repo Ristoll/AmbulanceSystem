@@ -1,98 +1,99 @@
 ﻿using Ambulance.BLL.Commands.CallsCommands;
 using Ambulance.BLL.Commands.PersonIdentity;
-using Ambulance.BLL.Models.PersonModels;
 using Ambulance.Core;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.DTO;
 using AutoMapper;
-using NetTopologySuite.Geometries;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.CallCommands;
+
 public class FillCallCommand : AbstrCommandWithDA<bool>
 {
-    private readonly PersonCreateModel? personCreateModel;
-    private readonly CallModel callModel;
+    private readonly CallDto callDto;
+    private readonly PatientDto? patientDto;
+    private readonly PersonCreateRequest personCreateRequest;
+    private readonly int actorId;
 
     public override string Name => "Заповнення виклику";
-    public FillCallCommand(PersonCreateModel? personCreateModel, CallModel callModel, IUnitOfWork unitOfWork, IMapper mapper, IUserContext userContext)
-        : base(unitOfWork, mapper, userContext)
+
+    public FillCallCommand(CallDto callDto, PatientDto? patientDto, int actorId, PersonCreateRequest personCreateRequest, IUnitOfWork unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
     {
-        this.callModel = callModel;
+        this.callDto = callDto;
+        this.patientDto = patientDto;
+        this.actorId = actorId;
+        this.personCreateRequest = personCreateRequest;
     }
 
     public override bool Execute()
     {
-        var call = dAPoint.CallRepository.GetById(callModel.CallId);
-        if (call == null)
-        {
-            LogAction($"{Name}: виклик з ID {callModel.CallId} не знайдено");
-            return false;
-        }
+        //Отримуємо виклик
+        var call = dAPoint.CallRepository.GetById(callDto.CallId)
+            ?? throw new InvalidOperationException($"Виклик з ID {callDto.CallId} не знайдено");
 
-        // Перевірка пацієнта
         Person? patient = null;
-        if (callModel.PatientId != null)
+
+        // Якщо передано DTO пацієнта — шукаємо або створюємо
+        if (patientDto != null)
         {
-            int callPatientId = callModel.PatientId.Value;
-            patient = dAPoint.PersonRepository.GetById(callPatientId);
+            // Викликаємо команду пошуку
+            var searchCommand = new SearchPersonCommand(patientDto, dAPoint, mapper);
 
-            if (patient == null && personCreateModel != null)
+            var foundPerson = searchCommand.Execute();
+
+            if (foundPerson != null)
             {
-                var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateModel, userContext);
-                bool personCreated = createPersonCommand.Execute();
-
-                if (!personCreated)
-                {
-                    patient = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == personCreateModel.Login);
-                    if (patient == null)
-                        throw new InvalidOperationException("Не вдалося створити пацієнта");
-                }
-                else
-                {
-                    patient = dAPoint.PersonRepository.FirstOrDefault(p => p.Login == personCreateModel.Login)
-                              ?? throw new InvalidOperationException("Не вдалося створити пацієнта");
-                }
-            }
-
-            if (patient != null)
-            {
-                var medCard = dAPoint.MedicalCardRepository.GetById(patient.PersonId);
-                if (medCard == null)
-                {
-                    var createMedCardCommand = new CreateMedicalCardCommand(patient.PersonId, dAPoint, mapper, userContext);
-                    createMedCardCommand.Execute();
-                }
-
-                call.PatientId = patient.PersonId;
+                // Якщо знайдено — отримуємо саму сутність
+                patient = dAPoint.PersonRepository.GetAll().FirstOrDefault(p =>
+                    string.Equals(p.Name, patientDto.Name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.Surname, patientDto.Surname, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.MiddleName, patientDto.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                    p.DateOfBirth.HasValue && p.DateOfBirth.Value == patientDto.DateOfBirth);
             }
             else
             {
-                throw new InvalidOperationException("Пацієнт не знайдений і не створений");
+                // Якщо не знайдено — створюємо нову особу
+                var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateRequest, actorId);
+                createPersonCommand.Execute();
+
+                patient = dAPoint.PersonRepository.GetAll().FirstOrDefault(p =>
+                    string.Equals(p.Name, patientDto.Name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.Surname, patientDto.Surname, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(p.MiddleName, patientDto.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                    p.DateOfBirth.HasValue && p.DateOfBirth.Value == patientDto.DateOfBirth)
+                    ?? throw new InvalidOperationException("Не вдалося створити пацієнта");
             }
         }
 
-        // Заповнення виклику
+        if (patient == null)
+            throw new InvalidOperationException("Пацієнта не знайдено або не передано");
+
+        // Перевіряємо, чи є медична картка
+        var medCard = dAPoint.MedicalCardRepository.GetById(patient.PersonId);
+        if (medCard == null)
+        {
+            var createMedCardCommand = new CreateMedicalCardCommand(patient.PersonId, actorId, dAPoint, mapper);
+            createMedCardCommand.Execute();
+        }
+
+        // Оновлюємо виклик
+        call.PatientId = patient.PersonId;
         call.EndCallTime = DateTime.Now;
-        call.Notes = callModel.Notes;
-        call.DispatcherId = callModel.DispatcherId;
-        call.UrgencyType = callModel.UrgencyType;
-        call.Phone = callModel.Phone;
-        call.Address = callModel.Address;
+        call.Notes = callDto.Notes;
+        call.DispatcherId = callDto.DispatcherId;
+        call.UrgencyType = callDto.UrgencyType;
+        call.Phone = callDto.Phone;
+        call.Address = callDto.Address;
 
         dAPoint.CallRepository.Update(call);
         dAPoint.Save();
 
-        LogAction($"{Name} № {call.CallId}");
+        LogAction($"{Name} № {call.CallId}", actorId);
         return true;
     }
-
-
-
-
 }
