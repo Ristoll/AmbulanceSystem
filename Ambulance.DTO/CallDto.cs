@@ -8,11 +8,11 @@ namespace AmbulanceSystem.DTO;
 public class CallDto
 {
     public int CallId { get; set; }
-    public int CallerId { get; set; }
     public int PatientId { get; set; }
     public int DispatcherId { get; set; }
     public int? HospitalId { get; set; }
     public int? CallStatusId { get; set; }
+    public string? Phone { get; set; }
     public int UrgencyType { get; set; }
     public string? Address { get; set; }
     public DateTime? StartCallTime { get; set; }

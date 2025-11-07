@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AmbulanceSystem.Core.Data;
+﻿using Ambulance.Core.Entities;
+using AmbulanceSystem.Core;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AmbulanceSystem.DAL;
 public class GenericRepository<TEntity> : IGenericRepository<TEntity>
@@ -45,8 +47,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         return entities.ToList();
     }
 
+    public TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+    {
+        return entities.FirstOrDefault(predicate);
+    }
+
     public IQueryable<TEntity> GetQueryable()
     {
-        return entities.AsQueryable();
+        return entities.AsQueryable(); // повертає запит, який ще не виконано
     }
 }

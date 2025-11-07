@@ -1,4 +1,4 @@
-﻿using AmbulanceSystem.Core.Data;
+﻿using AmbulanceSystem.Core;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands;

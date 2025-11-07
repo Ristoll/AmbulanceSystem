@@ -1,6 +1,5 @@
-﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Data;
-using AmbulanceSystem.Core.Entities;
+﻿using AmbulanceSystem.Core;
+using AmbulanceSystem.DTO;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,8 @@ namespace Ambulance.BLL.Services
 {
     public class DispatcherService
     {
+        //брати локацію з моделі бригади
+
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
@@ -18,7 +19,7 @@ namespace Ambulance.BLL.Services
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public List<TimeSpan> GetArrivalTimesForSelectedTeams(List<BrigadeModel> selectedTeams, double callLat, double callLon)
+        public List<TimeSpan> GetArrivalTimesForSelectedTeams(List<BrigadeDto> selectedTeams, double callLat, double callLon)
         {
             var etaList = new List<TimeSpan>();
 
@@ -34,17 +35,16 @@ namespace Ambulance.BLL.Services
             return etaList.OrderBy(t => t).ToList();
         }
 
-        public List<BrigadeModel> GetBestTeamsByTypeAndEta(int brigadeTypeId, double callLat, double callLon, int numberOfTeamsToAssign = 1)
+        public List<BrigadeDto> GetBestTeamsByTypeAndEta(int brigadeTypeId, double callLat, double callLon, int numberOfTeamsToAssign = 1)
         {
             var teams = unitOfWork.BrigadeRepository.GetAll();
 
-            var freeTeams = mapper.Map<List<BrigadeModel>>(teams
+            var freeTeams = mapper.Map<List<BrigadeDto>>(teams
                 .Where(b => b.BrigadeStateId == 1
-                         && b.BrigadeTypeId == brigadeTypeId
-                         && b.Location != null));
+                         && b.BrigadeTypeId == brigadeTypeId));
 
             if (!freeTeams.Any())
-                return new List<BrigadeModel>();
+                return new List<BrigadeDto>();
 
             foreach (var team in freeTeams)
             {
