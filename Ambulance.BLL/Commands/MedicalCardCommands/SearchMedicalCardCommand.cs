@@ -1,5 +1,4 @@
 ﻿using Ambulance.Core;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AutoMapper;
 using System;
