@@ -12,6 +12,7 @@ public class BrigadeDto
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public TimeSpan EstimatedArrival { get; set; }
+    public double EstimatedDistanceKm { get; set; }
     public List<BrigadeMemberDto>? Members { get; set; }
 }
 

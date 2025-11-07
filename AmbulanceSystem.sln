@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WebAPI", "Ambulan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.ExternalServices", "Ambulance.ExternalServices\Ambulance.ExternalServices.csproj", "{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WSAPI", "Ambulance.API\Ambulance.WSAPI.csproj", "{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8ECEE9D6-C0CE-59A1-D63E-958BD7BCDC4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

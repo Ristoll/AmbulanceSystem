@@ -1,5 +1,4 @@
 ﻿using Ambulance.BLL.Commands;
-using Ambulance.BLL.Models.PersonModels;
 using Ambulance.DTO;
 using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.DTO;
@@ -7,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ambulance.WebClient.Controllers;
+namespace Ambulance.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
