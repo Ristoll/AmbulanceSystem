@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.CallCommands
 {
-    internal class SearchPersonCommand : AbstrCommandWithDA<Person?>
+    internal class SearchPersonCommand : AbstrCommandWithDA<PersonProfileDTO?>
     {
         private readonly PersonProfileDTO personProfileDTO;
         public SearchPersonCommand(PersonProfileDTO personProfileDTO, IUnitOfWork operateUnitOfWork, IMapper mapper) 
@@ -22,14 +22,21 @@ namespace Ambulance.BLL.Commands.CallCommands
 
         public override string Name => "Пошук людини";
 
-        public override Person? Execute()
+        public override PersonProfileDTO? Execute()
         {
-            return dAPoint.PersonRepository.GetAll()
+            var person = dAPoint.PersonRepository.GetAll()
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, personProfileDTO.Name, StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(p.Surname, personProfileDTO.Surname, StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(p.MiddleName, personProfileDTO.MiddleName, StringComparison.OrdinalIgnoreCase) &&
                     p.DateOfBirth.HasValue && p.DateOfBirth.Value == personProfileDTO.DateOfBirth);
+
+            if (person == null)
+                return null;
+
+            var result = mapper.Map<PersonProfileDTO>(person);
+            return result;
         }
+
     }
 }

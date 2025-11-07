@@ -1,5 +1,4 @@
-﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core;
+﻿using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AmbulanceSystem.DTO;
 using AutoMapper;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Ambulance.BLL.Commands.CallCommands
 {
-    public class LoadCallsCommand : AbstrCommandWithDA<List<Call>>
+    public class LoadCallsCommand : AbstrCommandWithDA<List<CallDto>>
     {
         public override string Name => "Отримати всі виклики";
 
@@ -17,9 +16,16 @@ namespace Ambulance.BLL.Commands.CallCommands
         {
         }
 
-        public override List<Call> Execute()
+        public override List<CallDto> Execute()
         {
-            return dAPoint.CallRepository.GetAll().ToList();           
+            var calls = dAPoint.CallRepository.GetAll()
+                .OrderByDescending(c => c.StartCallTime)
+                .ToList();
+
+            if (!calls.Any())
+                return new List<CallDto>();
+
+            return mapper.Map<List<CallDto>>(calls);
         }
     }
 }

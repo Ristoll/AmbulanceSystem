@@ -4,7 +4,7 @@ using AutoMapper;
 using System;
 using System.Linq;
 
-namespace Ambulance.BLL.Commands.CallsCommands
+namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
     public class SearchMedicalCardCommand : AbstrCommandWithDA<bool>
     {

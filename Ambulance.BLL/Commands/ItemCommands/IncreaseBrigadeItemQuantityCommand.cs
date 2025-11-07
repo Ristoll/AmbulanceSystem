@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.ItemCommands
 {
-    public class DecreaseBrigadeItemCommand : AbstrCommandWithDA<bool>
+    public class IncreaseBrigadeItemQuantityCommand : AbstrCommandWithDA<bool>
     {
         private readonly int brigadeItemId;
         private readonly int quantity;
         private readonly int actorId;
 
-        public DecreaseBrigadeItemCommand(int brigadeItemId, int quantity, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public IncreaseBrigadeItemQuantityCommand(int brigadeItemId, int quantity, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
             this.brigadeItemId = brigadeItemId;
@@ -22,17 +22,17 @@ namespace Ambulance.BLL.Commands.ItemCommands
             this.actorId = actorId;
         }
 
-        public override string Name => "Зменшення кількості медикамента";
+        public override string Name => "Збільшення кількості медикамента";
 
         public override bool Execute()
         {
             var brigadeItem = dAPoint.BrigadeItemRepository.FirstOrDefault(bi => bi.BrigadeItemId == brigadeItemId);
             if (brigadeItem != null && brigadeItem.Quantity > 0)
             {
-                brigadeItem.Quantity -= quantity;
+                brigadeItem.Quantity += quantity;
                 dAPoint.BrigadeItemRepository.Update(brigadeItem);
                 dAPoint.Save();
-                LogAction($"{Name}: Кількість медикамента з ID {brigadeItemId} зменшена. Нова кількість: {brigadeItem.Quantity}", actorId);
+                LogAction($"{Name} з ID {brigadeItemId} збільшена на {quantity}. Нова кількість: {brigadeItem.Quantity}", actorId);
                 return true;
             }
             else
@@ -43,3 +43,4 @@ namespace Ambulance.BLL.Commands.ItemCommands
         }
     }
 }
+

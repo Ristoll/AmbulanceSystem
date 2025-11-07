@@ -1,8 +1,7 @@
-﻿using Ambulance.BLL.Commands.CallsCommands;
+﻿using Ambulance.BLL.Commands.MedicalCardCommands;
 using Ambulance.BLL.Commands.PersonIdentity;
 using Ambulance.Core;
 using Ambulance.DTO.PersonModels;
-using AmbulanceSystem.BLL.Models;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AmbulanceSystem.DTO;
@@ -32,28 +31,22 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
 
     public override bool Execute()
     {
-        //Отримуємо виклик
+        // 1️⃣ Отримуємо виклик
         var call = dAPoint.CallRepository.GetById(callDto.CallId)
             ?? throw new InvalidOperationException($"Виклик з ID {callDto.CallId} не знайдено");
 
         Person? patient = null;
 
-        // Якщо передано DTO пацієнта — шукаємо або створюємо
+        // 2️⃣ Якщо передано DTO пацієнта — шукаємо або створюємо
         if (patientDto != null)
         {
-            // Викликаємо команду пошуку
             var searchCommand = new SearchPersonCommand(patientDto, dAPoint, mapper);
+            var foundPersonDto = searchCommand.Execute();
 
-            var foundPerson = searchCommand.Execute();
-
-            if (foundPerson != null)
+            if (foundPersonDto != null)
             {
-                // Якщо знайдено — отримуємо саму сутність
-                patient = dAPoint.PersonRepository.GetAll().FirstOrDefault(p =>
-                    string.Equals(p.Name, patientDto.Name, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(p.Surname, patientDto.Surname, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(p.MiddleName, patientDto.MiddleName, StringComparison.OrdinalIgnoreCase) &&
-                    p.DateOfBirth.HasValue && p.DateOfBirth.Value == patientDto.DateOfBirth);
+                var foundPerson = mapper.Map<Person>(foundPersonDto);
+                patient = foundPerson;
             }
             else
             {
@@ -73,15 +66,21 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         if (patient == null)
             throw new InvalidOperationException("Пацієнта не знайдено або не передано");
 
-        // Перевіряємо, чи є медична картка
-        var medCard = dAPoint.MedicalCardRepository.GetById(patient.PersonId);
+        // 3️⃣ Перевіряємо, чи є медична картка
+        var medCard = dAPoint.MedicalCardRepository.FirstOrDefault(mc => mc.PersonId == patient.PersonId);
         if (medCard == null)
         {
-            var createMedCardCommand = new CreateMedicalCardCommand(patient.PersonId, actorId, dAPoint, mapper);
+            var medicalCardDto = new MedicalCardDto
+            {
+                PatientId = patient.PersonId,
+                CreationDate = DateTime.Now
+            };
+
+            var createMedCardCommand = new CreateMedicalCardCommand(medicalCardDto, actorId, dAPoint, mapper);
             createMedCardCommand.Execute();
         }
 
-        // Оновлюємо виклик
+        //Оновлюємо виклик
         call.PatientId = patient.PersonId;
         call.EndCallTime = DateTime.Now;
         call.Notes = callDto.Notes;

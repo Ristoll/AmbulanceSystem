@@ -2,18 +2,19 @@
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
+using AmbulanceSystem.DTO;
 
-namespace Ambulance.BLL.Commands.CallsCommands
+namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
     public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
     {
-        private readonly int patientId;
+        private readonly MedicalCardDto medicalCardDto;
         private readonly int actorId;
 
-        public CreateMedicalCardCommand(int patientId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public CreateMedicalCardCommand(MedicalCardDto medicalCardDto, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
-            this.patientId = patientId;
+            this.medicalCardDto = medicalCardDto;
             this.actorId = actorId;
         }
 
@@ -21,22 +22,12 @@ namespace Ambulance.BLL.Commands.CallsCommands
 
         public override bool Execute()
         {
-            // Перевірка, чи медкарта вже існує
-            var existingCard = dAPoint.MedicalCardRepository.GetById(patientId);
-            if (existingCard != null)
-                return false; // Карта вже існує
-
-            // Створення сутності медкарти
-            var medicalCard = new MedicalCard
-            {
-                PersonId = patientId,
-                CreationDate = DateTime.Now
-            };
+            var medicalCard = mapper.Map<MedicalCard>(medicalCardDto);
 
             dAPoint.MedicalCardRepository.Add(medicalCard);
             dAPoint.Save();
 
-            LogAction($"{Name} для пацієнта {patientId}", actorId);
+            LogAction($"{Name} для пацієнта {medicalCardDto.PatientId}", actorId);
             return true;
         }
     }

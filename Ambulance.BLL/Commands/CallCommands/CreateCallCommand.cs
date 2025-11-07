@@ -16,10 +16,10 @@ public class CreateCallCommand : AbstrCommandWithDA<bool>
     private readonly int personId;
 
     public override string Name => "Створення виклику";
-    public CreateCallCommand(CallDto callModel, IUnitOfWork unitOfWork, IMapper mapper, int personId)
+    public CreateCallCommand(CallDto callDto, IUnitOfWork unitOfWork, IMapper mapper, int personId)
         : base(unitOfWork, mapper)
     {
-        this.callDto = callModel;
+        this.callDto = callDto;
         this.personId = personId;
     }
 

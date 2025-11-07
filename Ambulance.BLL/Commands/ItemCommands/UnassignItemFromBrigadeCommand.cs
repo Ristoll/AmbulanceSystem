@@ -10,12 +10,12 @@ using AmbulanceSystem.DTO;
 
 namespace Ambulance.BLL.Commands.ItemCommands
 {
-    public class UnassignItemToBrigadeCommand : AbstrCommandWithDA<bool>
+    public class UnassignItemFromBrigadeCommand : AbstrCommandWithDA<bool>
     {
         private readonly int brigadeItemId;
         private readonly int actorId;
 
-        public UnassignItemToBrigadeCommand(int brigadeItemId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public UnassignItemFromBrigadeCommand(int brigadeItemId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
             this.brigadeItemId = brigadeItemId;
