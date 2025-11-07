@@ -6,4 +6,5 @@ public class BrigadeResourceDTO
     public string? BrigadeType { get; set; }
     public int TotalCallsHandled { get; set; }
     public int DistinctItemsUsed { get; set; }
+    public double AverageCallDurationMinutes { get; set; }
 }

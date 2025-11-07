@@ -26,7 +26,7 @@ public class FullAnalyticsCommand : AbstrCommandWithDA<FullAnalyticsDTO>
     {
         var callAnalytics = new CallAnalyticsCommand(dAPoint, mapper, from, to).Execute();
         var brigadeAnalytics = new BrigadeResourceAnalyticsCommand(dAPoint, mapper, from, to).Execute();
-        var deceaseAnalytics = new DeceaseAnalyticsCommand(dAPoint, mapper, from, to).Execute();
+        var deceaseAnalytics = new DeceaseAnalyticsCommand(dAPoint, mapper).Execute();
 
         return new FullAnalyticsDTO
         {
