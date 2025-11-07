@@ -1,6 +1,6 @@
-﻿namespace Ambulance.DTO;
+﻿namespace Ambulance.DTO.PersonModels;
 
-public class AuthResponseDto
+public class AuthResponse
 {
     public string JwtToken { get; set; } = null!;
 

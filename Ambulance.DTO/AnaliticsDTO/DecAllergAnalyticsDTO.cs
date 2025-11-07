@@ -1,6 +1,6 @@
 ﻿namespace Ambulance.BLL.Models;
 
-public class DecAllergAnalyticsModel
+public class DecAllergAnalyticsDTO
 {
     // назва захворювання та кількість пацієнтів із цим захворюванням
     public Dictionary<string, int> DeceaseStatistics { get; set; } = new();

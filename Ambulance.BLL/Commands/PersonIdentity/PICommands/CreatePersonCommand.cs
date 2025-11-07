@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Models.PersonModels;
+﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -9,10 +9,10 @@ namespace Ambulance.BLL.Commands.PersonIdentity;
 public class CreatePersonCommand : AbstrCommandWithDA <bool>
 {
     override public string Name => "Створення Person";
-    private readonly PersonCreateModel createUserModel;
+    private readonly PersonCreateRequest createUserModel;
     private readonly int personId;
 
-    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateModel createUserModel, int personId)
+    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateRequest createUserModel, int personId)
         : base(operateUnitOfWork, mapper)
     {
         ValidateIn(createUserModel, personId);
@@ -26,10 +26,10 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         var newPerson = mapper.Map<Person>(createUserModel);
 
         var roleEntity = dAPoint.UserRoleRepository
-            .FirstOrDefault(r => r.UserRoleId == createUserModel.RoleId);
+            .FirstOrDefault(r => r.Name == createUserModel.Role);
 
         if (roleEntity == null)
-            throw new ArgumentException($"Роль з Id '{createUserModel.RoleId}' не знайдена");
+            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена");
 
         newPerson.UserRole = roleEntity;
 
@@ -40,7 +40,7 @@ public class CreatePersonCommand : AbstrCommandWithDA <bool>
         return true;
     }
 
-    protected void ValidateIn(PersonCreateModel createUserModel, int actPersonId)
+    protected void ValidateIn(PersonCreateRequest createUserModel, int actPersonId)
     {
         var existingActionPerson = dAPoint.PersonRepository
             .FirstOrDefault(p => p.PersonId == actPersonId);

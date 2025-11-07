@@ -1,5 +1,5 @@
-﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Entities;
+﻿using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.DTO;
 using AutoMapper;
 
 namespace AmbulanceSystem.BLL.AutoMapperProfiles;
@@ -8,6 +8,6 @@ public class MedicalRecordProfile : Profile
 {
     public MedicalRecordProfile()
     {
-        CreateMap<MedicalRecord, MedicalRecordModel>().ReverseMap();
+        CreateMap<MedicalRecord, MedicalRecordDto>().ReverseMap();
     }
 }

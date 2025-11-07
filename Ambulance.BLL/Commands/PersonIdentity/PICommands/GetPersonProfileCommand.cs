@@ -1,10 +1,10 @@
-﻿using Ambulance.BLL.Models.PersonModels;
+﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
-public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileModel>
+public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileDTO>
 {
     private readonly int personId;
 
@@ -18,14 +18,14 @@ public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileModel>
         this.personId = personId;
     }
 
-    public override PersonProfileModel Execute()
+    public override PersonProfileDTO Execute()
     {
         var person = dAPoint.PersonRepository.GetById(personId);
 
         if (person == null)
             throw new InvalidOperationException("Користувача не знайдено");
 
-        var result = mapper.Map<PersonProfileModel>(person);
+        var result = mapper.Map<PersonProfileDTO>(person);
         return result;
     }
 }

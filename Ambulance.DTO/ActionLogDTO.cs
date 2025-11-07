@@ -1,6 +1,6 @@
-﻿namespace AmbulanceSystem.BLL.Models;
+﻿namespace Ambulance.DTO;
 
-public class ActionLogModel
+public class ActionLogDTO
 {
     public int ActionLogId { get; set; }
     public int PersonId { get; set; }

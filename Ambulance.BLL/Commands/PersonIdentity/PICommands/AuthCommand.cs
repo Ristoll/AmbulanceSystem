@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Models;
+﻿using Ambulance.DTO.PersonModels;
 using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
 using AutoMapper;
@@ -6,34 +6,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
-public class AuthCommand : AbstrCommandWithDA<AuthResponseModel>
+public class AuthCommand : AbstrCommandWithDA<AuthResponse>
 {
     override public string Name => "Автентифікація Person";
-    private readonly string login;
-    private readonly string password;
+    private readonly LoginRequest request;
 
-    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, string login, string password)
+    public AuthCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, LoginRequest request)
         : base(operateUnitOfWork, mapper)
     {
-        ArgumentNullException.ThrowIfNull(login, "Логін не може бути null");
-        ArgumentNullException.ThrowIfNull(password, "Пароль не може бути null");
+        ArgumentNullException.ThrowIfNull(request.Login, "Логін не може бути null");
+        ArgumentNullException.ThrowIfNull(request.Password, "Пароль не може бути null");
 
-        this.login = login;
-        this.password = password;
+        this.request = request;
     }
 
-    public override AuthResponseModel Execute()
+    public override AuthResponse Execute()
     {
         var existingPerson = dAPoint.PersonRepository.GetQueryable()
             .Include(p => p.UserRole)
-            .FirstOrDefault(p => p.Login == login);
+            .FirstOrDefault(p => p.Login == request.Login);
 
-        if (existingPerson == null || !PasswordHasher.VerifyPassword(password, existingPerson.PasswordHash!))
+        if (existingPerson == null || !PasswordHasher.VerifyPassword(request.Password, existingPerson.PasswordHash!))
         {
             throw new UnauthorizedAccessException("Невірний логін або пароль");
         }
 
-        var result = mapper.Map<AuthResponseModel>(existingPerson);
+        var result = mapper.Map<AuthResponse>(existingPerson);
 
         var payload = new Dictionary<string, object>
         {

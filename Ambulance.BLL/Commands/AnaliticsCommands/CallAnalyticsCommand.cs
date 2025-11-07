@@ -5,15 +5,15 @@ using AutoMapper;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-public class CallAnalyticsCommand : AbstrCommandWithDA<CallAnalyticsModel>
+public class CallAnalyticsCommand : AbstrCommandWithDA<CallAnalyticsDTO>
 {
     private readonly DateTime from;
     private readonly DateTime to;
 
     public override string Name => "Аналітика дзвінків";
 
-    public CallAnalyticsCommand (IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, DateTime from, DateTime to)
-        : base(operateUnitOfWork, mapper, userContext)
+    public CallAnalyticsCommand (IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
+        : base(operateUnitOfWork, mapper)
     {
         if (from > to)
             throw new ArgumentException("From не може бути більше за to");
@@ -22,7 +22,7 @@ public class CallAnalyticsCommand : AbstrCommandWithDA<CallAnalyticsModel>
         this.to = to;
     }
 
-    public override CallAnalyticsModel Execute()
+    public override CallAnalyticsDTO Execute()
     {
         var calls = dAPoint.CallRepository.GetAll()
             .Where(c => c.StartCallTime >= from && c.StartCallTime <= to)
@@ -40,7 +40,7 @@ public class CallAnalyticsCommand : AbstrCommandWithDA<CallAnalyticsModel>
             .GroupBy(c => c.UrgencyType)
             .ToDictionary(g => g.Key, g => g.Count()); // тимчасове рішення --- перепитати щодо сутності
 
-        return new CallAnalyticsModel
+        return new CallAnalyticsDTO
         {
             TotalCalls = calls.Count,
             CompletedCalls = completed,

@@ -1,11 +1,11 @@
-﻿using Ambulance.BLL.Models.PersonModels;
+﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
-public class LoadPersonsCommand : AbstrCommandWithDA<List<PersonExtModel>>
+public class LoadPersonsCommand : AbstrCommandWithDA<List<PersonExtDTO>>
 {
     private readonly int actionPersonId;
 
@@ -19,13 +19,13 @@ public class LoadPersonsCommand : AbstrCommandWithDA<List<PersonExtModel>>
         this.actionPersonId = actionPersonId;
     }
 
-    public override List<PersonExtModel> Execute()
+    public override List<PersonExtDTO> Execute()
     {
         var persons = dAPoint.PersonRepository.GetQueryable()
             .Include(p => p.UserRole)
             .ToList();
 
-        var result = mapper.Map<List<PersonExtModel>>(persons);
+        var result = mapper.Map<List<PersonExtDTO>>(persons);
 
         LogAction($"{Name}: отримано {result.Count} користувачів", actionPersonId);
 

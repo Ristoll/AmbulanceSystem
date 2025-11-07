@@ -1,6 +1,6 @@
 ﻿namespace Ambulance.BLL.Models;
 
-public class BrigadeResourceModel
+public class BrigadeResourceDTO
 {
     public int BrigadeId { get; set; }
     public string? BrigadeType { get; set; }

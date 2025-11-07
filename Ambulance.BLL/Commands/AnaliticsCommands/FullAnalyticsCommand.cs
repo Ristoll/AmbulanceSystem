@@ -5,15 +5,15 @@ using AutoMapper;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-public class FullAnalyticsCommand : AbstrCommandWithDA<FullAnalyticsModel>
+public class FullAnalyticsCommand : AbstrCommandWithDA<FullAnalyticsDTO>
 {
     private readonly DateTime from;
     private readonly DateTime to;
 
     public override string Name => "Повна аналітика для адміністратора";
 
-    public FullAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, DateTime from, DateTime to)
-        : base(operateUnitOfWork, mapper, userContext)
+    public FullAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
+        : base(operateUnitOfWork, mapper)
     {
         if (from > to)
             throw new ArgumentException("From не може бути більше за to");
@@ -22,13 +22,13 @@ public class FullAnalyticsCommand : AbstrCommandWithDA<FullAnalyticsModel>
         this.to = to;
     }
 
-    public override FullAnalyticsModel Execute()
+    public override FullAnalyticsDTO Execute()
     {
-        var callAnalytics = new CallAnalyticsCommand(dAPoint, mapper, userContext, from, to).Execute();
-        var brigadeAnalytics = new BrigadeResourceAnalyticsCommand(dAPoint, mapper, userContext, from, to).Execute();
-        var deceaseAnalytics = new DeceaseAnalyticsCommand(dAPoint, mapper, userContext, from, to).Execute();
+        var callAnalytics = new CallAnalyticsCommand(dAPoint, mapper, from, to).Execute();
+        var brigadeAnalytics = new BrigadeResourceAnalyticsCommand(dAPoint, mapper, from, to).Execute();
+        var deceaseAnalytics = new DeceaseAnalyticsCommand(dAPoint, mapper, from, to).Execute();
 
-        return new FullAnalyticsModel
+        return new FullAnalyticsDTO
         {
             Calls = callAnalytics,
             Brigades = brigadeAnalytics,

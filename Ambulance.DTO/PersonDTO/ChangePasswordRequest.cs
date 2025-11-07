@@ -1,6 +1,6 @@
-﻿namespace Ambulance.BLL.Models;
+﻿namespace Ambulance.DTO.PersonModels;
 
-public class ChangePasswordModel
+public class ChangePasswordRequest
 {
     public int PersonID { get; set; }
     public string OldPassword { get; set; } = null!;

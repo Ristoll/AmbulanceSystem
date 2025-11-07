@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Models;
+﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AutoMapper;
 
@@ -7,10 +7,10 @@ namespace Ambulance.BLL.Commands.PersonIdentity;
 public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 {
     override public string Name => "Зміна паролю Person";
-    private readonly ChangePasswordModel changePasswordModel;
+    private readonly ChangePasswordRequest changePasswordModel;
     private readonly int personId;
 
-    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordModel changePasswordModel, int personId)
+    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordRequest changePasswordModel, int personId)
         : base(operateUnitOfWork, mapper)
     {
         ValidateIn(changePasswordModel, personId);
@@ -40,7 +40,7 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
         return true;
     }
 
-    private void ValidateIn(ChangePasswordModel changePasswordModel, int personId)
+    private void ValidateIn(ChangePasswordRequest changePasswordModel, int personId)
     {
         base.ValidateIn(personId); // перевірка існування personId
 

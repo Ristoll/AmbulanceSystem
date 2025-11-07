@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AmbulanceSystem.BLL.Models;
-public class UsedItemModel
+public class UsedItemDTO
 {
     public int UsedItemId { get; set; }
     public int ItemId { get; set; }

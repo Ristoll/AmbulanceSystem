@@ -1,4 +1,4 @@
-﻿using AmbulanceSystem.BLL.Models;
+﻿using Ambulance.DTO;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
 
@@ -8,6 +8,6 @@ public class ActionLogProfile : Profile
 {
     public ActionLogProfile()
     {
-        CreateMap<ActionLog, ActionLogModel>().ReverseMap();
+        CreateMap<ActionLog, ActionLogDTO>().ReverseMap();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Ambulance.DTO;
+﻿namespace Ambulance.DTO.PersonModels;
 
 public class LoginRequest
 {

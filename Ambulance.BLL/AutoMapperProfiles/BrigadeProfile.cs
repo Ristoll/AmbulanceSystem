@@ -1,7 +1,6 @@
-﻿using AmbulanceSystem.BLL.Models;
-using AmbulanceSystem.Core.Entities;
+﻿using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.DTO;
 using AutoMapper;
-using NetTopologySuite.Geometries;
 
 namespace AmbulanceSystem.BLL.AutoMapperProfiles;
 
@@ -9,6 +8,6 @@ public class BrigadeProfile : Profile
 {
     public BrigadeProfile()
     {
-        CreateMap<Brigade, BrigadeModel>().ReverseMap();
+        CreateMap<Brigade, BrigadeDto>().ReverseMap();
     }
 }

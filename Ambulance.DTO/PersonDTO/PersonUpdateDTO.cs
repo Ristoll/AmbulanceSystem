@@ -1,7 +1,7 @@
-﻿namespace Ambulance.BLL.Models.PersonModels;
+﻿namespace Ambulance.DTO.PersonModels;
 
 // надсилання тільки змінених полів перекладається на фронт
-public class PersonUpdateModel : PersonBaseModel
+public class PersonUpdateDTO : PersonBase
 {
     public int PersonId { get; set; }
     public int? RoleId { get; set; }

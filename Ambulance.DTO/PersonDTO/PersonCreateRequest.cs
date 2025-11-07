@@ -1,8 +1,8 @@
-﻿namespace Ambulance.BLL.Models.PersonModels;
+﻿namespace Ambulance.DTO.PersonModels;
 
-public class PersonCreateModel : PersonBaseModel
+public class PersonCreateRequest : PersonBase
 {
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!; // для передачі при створенні
-    public int RoleId { get; set; }
+    public string Role { get; set; }
 }

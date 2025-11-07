@@ -5,15 +5,15 @@ using AutoMapper;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-public class BrigadeResourceAnalyticsCommand : AbstrCommandWithDA<List<BrigadeResourceModel>>
+public class BrigadeResourceAnalyticsCommand : AbstrCommandWithDA<List<BrigadeResourceDTO>>
 {
     private readonly DateTime from;
     private readonly DateTime to;
 
     public override string Name => "Аналітика ресурсів бригад";
 
-    public BrigadeResourceAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, DateTime from, DateTime to)
-        : base(operateUnitOfWork, mapper, userContext)
+    public BrigadeResourceAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
+        : base(operateUnitOfWork, mapper)
     {
         if (from > to)
             throw new ArgumentException("From не може бути більше за to");
@@ -22,9 +22,9 @@ public class BrigadeResourceAnalyticsCommand : AbstrCommandWithDA<List<BrigadeRe
         this.to = to;
     }
 
-    public override List<BrigadeResourceModel> Execute()
+    public override List<BrigadeResourceDTO> Execute()
     {
         // уточнити щодо станів речей бригад та конкретної аналітики по бриагадах
-        return new List<BrigadeResourceModel>();
+        return new List<BrigadeResourceDTO>();
     }
 }

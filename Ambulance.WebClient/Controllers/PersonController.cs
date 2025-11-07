@@ -1,6 +1,7 @@
 ﻿using Ambulance.BLL.Commands;
 using Ambulance.BLL.Models.PersonModels;
 using Ambulance.DTO;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -26,15 +27,14 @@ public class PersonController : Controller
 
     [HttpPost("create")]
     [Authorize(Roles = "Admin")] // одразу перевіряємо, чи є користувач адміністратором
-    public IActionResult CreatePerson([FromBody] CreatePersonRequest request)
+    public IActionResult CreatePerson([FromBody] PersonCreateRequest request)
     {
         try
         {
             // отримуємо ID користувача, який виконав запит із JWT токена
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
 
-            var model = mapper.Map<PersonCreateModel>(request);
-            bool result = manager.CreatePerson(model, actionOwnerId);
+            bool result = manager.CreatePerson(request, actionOwnerId);
             return result ? Ok() : BadRequest("Не вдалося створити користувача");
         }
         catch (Exception ex)
@@ -45,15 +45,14 @@ public class PersonController : Controller
 
     [HttpPost("create-patient")]
     [Authorize(Roles = "Dispatcher")]
-    public IActionResult CreatePatient([FromBody] CreatePersonRequest request)
+    public IActionResult CreatePatient([FromBody] PersonCreateRequest request)
     {
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
 
-            var model = mapper.Map<PersonCreateModel>(request);
-            model.Role = "Patient"; // жорстко встановлюємо роль
-            bool result = manager.CreatePerson(model, actionOwnerId);
+            request.Role = "Patient"; // жорстко встановлюємо роль
+            bool result = manager.CreatePerson(request, actionOwnerId);
             return result ? Ok() : BadRequest("Не вдалося створити пацієнта");
         }
         catch (Exception ex)
@@ -63,14 +62,13 @@ public class PersonController : Controller
     }
 
     [HttpPost("authetificate")]
-    public ActionResult<AuthResponseDto> Authetificate([FromBody] LoginRequest request)
+    public ActionResult<AuthResponse> Authetificate([FromBody] LoginRequest request)
     {
         try
         {
-            var response = manager.AuthPerson(request.Login, request.Password); // повертає базову інформацію про користувача з токеном
+            var response = manager.AuthPerson(request); // повертає базову інформацію про користувача з токеном
 
-            var responseDto = mapper.Map<AuthResponseDto>(response);
-            return responseDto;
+            return response;
         }
         catch (UnauthorizedAccessException ex)
         {

@@ -1,25 +1,18 @@
 ﻿using Ambulance.BLL.Models;
-using Ambulance.Core;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-public class DeceaseAnalyticsCommand : AbstrCommandWithDA<List<DecAllergAnalyticsModel>>
+public class DeceaseAnalyticsCommand : AbstrCommandWithDA<List<DecAllergAnalyticsDTO>>
 {
     private readonly DateTime from;
     private readonly DateTime to;
 
     public override string Name => "Аналітика хронічних захворювань";
 
-    public DeceaseAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, IUserContext userContext, DateTime from, DateTime to)
-        : base(operateUnitOfWork, mapper, userContext)
+    public DeceaseAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
+        : base(operateUnitOfWork, mapper)
     {
         if (from > to)
             throw new ArgumentException("'From' не може бути більше за 'To'.");
@@ -28,9 +21,9 @@ public class DeceaseAnalyticsCommand : AbstrCommandWithDA<List<DecAllergAnalytic
         this.to = to;
     }
 
-    public override List<DecAllergAnalyticsModel> Execute()
+    public override List<DecAllergAnalyticsDTO> Execute()
     {
         // уточнити щодо часу записів захворювань та алергій
-        return new List<DecAllergAnalyticsModel>();
+        return new List<DecAllergAnalyticsDTO>();
     }
 }

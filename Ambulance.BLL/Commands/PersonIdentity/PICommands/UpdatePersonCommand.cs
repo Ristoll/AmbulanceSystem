@@ -1,4 +1,4 @@
-﻿using Ambulance.BLL.Models.PersonModels;
+﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -8,11 +8,11 @@ namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 public class UpdatePersonCommand : AbstrCommandWithDA<bool>
 {
     private readonly int? actionPersonId;
-    private readonly PersonUpdateModel upPersonModel;
+    private readonly PersonUpdateDTO upPersonModel;
 
     public override string Name => "Оновлення Person";
 
-    public UpdatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonUpdateModel upPersonModel, int? actionPersonId)
+    public UpdatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonUpdateDTO upPersonModel, int? actionPersonId)
         : base(operateUnitOfWork, mapper)
     {
         if (actionPersonId.HasValue)
@@ -56,15 +56,15 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
             person.UserRole = roleEntity;
         }
 
-        foreach (var prop in typeof(PersonUpdateModel).GetProperties())
+        foreach (var prop in typeof(PersonUpdateDTO).GetProperties())
         {
             var newValue = prop.GetValue(upPersonModel);
 
             if (newValue != null)
             {
-                if (prop.Name is nameof(PersonUpdateModel.PersonId)
-                    or nameof(PersonUpdateModel.Gender)
-                    or nameof(PersonUpdateModel.RoleId))
+                if (prop.Name is nameof(PersonUpdateDTO.PersonId)
+                    or nameof(PersonUpdateDTO.Gender)
+                    or nameof(PersonUpdateDTO.RoleId))
                     continue;  // за винятком ID, ці властивості обробляємо вручну
 
                 var targetProp = typeof(Person).GetProperty(prop.Name);
