@@ -23,5 +23,16 @@ namespace Ambulance.BLL.Commands.BigadeCommands
             var command = new UpdateBrigade(brigadeDto, unitOfWork, mapper, actionOwnerID);
             return ExecuteCommand(command, "Не вдалося оновити дані бригади");
         }
+        public List<BrigadeDto> LoadAllBrigades(int actionOwnerID)
+        {
+            var command = new LoadAllBrigadesCommand(unitOfWork, mapper, actionOwnerID);
+            return ExecuteCommand(command, "Не вдалося підвантажити всі бригади");
+        }
+        public List<BrigadeDto> LoadBrigadesByState(int brigadeStateId,  int actionOwnerID)
+        {
+            var command = new LoadBrigadesByStateCommand(unitOfWork, mapper, actionOwnerID);
+            command.brigadeStateId = brigadeStateId;
+            return ExecuteCommand(command, "Не вдалося підвантажити бригади за станом");
+        }
     }
 }
