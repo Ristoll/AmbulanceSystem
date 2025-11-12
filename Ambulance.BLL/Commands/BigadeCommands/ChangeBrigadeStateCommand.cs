@@ -13,7 +13,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
     {
         public int brigadeStateId;
         public BrigadeDto brigade;
-        public override string Name => "ChangeBrigadeStateCommand";
+        public override string Name => "Зміна стану бригади";
         public ChangeBrigadeStateCommand(int brigadeStateId, BrigadeDto brigade, IUnitOfWork unitOfWork, IMapper mapper, int actionOwnerID)
             : base(unitOfWork, mapper, actionOwnerID)
         {

@@ -12,10 +12,9 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         private readonly int actorId;
 
         public SearchMedicalCardCommand(int personId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper) 
-            :base(operateUnitOfWork, mapper)
+            :base(operateUnitOfWork, mapper, actorId)
         {
             this.personId = personId;
-            this.actorId = actorId;
         }
 
         public override string Name => "Пошук медичної картки";
