@@ -2,10 +2,12 @@
 using Ambulance.BLL.Commands.CallCommands;
 using Ambulance.DTO;
 using Ambulance.DTO.PersonModels;
+using Ambulance.WebAPI.Hubs;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Ambulance.WebAPI.Controllers;
 
@@ -13,14 +15,16 @@ namespace Ambulance.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class CallController : Controller
 {
+    private readonly IHubContext<NotificationHub> hubContext;
     private readonly CallCommandManager manager;
     private readonly IMapper mapper;
-    public CallController(CallCommandManager manager, IMapper mapper)
+    public CallController(CallCommandManager manager, IMapper mapper, IHubContext<NotificationHub> hubContext)
     {
         ArgumentNullException.ThrowIfNull(manager);
         ArgumentNullException.ThrowIfNull(mapper);
         this.manager = manager;
         this.mapper = mapper;
+        this.hubContext = hubContext;
     }
 
     [HttpPost("create-call")]
@@ -55,19 +59,40 @@ public class CallController : Controller
     }
 
     [HttpPost("fill-call")]
-    public IActionResult FillCall([FromBody] FillCallRequest request)
+    public async Task<IActionResult> FillCall([FromBody] FillCallRequest request)
     {
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.FillCallCommand(request.CallDto, request.PatientDto, request.PersonCreateRequest, actionOwnerId);
-            return result ? Ok() : BadRequest("Не вдалося заповнити виклик");
+
+            bool result = manager.FillCallCommand(
+                request.CallDto,
+                request.PatientDto,
+                request.PersonCreateRequest,
+                actionOwnerId
+            );
+
+            if (!result)
+                return BadRequest("Не вдалося заповнити виклик");
+
+            string notificationText = $"Отримано новий виклик!";
+
+            var brigadeMembers = request.CallDto.AssignedBrigades!.SelectMany(b => b.Members!).ToList();
+
+            foreach (var brigadeMember in brigadeMembers)
+            {
+                await hubContext.Clients.User(brigadeMember.BrigadeMemberId.ToString())
+                    .SendAsync("ReceiveNotification", notificationText);
+            }
+
+            return Ok();
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpGet("load-calls")]
     public IActionResult LoadCalls()

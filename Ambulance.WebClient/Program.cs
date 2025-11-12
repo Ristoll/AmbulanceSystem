@@ -1,24 +1,19 @@
 using Ambulance.BLL;
 using Ambulance.ExternalServices;
+using Ambulance.WebAPI.Hubs; // <- додано для SignalR Hub
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// --- Залишаємо твої сервіси ---
+builder.Services.AddControllers(); // замість AddControllersWithViews
 
-var app = builder.Build();
+// --- Додано для SignalR ---
+builder.Services.AddSignalR();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
+// --- Твоя JWT аутентифікація ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -30,21 +25,25 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = false, // покищо не перевіряємо час життя токена
-        ValidateIssuerSigningKey = true, // підпис токена буде перевірятися
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode)) // ключ для перевірки підпису токена
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode))
     };
 });
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+var app = builder.Build();
 
+// --- Middleware ---
+app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication(); // додано для JWT
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// --- Маршрути --- 
+app.MapControllers();
+
+// --- Додано маршрут для SignalR Hub ---
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
