@@ -32,6 +32,11 @@ namespace Ambulance.BLL.Commands.CallCommands
             var command = new FillCallCommand(callDto, patientDto, actionOwnerID, personCreateRequest, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося заповнити виклик");
         }
+        public CallDto LoadCallCommand(int callId)
+        {
+            var command = new LoadCallCommand(unitOfWork, mapper, callId);
+            return ExecuteCommand(command, "Не вдалося завантажити виклик")!;
+        }
         public List<CallDto> LoadCallsCommand()
         {
             var command = new LoadCallsCommand(unitOfWork, mapper);

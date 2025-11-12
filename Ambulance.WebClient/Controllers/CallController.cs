@@ -93,6 +93,19 @@ public class CallController : Controller
         }
     }
 
+    [HttpGet("load-call")]
+    public IActionResult LoadCall([FromQuery] int callId)
+    {
+        try
+        {
+            var call = manager.LoadCallCommand(callId);
+            return Ok(call);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     [HttpGet("load-calls")]
     public IActionResult LoadCalls()
