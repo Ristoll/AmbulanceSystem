@@ -11,7 +11,7 @@ public abstract class AbstrCommandWithDA<TResult> : IBaseCommand<TResult>
 
     public abstract string Name { get; }
 
-    protected AbstrCommandWithDA(IUnitOfWork operateUnitOfWork, IMapper mapper)
+    protected AbstrCommandWithDA(IUnitOfWork operateUnitOfWork, IMapper mapper, int actionOwnerID)
     {
         this.dAPoint = operateUnitOfWork;
         this.mapper = mapper;
