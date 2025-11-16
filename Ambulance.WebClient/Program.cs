@@ -1,19 +1,19 @@
 using Ambulance.BLL;
 using Ambulance.ExternalServices;
-using Ambulance.WebAPI.Hubs; // <- додано для SignalR Hub
+using Ambulance.WebAPI.Hubs; // <- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ SignalR Hub
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- Залишаємо твої сервіси ---
-builder.Services.AddControllers(); // замість AddControllersWithViews
+// --- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ---
+builder.Services.AddControllers(); // пїЅпїЅпїЅпїЅпїЅпїЅ AddControllersWithViews
 
-// --- Додано для SignalR ---
+// --- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ SignalR ---
 builder.Services.AddSignalR();
 
-// --- Твоя JWT аутентифікація ---
+// --- пїЅпїЅпїЅпїЅ JWT пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = false,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode))
     };
@@ -37,13 +37,13 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthentication(); // додано для JWT
+app.UseAuthentication(); // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ JWT
 app.UseAuthorization();
 
-// --- Маршрути --- 
+// --- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ --- 
 app.MapControllers();
 
-// --- Додано маршрут для SignalR Hub ---
+// --- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ SignalR Hub ---
 app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
