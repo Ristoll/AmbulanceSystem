@@ -1,0 +1,224 @@
+.patient {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f6f8;
+}
+
+.tabs {
+  display: flex;
+  background: #1f2937;
+  border-bottom: 3px solid #374151;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 12px;
+  color: #e5e7eb;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tabs button.active {
+  background: #374151;
+  color: #fff;
+}
+
+.logout-btn {
+  flex: 0;
+  padding: 12px 18px;
+  background: #b91c1c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #991b1b;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.map-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-panel,
+.doctors-panel,
+.medical-card-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.map-panel h3,
+.doctors-panel h3,
+.medical-card-panel h3 {
+  margin: 0 0 18px 0;
+  color: #001e3c;
+  font-size: 1.1rem;
+}
+
+.map-placeholder {
+  background: #f8f9fa;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #6b7280;
+}
+
+.doctors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.doctor-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.calls-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calls-panel h3 {
+  margin: 0 0 18px 0;
+  color: #001e3c;
+  font-size: 1.1rem;
+}
+
+.calls-panel .calls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Медична картка */
+.medical-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.medical-card-section {
+  margin-bottom: 24px;
+}
+
+.medical-card-section h4 {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+.patient-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.allergies-list,
+.chronic-diseases-list,
+.medical-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.allergy-item,
+.disease-item {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.medical-record-item {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.record-doctor {
+  font-weight: 600;
+  color: #374151;
+}
+
+.record-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.record-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.record-detail {
+  font-size: 0.9rem;
+}
+
+.record-detail strong {
+  color: #374151;
+}
+
+.no-data {
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
