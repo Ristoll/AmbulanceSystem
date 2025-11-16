@@ -3,6 +3,8 @@ import './CallForm.css';
 import CallMap from './CallMap';
 
 function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
+  const [routeDistance, setRouteDistance] = useState(null); // не зубвай що в метрах
+  const [routeDuration, setRouteDuration] = useState(null); // секундах
   const [callData, setCallData] = useState({
     patientId: null,
     phone: '',
@@ -267,10 +269,13 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
 
       <div className="map-placeholder">
         {callData.address && hospitalAddress ? (
-          <CallMap 
-            startAddress={callData.address} 
-            endAddress={hospitalAddress}
-          />
+          <CallMap
+           startAddress={callData.address}
+           endAddress={hospitalAddress}
+           onRouteFound={({ distance, duration }) => {
+              setRouteDistance(distance);
+              setRouteDuration(duration);}}
+                />
         ) : (
           <div className="map-placeholder-text">
             {!callData.address && !hospitalAddress ? (
@@ -285,15 +290,21 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       </div>
 
       <div className="distribution-info">
-        <div className="info-row">
-          <span>Орієнтовний час прибуття:</span>
-          <span className="time-value">~15 хв</span>
-        </div>
-        <div className="info-row">
-          <span>Відстань до лікарні:</span>
-          <span className="distance-value">~3.2 км</span>
-        </div>
+       <div className="info-row">
+        <span>Орієнтовний час прибуття:</span>
+        <span className="time-value">
+          {routeDuration ? Math.round(routeDuration / 60) + " хв" : "~ ..."}
+        </span>
       </div>
+
+      <div className="info-row">
+       <span>Відстань до лікарні:</span>
+       <span className="distance-value">
+         {routeDistance ? (routeDistance / 1000).toFixed(1) + " км" : "~ ..."} {/*до 1 після коми*/}
+       </span>
+     </div>
+</div>
+
 
       <div className="form-actions">
         <button type="button" className="cancel-btn" onClick={onClose}>

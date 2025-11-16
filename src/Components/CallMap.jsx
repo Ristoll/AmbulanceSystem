@@ -9,33 +9,45 @@ function Routing({ start, end, onRouteFound }) {
   const map = useMap();
   const routingRef = useRef(null);
 
-  useEffect(() => {
-    if (!map) return;
+useEffect(() => {
+  if (!map || !start || !end) return;
 
-    if (!routingRef.current) {
-      routingRef.current = L.Routing.control({
-        waypoints: [],
-        addWaypoints: false,
-        draggableWaypoints: false,
-        showAlternatives: false,
-        routeWhileDragging: false,
-        lineOptions: {
-          styles: [{ color: "#e11d48", weight: 6 }],
-        },
-      }).addTo(map);
+  if (!routingRef.current) {
+    routingRef.current = L.Routing.control({
+      waypoints: [],
+      addWaypoints: false,
+      draggableWaypoints: false,
+      showAlternatives: false,
+      routeWhileDragging: false,
+      lineOptions: {
+        styles: [{ color: "#e11d48", weight: 6 }],
+      },
+    }).addTo(map);
+  }
+
+  routingRef.current.setWaypoints([
+    L.latLng(start[0], start[1]),
+    L.latLng(end[0], end[1]),
+  ]);
+
+  const handleRoutesFound = (e) => {
+    const route = e.routes[0];
+    const distance = route.summary.totalDistance; // метри
+    const duration = route.summary.totalTime; // секунди
+
+    if (onRouteFound) {
+      onRouteFound({ distance, duration });
     }
+  };
 
-    // урааа просто оновлюємо маршрут
-    if (start && end) {
-      routingRef.current.setWaypoints([
-        L.latLng(start[0], start[1]),
-        L.latLng(end[0], end[1]),
-      ]);
-    }
+  // ставимо слухач
+  routingRef.current.on("routesfound", handleRoutesFound);
 
-  }, [map, start, end]);
-
-  return null;
+  return () => {
+    // знімаємо слухач перед наступним effect
+    routingRef.current.off("routesfound", handleRoutesFound);
+  };
+}, [map, start, end, onRouteInfo]);
 }
 
 export default function CallMap({ startAddress, endAddress }) {
