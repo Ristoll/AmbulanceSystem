@@ -1,10 +1,9 @@
-﻿using AmbulanceSystem.Core.Entities;
+﻿using Ambulance.Core.Entities;
 
 namespace AmbulanceSystem.Core;
 
 public interface IUnitOfWork : IDisposable
 {
-    public IGenericRepository<ActionLog> ActionLogRepository { get; }
     public IGenericRepository<Allergy> AllergyRepository { get; }
     public IGenericRepository<Brigade> BrigadeRepository { get; }
     public IGenericRepository<BrigadeItem> BrigadeItemRepository { get; }
@@ -17,6 +16,5 @@ public interface IUnitOfWork : IDisposable
     public IGenericRepository<MedicalCard> MedicalCardRepository { get; }
     public IGenericRepository<MedicalRecord> MedicalRecordRepository { get; }
     public IGenericRepository<Person> PersonRepository { get; }
-    public IGenericRepository<UserRole> UserRoleRepository { get; }
     void Save();
 }

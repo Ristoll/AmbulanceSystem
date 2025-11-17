@@ -29,7 +29,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.CreateItemCommand(itemDto, actionOwnerId);
+            bool result = manager.CreateItemCommand(itemDto);
             return result ? Ok() : BadRequest("Не вдалося створити виклик");
         }
         catch (Exception ex)
@@ -44,7 +44,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.DeleteItemCommand(itemId, actionOwnerId);
+            bool result = manager.DeleteItemCommand(itemId);
             return result ? Ok() : BadRequest("Не вдалося видалити виклик");
         }
         catch (Exception ex)
@@ -59,7 +59,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.SearchItemCommand(itemId, actionOwnerId);
+            bool result = manager.SearchItemCommand(itemId);
             return result ? Ok(result) : BadRequest("Не вдалося знайти користувача");
         }
         catch (Exception ex)
@@ -88,7 +88,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.AssignItemToBrigadeCommand(brigadeItemDto, actionOwnerId);
+            bool result = manager.AssignItemToBrigadeCommand(brigadeItemDto);
             return result ? Ok() : BadRequest("Не вдалося призначити предмет бригаді");
         }
         catch (Exception ex)
@@ -103,7 +103,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.UnassignItemFromBrigadeCommand(brigadeItemId, actionOwnerId);
+            bool result = manager.UnassignItemFromBrigadeCommand(brigadeItemId);
             return result ? Ok() : BadRequest("Не вдалося відмінити призначення предмета бригаді");
         }
         catch (Exception ex)
@@ -132,7 +132,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.IncreaseBrigadeItemQuantityCommand(itemId, amount, actionOwnerId);
+            bool result = manager.IncreaseBrigadeItemQuantityCommand(itemId, amount);
             return result ? Ok() : BadRequest("Не вдалося збільшити кількість предмета");
         }
         catch (Exception ex)
@@ -147,7 +147,7 @@ public class ItemController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.DecreaseBrigadeItemQuantityCommand(itemId, amount, actionOwnerId);
+            bool result = manager.DecreaseBrigadeItemQuantityCommand(itemId, amount);
             return result ? Ok() : BadRequest("Не вдалося зменшити кількість предмета");
         }
         catch (Exception ex)

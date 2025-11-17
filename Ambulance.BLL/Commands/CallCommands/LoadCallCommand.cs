@@ -11,8 +11,8 @@ namespace Ambulance.BLL.Commands.CallCommands
     {
         public override string Name => "Отримати виклик за ідентифікатором";
         private readonly int callId;
-        public LoadCallCommand(IUnitOfWork unitOfWork, IMapper mapper,  int callId, int actionOwner)
-            : base(unitOfWork, mapper, actionOwner)
+        public LoadCallCommand(IUnitOfWork unitOfWork, IMapper mapper,  int callId)
+            : base(unitOfWork, mapper)
         {
             this.callId = callId;
         }

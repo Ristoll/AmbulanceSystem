@@ -1,4 +1,5 @@
 ﻿using Ambulance.Core.Entities;
+using Ambulance.Core.Entities.StandartEnums;
 using AmbulanceSystem.Core;
 using AutoMapper;
 
@@ -13,17 +14,6 @@ public class LoadPersonRolesCommand : AbstrCommandWithDA<List<string>>
 
     public override List<string> Execute()
     {
-        var roles = dAPoint.UserRoleRepository.GetAll();
-
-        if (roles == null || !roles.Any())
-            throw new InvalidOperationException("Не знайдено жодної ролі користувачів");
-
-        // витягуємо лише поле Name у список рядків
-        var roleNames = roles
-            .Where(r => !string.IsNullOrWhiteSpace(r.Name))
-            .Select(r => r.Name)
-            .ToList();
-
-        return roleNames!;
+        return Enum.GetNames(typeof(UserRole)).ToList();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Ambulance.Core;
+using Ambulance.Core.Entities;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AmbulanceSystem.DTO;
@@ -14,13 +15,11 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
     internal class CreateMedicalRecordCommand : AbstrCommandWithDA<bool>
     {
         private readonly MedicalRecordDto medicalRecordDto;
-        private readonly int actorId;
 
-        public CreateMedicalRecordCommand(MedicalRecordDto medicalRecordDto, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper) 
+        public CreateMedicalRecordCommand(MedicalRecordDto medicalRecordDto, IUnitOfWork operateUnitOfWork, IMapper mapper) 
             : base(operateUnitOfWork, mapper)
         {
             this.medicalRecordDto = medicalRecordDto;
-            this.actorId = actorId;
         }
 
         public override string Name => "Створення медичного запису";

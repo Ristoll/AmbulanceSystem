@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace DLL.Services;
+namespace Ambulance.ExternalServices;
 
 /// <summary>
 /// Сервіс для генерації та перевірки JWT токенів.

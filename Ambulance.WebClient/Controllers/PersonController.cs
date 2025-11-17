@@ -12,6 +12,9 @@ namespace Ambulance.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class PersonController : Controller
 {
+    [HttpGet("ping")]
+    public IActionResult Ping() => Ok("API працює");
+
     private readonly PersonIdentityCommandManager manager;
     private readonly IMapper mapper;
 
@@ -30,10 +33,7 @@ public class PersonController : Controller
     {
         try
         {
-            // отримуємо ID користувача, який виконав запит із JWT токена
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-
-            bool result = manager.CreatePerson(request, actionOwnerId);
+            bool result = manager.CreatePerson(request);
             return result ? Ok() : BadRequest("Не вдалося створити користувача");
         }
         catch (Exception ex)
@@ -48,10 +48,8 @@ public class PersonController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-
             request.Role = "Patient"; // жорстко встановлюємо роль
-            bool result = manager.CreatePerson(request, actionOwnerId);
+            bool result = manager.CreatePerson(request);
             return result ? Ok() : BadRequest("Не вдалося створити пацієнта");
         }
         catch (Exception ex)
@@ -72,6 +70,111 @@ public class PersonController : Controller
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+   [HttpPost("change-password")]
+    [Authorize]
+    public IActionResult ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        try
+        {
+            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
+            bool result = manager.ChangePassword(request, actionOwnerId);
+            return result ? Ok() : BadRequest("Не вдалося змінити пароль");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("admin-reset-password/{targetPersonId}")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminResetPassword(int targetPersonId, [FromBody] string newPassword)
+    {
+        try
+        {
+            bool result = manager.AdminResetPassword(newPassword, targetPersonId);
+            return result ? Ok() : BadRequest("Не вдалося скинути пароль користувача");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("profile/{personId}")]
+    [Authorize]
+    public ActionResult<PersonProfileDTO> GetPersonProfile(int personId)
+    {
+        try
+        {
+            var profile = manager.GetPersonProfile(personId);
+            return profile != null ? Ok(profile) : NotFound("Користувача не знайдено");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("update")]
+    [Authorize]
+    public IActionResult UpdatePerson([FromBody] PersonUpdateDTO updateModel)
+    {
+        try
+        {
+            bool result = manager.UpdatePerson(updateModel);
+            return result ? Ok() : BadRequest("Не вдалося оновити дані користувача");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("delete/{deletePersonId}")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult DeletePerson(int deletePersonId)
+    {
+        try
+        {
+            bool result = manager.DeletePerson(deletePersonId);
+            return result ? Ok() : BadRequest("Не вдалося видалити користувача");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("load-persons")]
+    [Authorize]
+    public ActionResult<List<PersonExtDTO>> LoadPersons()
+    {
+        try
+        {
+            var list = manager.LoadPersons();
+            return Ok(list);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("roles")]
+    [Authorize]
+    public ActionResult<List<string>> LoadPersonRoles()
+    {
+        try
+        {
+            var roles = manager.LoadPersonRoles();
+            return Ok(roles);
         }
         catch (Exception ex)
         {

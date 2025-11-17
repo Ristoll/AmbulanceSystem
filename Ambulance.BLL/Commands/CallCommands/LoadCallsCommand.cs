@@ -11,8 +11,8 @@ namespace Ambulance.BLL.Commands.CallCommands
     {
         public override string Name => "Отримати всі виклики";
 
-        public LoadCallsCommand(IUnitOfWork unitOfWork, IMapper mapper, int actionOwnerId)
-            : base(unitOfWork, mapper, actionOwnerId)
+        public LoadCallsCommand(IUnitOfWork unitOfWork, IMapper mapper)
+            : base(unitOfWork, mapper)
         {
         }
 

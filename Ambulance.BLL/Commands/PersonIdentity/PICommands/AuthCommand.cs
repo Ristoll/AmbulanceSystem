@@ -1,8 +1,8 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using Ambulance.Core.Entities.StandartEnums;
+using Ambulance.DTO.PersonModels;
 using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -22,8 +22,7 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponse>
 
     public override AuthResponse Execute()
     {
-        var existingPerson = dAPoint.PersonRepository.GetQueryable()
-            .Include(p => p.UserRole)
+        var existingPerson = dAPoint.PersonRepository
             .FirstOrDefault(p => p.Login == request.Login);
 
         if (existingPerson == null || !PasswordHasher.VerifyPassword(request.Password, existingPerson.PasswordHash!))
@@ -37,12 +36,11 @@ public class AuthCommand : AbstrCommandWithDA<AuthResponse>
         {
             ["sub"] = existingPerson.PersonId,
             ["login"] = existingPerson.Login!, // тимчасово припускаємо, що Login не null до корекції БД
-            ["role"] = existingPerson.UserRole?.Name ?? "Unknown"
+            ["role"] = existingPerson.UserRole ?? UserRole.Unknown.ToString()
         };
 
         result.JwtToken = JWTService.GenerateJwtToken(payload); // генерація токена окремо
 
-        LogAction($"{Name}: Person {existingPerson.Login} автентифікувався", existingPerson.PersonId);
         return result;
     }
 }

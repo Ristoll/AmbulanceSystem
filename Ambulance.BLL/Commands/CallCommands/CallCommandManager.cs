@@ -17,19 +17,19 @@ namespace Ambulance.BLL.Commands.CallCommands
         public CallCommandManager(IUnitOfWork unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper) { }
 
-        public bool CreateCallCommand(CallDto callDto, int actionOwnerID)
+        public bool CreateCallCommand(CallDto callDto)
         {
-            var command = new CreateCallCommand(callDto, unitOfWork, mapper, actionOwnerID);
+            var command = new CreateCallCommand(callDto, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося створити користувача");
         }
-        public bool DeleteCallCommand(int callId, int actionOwnerID)
+        public bool DeleteCallCommand(int callId)
         {
-            var command = new DeleteCallCommand(callId, unitOfWork, mapper, actionOwnerID);
+            var command = new DeleteCallCommand(callId, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося видалити виклик");
         }
-        public bool FillCallCommand(CallDto callDto, PatientDto patientDto, PersonCreateRequest personCreateRequest, int actionOwnerID)
+        public bool FillCallCommand(CallDto callDto, PatientDto patientDto, PersonCreateRequest personCreateRequest)
         {
-            var command = new FillCallCommand(callDto, patientDto, actionOwnerID, personCreateRequest, unitOfWork, mapper);
+            var command = new FillCallCommand(callDto, patientDto, personCreateRequest, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося заповнити виклик");
         }
         public CallDto LoadCallCommand(int callId)

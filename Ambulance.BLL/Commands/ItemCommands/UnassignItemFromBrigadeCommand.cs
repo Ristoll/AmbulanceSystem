@@ -13,13 +13,11 @@ namespace Ambulance.BLL.Commands.ItemCommands
     public class UnassignItemFromBrigadeCommand : AbstrCommandWithDA<bool>
     {
         private readonly int brigadeItemId;
-        private readonly int actorId;
 
-        public UnassignItemFromBrigadeCommand(int brigadeItemId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public UnassignItemFromBrigadeCommand(int brigadeItemId, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
             this.brigadeItemId = brigadeItemId;
-            this.actorId = actorId;
         }
 
         public override string Name => "Винесення медикамента з бригади";
@@ -31,7 +29,7 @@ namespace Ambulance.BLL.Commands.ItemCommands
 
             dAPoint.BrigadeItemRepository.Remove(brigadeItemId);
             dAPoint.Save();
-            LogAction($"{Name} з ID {brigadeItem!.BrigadeId}", actorId);
+
             return true;
         }
     }

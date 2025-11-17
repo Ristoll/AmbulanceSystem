@@ -1,19 +1,33 @@
 using Ambulance.BLL;
 using Ambulance.ExternalServices;
-using Ambulance.WebAPI.Hubs; // <- ������ ��� SignalR Hub
+using Ambulance.WebAPI.Hubs;
+using BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- �������� ��� ������ ---
-builder.Services.AddControllers(); // ������ AddControllersWithViews
+builder.Services.AddControllers();
+BLLInitializer.AddAutoMapperToServices(builder.Services);
+BLLInitializer.AddCommandDependenciesToServices(builder.Services);
 
-// --- ������ ��� SignalR ---
+// --- CORS ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // наш фронтенд
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+// --- Додавання SignalR ---
 builder.Services.AddSignalR();
 
-// --- ���� JWT �������������� ---
+// --- Налаштування JWT аутентифікації ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,17 +47,14 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// --- Middleware ---
-app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
+
 app.UseRouting();
 
-app.UseAuthentication(); // ������ ��� JWT
+app.UseAuthentication();
 app.UseAuthorization();
 
-// --- �������� --- 
 app.MapControllers();
-
-// --- ������ ������� ��� SignalR Hub ---
 app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using AmbulanceSystem.Core.Entities;
+﻿using Ambulance.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
-namespace Ambulance.Core.Entities;
+namespace AmbulanceSystem.DAL;
 
 public partial class AmbulanceDbContext : DbContext
 {
@@ -15,8 +15,6 @@ public partial class AmbulanceDbContext : DbContext
         : base(options)
     {
     }
-
-    public virtual DbSet<ActionLog> ActionLogs { get; set; }
 
     public virtual DbSet<Allergy> Allergies { get; set; }
 
@@ -54,23 +52,12 @@ public partial class AmbulanceDbContext : DbContext
 
     public virtual DbSet<Person> People { get; set; }
 
-    public virtual DbSet<UserRole> UserRoles { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-N27H27E;Initial Catalog=AmbulanceDB;Integrated Security=True;TrustServerCertificate=True;", x => x.UseNetTopologySuite());
+        => optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Program Files\\Microsoft SQL Server\\MSSQL16.SQLEXPRESS\\MSSQL\\DATA\\AmbulanceDB.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True", x => x.UseNetTopologySuite());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ActionLog>(entity =>
-        {
-            entity.HasKey(e => e.ActionLogId).HasName("PK__ActionLo__428D61A2FD8D203F");
-
-            entity.HasOne(d => d.Person).WithMany(p => p.ActionLogs)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ActionLog__Perso__74AE54BC");
-        });
-
         modelBuilder.Entity<Allergy>(entity =>
         {
             entity.HasKey(e => e.AllergyId).HasName("PK__Allergie__A49EBE62A43266C6");
@@ -147,7 +134,6 @@ public partial class AmbulanceDbContext : DbContext
             entity.HasKey(e => e.CallId).HasName("PK__Calls__5180CF8A70EFE4A7");
 
             entity.Property(e => e.StartCallTime).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.UrgencyType).IsFixedLength();
 
             entity.HasOne(d => d.Dispatcher).WithMany(p => p.CallDispatchers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -244,18 +230,6 @@ public partial class AmbulanceDbContext : DbContext
         modelBuilder.Entity<Person>(entity =>
         {
             entity.HasKey(e => e.PersonId).HasName("PK__People__AA2FFB85F329FA5E");
-
-            entity.HasOne(d => d.UserRole).WithMany(p => p.People).HasConstraintName("FK__People__Image_Ur__398D8EEE");
-
-            entity.Property(e => e.Gender)
-          .HasConversion(
-              v => v.ToString(), // зберігатиме enum Gender як строку, але при цьому залишиться тип Role коли витягнемо з бази
-              v => EnumConverters.ParseUserGender(v)); // конвертуватиме строку назад в enum Gender + виніс як окремий метод, бо Expression-bodied members не підтримують складні вирази
-        });
-
-        modelBuilder.Entity<UserRole>(entity =>
-        {
-            entity.HasKey(e => e.UserRoleId).HasName("PK__UserRole__3D978A35E8922A2D");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -11,13 +11,10 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
 
     public override string Name => "Видалення Person";
 
-    public DeletePersonCommand(IUnitOfWork unitOfWork, IMapper mapper, int deletePersonId, int actionPersonId)
+    public DeletePersonCommand(IUnitOfWork unitOfWork, IMapper mapper, int deletePersonId)
         : base(unitOfWork, mapper)
     {
-        ValidateIn(actionPersonId);
-
         this.deletePersonId = deletePersonId;
-        this.actionPersonId = actionPersonId;
     }
 
     public override bool Execute()
@@ -32,7 +29,6 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
         dAPoint.CallRepository.Remove(deletePersonId);
         dAPoint.Save();
 
-        LogAction($"{Name}: персона з ID {deletePersonId} видалена", actionPersonId);
         return true;
     }
 }

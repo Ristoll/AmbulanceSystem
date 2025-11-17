@@ -9,13 +9,11 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
     public class UpdateMedicalCardCommand : AbstrCommandWithDA<bool>
     {
         private readonly MedicalCardDto medicalCardDto;
-        private readonly int actorId;
 
-        public UpdateMedicalCardCommand(MedicalCardDto medicalCardDto, int actorId, IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateMedicalCardCommand(MedicalCardDto medicalCardDto, IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
         {
             this.medicalCardDto = medicalCardDto;
-            this.actorId = actorId;
         }
 
         public override string Name => "Оновлення медичної картки";
@@ -33,7 +31,6 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
             dAPoint.MedicalCardRepository.Update(existingCard);
             dAPoint.Save();
 
-            LogAction($"{Name} для пацієнта {medicalCardDto.PatientId}", actorId);
             return true;
         }
     }

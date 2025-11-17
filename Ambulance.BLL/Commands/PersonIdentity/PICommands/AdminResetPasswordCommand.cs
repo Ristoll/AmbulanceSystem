@@ -1,6 +1,6 @@
-﻿using AmbulanceSystem.Core;
+﻿using Ambulance.ExternalServices;
+using AmbulanceSystem.Core;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
@@ -12,14 +12,13 @@ public class AdminResetPasswordCommand : AbstrCommandWithDA<bool>
 
     public override string Name => "Скидання паролю адміністратором";
 
-    public AdminResetPasswordCommand(IUnitOfWork uow, IMapper mapper, string newPassword, int targetPersonId, int adminId)
+    public AdminResetPasswordCommand(IUnitOfWork uow, IMapper mapper, string newPassword, int targetPersonId)
         : base(uow, mapper)
     {
-        ValidateIn(newPassword, adminId);
+        ValidateIn(newPassword);
 
         this.newPassword = newPassword;
         this.targetPersonId = targetPersonId;
-        this.adminId = adminId;
     }
 
     public override bool Execute()
@@ -32,26 +31,15 @@ public class AdminResetPasswordCommand : AbstrCommandWithDA<bool>
         person.PasswordHash = PasswordHasher.HashPassword(newPassword);
         dAPoint.Save();
 
-        LogAction($"{Name}: Адмін {adminId} змінив пароль користувача {person.Login}", adminId);
         return true;
     }
 
-    private void ValidateIn(string newPassword, int adminId)
+    private void ValidateIn(string newPassword)
     {
         if (string.IsNullOrWhiteSpace(newPassword))
             throw new ArgumentException("Новий пароль не може бути порожнім");
 
         if (newPassword.Length < 8)
             throw new ArgumentException("Новий пароль повинен містити не менше 8 символів");
-
-        var admin = dAPoint.PersonRepository.GetQueryable()
-            .Include(x => x.UserRole)
-            .FirstOrDefault(p => p.PersonId == adminId);
-
-        if (admin == null)
-            throw new ArgumentException($"Адміністратора з ID {adminId} не знайдено");
-
-        if (!string.Equals(admin.UserRole?.Name, "admin", StringComparison.OrdinalIgnoreCase)) // строга перевірка на роль "admin"
-            throw new UnauthorizedAccessException("Тільки адміністратор може виконати скидання паролю");
     }
 }

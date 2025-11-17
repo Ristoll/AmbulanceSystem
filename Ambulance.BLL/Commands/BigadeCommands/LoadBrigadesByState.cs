@@ -13,8 +13,8 @@ namespace Ambulance.BLL.Commands.BigadeCommands
     {
         public int brigadeStateId;
         public override string Name => "Підвантаження всіх бригад за станом";
-        public LoadBrigadesByStateCommand(IUnitOfWork unitOfWork, IMapper mapper, int actionOwner)
-            : base(unitOfWork, mapper, actionOwner)
+        public LoadBrigadesByStateCommand(IUnitOfWork unitOfWork, IMapper mapper)
+            : base(unitOfWork, mapper)
         {
         }
         public override List<BrigadeDto> Execute()

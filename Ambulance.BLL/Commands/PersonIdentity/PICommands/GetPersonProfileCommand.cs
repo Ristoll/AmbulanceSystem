@@ -13,8 +13,6 @@ public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileDTO>
     public GetPersonProfileCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, int personId)
         : base(operateUnitOfWork, mapper)
     {
-        ValidateIn(personId);
-
         this.personId = personId;
     }
 

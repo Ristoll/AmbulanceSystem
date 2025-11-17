@@ -1,6 +1,7 @@
 ﻿using Ambulance.BLL.Commands.MedicalCardCommands;
 using Ambulance.BLL.Commands.PersonIdentity;
 using Ambulance.Core;
+using Ambulance.Core.Entities;
 using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
@@ -16,28 +17,24 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
     private readonly CallDto callDto;
     private readonly PatientDto? patientDto;
     private readonly PersonCreateRequest personCreateRequest;
-    private readonly int actorId;
 
     public override string Name => "Заповнення виклику";
 
-    public FillCallCommand(CallDto callDto, PatientDto? patientDto, int actorId, PersonCreateRequest personCreateRequest, IUnitOfWork unitOfWork, IMapper mapper)
+    public FillCallCommand(CallDto callDto, PatientDto? patientDto, PersonCreateRequest personCreateRequest, IUnitOfWork unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
         this.callDto = callDto;
         this.patientDto = patientDto;
-        this.actorId = actorId;
         this.personCreateRequest = personCreateRequest;
     }
 
     public override bool Execute()
     {
-        // 1️⃣ Отримуємо виклик
         var call = dAPoint.CallRepository.GetById(callDto.CallId)
             ?? throw new InvalidOperationException($"Виклик з ID {callDto.CallId} не знайдено");
 
         Person? patient = null;
 
-        // 2️⃣ Якщо передано DTO пацієнта — шукаємо або створюємо
         if (patientDto != null)
         {
             var searchCommand = new SearchPersonCommand(patientDto, dAPoint, mapper);
@@ -51,7 +48,7 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
             else
             {
                 // Якщо не знайдено — створюємо нову особу
-                var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateRequest, actorId);
+                var createPersonCommand = new CreatePersonCommand(dAPoint, mapper, personCreateRequest);
                 createPersonCommand.Execute();
 
                 patient = dAPoint.PersonRepository.GetAll().FirstOrDefault(p =>
@@ -76,7 +73,7 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
                 CreationDate = DateTime.Now
             };
 
-            var createMedCardCommand = new CreateMedicalCardCommand(medicalCardDto, actorId, dAPoint, mapper);
+            var createMedCardCommand = new CreateMedicalCardCommand(medicalCardDto, dAPoint, mapper);
             createMedCardCommand.Execute();
         }
 
@@ -92,7 +89,6 @@ public class FillCallCommand : AbstrCommandWithDA<bool>
         dAPoint.CallRepository.Update(call);
         dAPoint.Save();
 
-        LogAction($"{Name} № {call.CallId}", actorId);
         return true;
     }
 }

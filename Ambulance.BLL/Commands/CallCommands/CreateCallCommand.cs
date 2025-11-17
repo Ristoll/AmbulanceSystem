@@ -1,7 +1,8 @@
 ﻿using Ambulance.Core;
-using AmbulanceSystem.DTO;
+using Ambulance.Core.Entities;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.DTO;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,13 @@ namespace Ambulance.BLL.Commands.CallCommands;
 public class CreateCallCommand : AbstrCommandWithDA<bool>
 {
     private readonly CallDto callDto;
-    private readonly int personId;
+
 
     public override string Name => "Створення виклику";
-    public CreateCallCommand(CallDto callDto, IUnitOfWork unitOfWork, IMapper mapper, int personId)
+    public CreateCallCommand(CallDto callDto, IUnitOfWork unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
         this.callDto = callDto;
-        this.personId = personId;
     }
 
     public override bool Execute()
@@ -29,7 +29,7 @@ public class CreateCallCommand : AbstrCommandWithDA<bool>
 
         dAPoint.CallRepository.Add(call);
         dAPoint.Save();
-        LogAction($"{Name} № {call.CallId}", personId);
+
         return true;
     }
 }

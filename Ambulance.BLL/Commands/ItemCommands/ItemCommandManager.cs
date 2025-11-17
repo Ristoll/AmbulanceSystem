@@ -14,19 +14,19 @@ namespace Ambulance.BLL.Commands.ItemCommands
         public ItemCommandManager(IUnitOfWork unitOfWork, IMapper mapper)
        : base(unitOfWork, mapper) { }
 
-        public bool CreateItemCommand(ItemDto itemDto,int actionOwnerID)
+        public bool CreateItemCommand(ItemDto itemDto)
         {
-            var command = new CreateItemCommand(itemDto, actionOwnerID, unitOfWork, mapper);
+            var command = new CreateItemCommand(itemDto, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося створити предмет");
         }
-        public bool DeleteItemCommand(int itemId, int actionOwnerID)
+        public bool DeleteItemCommand(int itemId)
         {
-            var command = new DeleteItemCommand(itemId, actionOwnerID, unitOfWork, mapper);
+            var command = new DeleteItemCommand(itemId, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося видалити предмет");
         }
-        public bool SearchItemCommand(int itemId, int actionOwnerID)
+        public bool SearchItemCommand(int itemId)
         {
-            var command = new SearchItemCommand(itemId, actionOwnerID, unitOfWork, mapper);
+            var command = new SearchItemCommand(itemId, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося знайти предмет");
         }
         public List<ItemDto> LoadItemsCommand()
@@ -34,14 +34,14 @@ namespace Ambulance.BLL.Commands.ItemCommands
             var command = new LoadItemsCommand(unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося завантажити предмети");
         }
-        public bool AssignItemToBrigadeCommand(BrigadeItemDto brigadeItemDto, int actionOwnerID)
+        public bool AssignItemToBrigadeCommand(BrigadeItemDto brigadeItemDto)
         {
-            var command = new AssignItemToBrigadeCommand(brigadeItemDto, actionOwnerID, unitOfWork, mapper);
+            var command = new AssignItemToBrigadeCommand(brigadeItemDto, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося призначити предмет бригаді");
         }
-        public bool UnassignItemFromBrigadeCommand(int brigadeItemId, int actionOwnerID)
+        public bool UnassignItemFromBrigadeCommand(int brigadeItemId)
         {
-            var command = new UnassignItemFromBrigadeCommand(brigadeItemId, actionOwnerID, unitOfWork, mapper);
+            var command = new UnassignItemFromBrigadeCommand(brigadeItemId, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося відмінити призначення предмета бригаді");
         }
 
@@ -50,14 +50,14 @@ namespace Ambulance.BLL.Commands.ItemCommands
             var command = new LoadBrigadeItemsCommand(unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося завантажити предмети бригади");
         }
-        public bool IncreaseBrigadeItemQuantityCommand(int itemId, int amount, int actionOwnerID)
+        public bool IncreaseBrigadeItemQuantityCommand(int itemId, int amount)
         {
-            var command = new IncreaseBrigadeItemQuantityCommand(itemId, amount, actionOwnerID, unitOfWork, mapper);
+            var command = new IncreaseBrigadeItemQuantityCommand(itemId, amount, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося збільшити кількість предмета");
         }
-        public bool DecreaseBrigadeItemQuantityCommand(int itemId, int amount, int actionOwnerID)
+        public bool DecreaseBrigadeItemQuantityCommand(int itemId, int amount)
         {
-            var command = new DecreaseBrigadeItemQuantityCommand(itemId, amount, actionOwnerID, unitOfWork, mapper);
+            var command = new DecreaseBrigadeItemQuantityCommand(itemId, amount, unitOfWork, mapper);
             return ExecuteCommand(command, "Не вдалося зменшити кількість предмета");
         }
     }

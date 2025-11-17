@@ -12,13 +12,11 @@ namespace Ambulance.BLL.Commands.ItemCommands
     public class DeleteItemCommand : AbstrCommandWithDA<bool>
     {
         private readonly int itemId;
-        private readonly int actorId;
 
-        public DeleteItemCommand(int itemId, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public DeleteItemCommand(int itemId, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
             this.itemId = itemId;
-            this.actorId = actorId;
         }
 
         public override string Name => "Видалення медикаменту";
@@ -29,7 +27,7 @@ namespace Ambulance.BLL.Commands.ItemCommands
             {
                 dAPoint.ItemRepository.Remove(itemId);
                 dAPoint.Save();
-                LogAction($"{Name} з ID {itemId}", actorId);
+
                 return true;
             }
             else

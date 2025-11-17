@@ -14,6 +14,7 @@ namespace Ambulance.BLL.Commands.CallCommands
     internal class SearchPersonCommand : AbstrCommandWithDA<PersonProfileDTO?>
     {
         private readonly PersonProfileDTO personProfileDTO;
+
         public SearchPersonCommand(PersonProfileDTO personProfileDTO, IUnitOfWork operateUnitOfWork, IMapper mapper) 
             : base(operateUnitOfWork, mapper)
         {

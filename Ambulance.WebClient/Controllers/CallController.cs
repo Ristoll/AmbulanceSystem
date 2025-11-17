@@ -33,8 +33,7 @@ public class CallController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.CreateCallCommand(callDto, actionOwnerId);
+            bool result = manager.CreateCallCommand(callDto);
             return result ? Ok() : BadRequest("Не вдалося створити виклик");
         }
         catch (Exception ex)
@@ -48,8 +47,7 @@ public class CallController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.DeleteCallCommand(callId, actionOwnerId);
+            bool result = manager.DeleteCallCommand(callId);
             return result ? Ok() : BadRequest("Не вдалося видалити виклик");
         }
         catch (Exception ex)
@@ -68,8 +66,7 @@ public class CallController : Controller
             bool result = manager.FillCallCommand(
                 request.CallDto,
                 request.PatientDto,
-                request.PersonCreateRequest,
-                actionOwnerId
+                request.PersonCreateRequest
             );
 
             if (!result)

@@ -14,7 +14,7 @@ namespace Ambulance.BLL.Commands.ItemCommands
     public class LoadBrigadeItemsCommand : AbstrCommandWithDA<List<BrigadeItemDto>>
     {
         public override string Name => "Завантаження медикаментів";
-        public LoadBrigadeItemsCommand(IUnitOfWork unitOfWork, IMapper mapper, )
+        public LoadBrigadeItemsCommand(IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
         {
         }

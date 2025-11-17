@@ -14,24 +14,24 @@ public class AnaliticsCommandManager : AbstractCommandManager
     public AnaliticsCommandManager(IUnitOfWork unitOfWork, IMapper mapper)
     : base(unitOfWork, mapper) { }
 
-    public List<BrigadeResourceDTO> GetBrigadeResourceAnalytics(DateTime from, DateTime to, int actionOwnerId)
+    public List<BrigadeResourceDTO> GetBrigadeResourceAnalytics(DateTime from, DateTime to)
     {
-        var command = new BrigadeResourceAnalyticsCommand(unitOfWork, mapper, from, to, actionOwnerId);
+        var command = new BrigadeResourceAnalyticsCommand(unitOfWork, mapper, from, to);
         return command.Execute();
     }
-    public CallAnalyticsDTO GetCallAnalytics(DateTime from, DateTime to, int actionOwnerId)
+    public CallAnalyticsDTO GetCallAnalytics(DateTime from, DateTime to)
     {
-        var command = new CallAnalyticsCommand(unitOfWork, mapper, from, to, actionOwnerId);
+        var command = new CallAnalyticsCommand(unitOfWork, mapper, from, to);
         return command.Execute();
     }
-    public List<DecAllergAnalyticsDTO>  GetDeceaseAnalytics(int actionOwnerId)
+    public List<DecAllergAnalyticsDTO>  GetDeceaseAnalytics()
     {
-        var command = new DeceaseAnalyticsCommand(unitOfWork, mapper, actionOwnerId);
+        var command = new DeceaseAnalyticsCommand(unitOfWork, mapper);
         return command.Execute();
     }
-    public FullAnalyticsDTO GetFullAnalytics(DateTime from, DateTime to, int actionOwnerId)
+    public FullAnalyticsDTO GetFullAnalytics(DateTime from, DateTime to)
     {
-        var command = new FullAnalyticsCommand(unitOfWork, mapper, from, to, actionOwnerId);
+        var command = new FullAnalyticsCommand(unitOfWork, mapper, from, to);
         return command.Execute();
     }
 }

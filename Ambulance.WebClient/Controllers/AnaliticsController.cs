@@ -23,8 +23,7 @@ public class AnaliticsController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var analiticsData = manager.GetBrigadeResourceAnalytics(from, to, actionOwnerId);
+            var analiticsData = manager.GetBrigadeResourceAnalytics(from, to);
             return Ok(analiticsData);
         }
         catch (Exception ex)
@@ -38,8 +37,7 @@ public class AnaliticsController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var analiticsData = manager.GetCallAnalytics(from, to, actionOwnerId);
+            var analiticsData = manager.GetCallAnalytics(from, to);
             return Ok(analiticsData);
         }
         catch (Exception ex)
@@ -53,8 +51,7 @@ public class AnaliticsController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var analiticsData = manager.GetDeceaseAnalytics(actionOwnerId);
+            var analiticsData = manager.GetDeceaseAnalytics();
             return Ok(analiticsData);
         }
         catch (Exception ex)
@@ -68,8 +65,7 @@ public class AnaliticsController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var analiticsData = manager.GetFullAnalytics(from, to, actionOwnerId);
+            var analiticsData = manager.GetFullAnalytics(from, to);
             return Ok(analiticsData);
         }
         catch (Exception ex)

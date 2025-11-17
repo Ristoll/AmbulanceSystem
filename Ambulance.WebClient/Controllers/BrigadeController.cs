@@ -23,8 +23,7 @@ public class BrigadeController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var brigades = manager.LoadAllBrigades(actionOwnerId);
+            var brigades = manager.LoadAllBrigades();
             return Ok(brigades);
         }
         catch (Exception ex)
@@ -38,8 +37,7 @@ public class BrigadeController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var brigade = manager.LoadBrigade(brigadeId, actionOwnerId);
+            var brigade = manager.LoadBrigade(brigadeId);
             return Ok(brigade);
         }
         catch (Exception ex)
@@ -53,8 +51,7 @@ public class BrigadeController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var brigadesState = manager.LoadBrigadesByState(brigadeStateId, actionOwnerId);
+            var brigadesState = manager.LoadBrigadesByState(brigadeStateId);
             return Ok(brigadesState);
         }
         catch (Exception ex)
@@ -68,7 +65,7 @@ public class BrigadeController : Controller
         try
         {
             var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.ChangeBrigadeState(brigadeStateId, brigadeDto, actionOwnerId);
+            bool result = manager.ChangeBrigadeState(brigadeStateId, brigadeDto);
             return result ? Ok() : BadRequest("Не вдалося оновити стан бригади");
         }
         catch (Exception ex)
@@ -81,8 +78,7 @@ public class BrigadeController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            var updatedBrigade = manager.UpdateBrigade(brigadeDto, actionOwnerId);
+            var updatedBrigade = manager.UpdateBrigade(brigadeDto);
             return Ok(updatedBrigade);
         }
         catch (Exception ex)

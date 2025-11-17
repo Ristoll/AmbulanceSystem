@@ -12,8 +12,8 @@ namespace Ambulance.BLL.Commands.BigadeCommands
     public class LoadAllBrigadesCommand : AbstrCommandWithDA<List<BrigadeDto>>
     {
         public override string Name => "Підвантаження всіх бригад";
-        public LoadAllBrigadesCommand(IUnitOfWork unitOfWork, IMapper mapper, int actionOwner)
-            : base(unitOfWork, mapper, actionOwner)
+        public LoadAllBrigadesCommand(IUnitOfWork unitOfWork, IMapper mapper)
+            : base(unitOfWork, mapper)
         {
         }
         public override List<BrigadeDto> Execute()

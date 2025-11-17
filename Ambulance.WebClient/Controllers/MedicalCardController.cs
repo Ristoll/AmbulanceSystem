@@ -28,8 +28,7 @@ public class MedicalCardController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.CreateMedicalCardCommand(medicalCardDto, actionOwnerId);
+            bool result = manager.CreateMedicalCardCommand(medicalCardDto);
             return result ? Ok() : BadRequest("Не вдалося створити медичну карту");
         }
         catch (Exception ex)
@@ -43,8 +42,7 @@ public class MedicalCardController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.UpdateMedicalCardCommand(medicalCardDto, actionOwnerId);
+            bool result = manager.UpdateMedicalCardCommand(medicalCardDto);
             return result ? Ok() : BadRequest("Не вдалося оновити медичну карту");
         }
         catch (Exception ex)
@@ -58,8 +56,7 @@ public class MedicalCardController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.SearchMeducalCardCommand(personId, actionOwnerId);
+            bool result = manager.SearchMeducalCardCommand(personId);
             return result ? Ok() : BadRequest("Не вдалося знайти медичну карту");
         }
         catch (Exception ex)
@@ -73,8 +70,7 @@ public class MedicalCardController : Controller
     {
         try
         {
-            var actionOwnerId = int.Parse(User.FindFirst("sub")!.Value);
-            bool result = manager.CreateMedicalRecordCommand(medicalRecordDto, actionOwnerId);
+            bool result = manager.CreateMedicalRecordCommand(medicalRecordDto);
             return result ? Ok() : BadRequest("Не вдалося створити медичний запис");
         }
         catch (Exception ex)

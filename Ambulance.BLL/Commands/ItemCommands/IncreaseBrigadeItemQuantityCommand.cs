@@ -12,14 +12,12 @@ namespace Ambulance.BLL.Commands.ItemCommands
     {
         private readonly int brigadeItemId;
         private readonly int quantity;
-        private readonly int actorId;
 
-        public IncreaseBrigadeItemQuantityCommand(int brigadeItemId, int quantity, int actorId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        public IncreaseBrigadeItemQuantityCommand(int brigadeItemId, int quantity, IUnitOfWork operateUnitOfWork, IMapper mapper)
             : base(operateUnitOfWork, mapper)
         {
             this.brigadeItemId = brigadeItemId;
             this.quantity = quantity;
-            this.actorId = actorId;
         }
 
         public override string Name => "Збільшення кількості медикамента";
@@ -32,13 +30,12 @@ namespace Ambulance.BLL.Commands.ItemCommands
                 brigadeItem.Quantity += quantity;
                 dAPoint.BrigadeItemRepository.Update(brigadeItem);
                 dAPoint.Save();
-                LogAction($"{Name} з ID {brigadeItemId} збільшена на {quantity}. Нова кількість: {brigadeItem.Quantity}", actorId);
+
                 return true;
             }
             else
             {
-                LogAction($"{Name}: Неможливо зменшити кількість медикамента з ID {brigadeItemId}. Медикамент не знайдений або кількість вже нульова.", actorId);
-                return false;
+                throw new ArgumentException($"{Name}: Неможливо зменшити кількість медикамента з ID {brigadeItemId}. Медикамент не знайдений або кількість вже нульова");
             }
         }
     }

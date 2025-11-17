@@ -1,4 +1,5 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using Ambulance.Core.Entities;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -7,20 +8,13 @@ namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
 public class UpdatePersonCommand : AbstrCommandWithDA<bool>
 {
-    private readonly int? actionPersonId;
     private readonly PersonUpdateDTO upPersonModel;
 
     public override string Name => "Оновлення Person";
 
-    public UpdatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonUpdateDTO upPersonModel, int? actionPersonId)
+    public UpdatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonUpdateDTO upPersonModel)
         : base(operateUnitOfWork, mapper)
     {
-        if (actionPersonId.HasValue)
-        {
-            ValidateIn(actionPersonId.Value);
-            this.actionPersonId = actionPersonId;
-        }
-
         this.upPersonModel = upPersonModel;
     }
 
@@ -31,8 +25,6 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
         if (person == null)
             throw new InvalidOperationException("Користувача не знайдено");
 
-        List<string> changesLog = new List<string>();
-
         // обробка гендеру окремо
         if (!string.IsNullOrEmpty(upPersonModel.Gender))
         {
@@ -40,20 +32,19 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
 
             if (newGender != person.Gender)
             {
-                changesLog.Add($"Gender змінено з '{person.Gender}' на '{newGender}'");
                 person.Gender = newGender;
             }
         }
 
         // обробка ролі окремо
-        if (upPersonModel.RoleId.HasValue)
+        if (upPersonModel.Role != null)
         {
-            var roleEntity = dAPoint.UserRoleRepository.GetById(upPersonModel.RoleId.Value);
+            var newRole = EnumConverters.ParseUserRole(upPersonModel.Role);
 
-            if (roleEntity == null)
-                throw new ArgumentException($"Роль з Id '{upPersonModel.RoleId}' не знайдена");
-
-            person.UserRole = roleEntity;
+            if (newRole != person.UserRole)
+            {
+                person.UserRole = newRole;
+            }
         }
 
         foreach (var prop in typeof(PersonUpdateDTO).GetProperties())
@@ -64,7 +55,7 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
             {
                 if (prop.Name is nameof(PersonUpdateDTO.PersonId)
                     or nameof(PersonUpdateDTO.Gender)
-                    or nameof(PersonUpdateDTO.RoleId))
+                    or nameof(PersonUpdateDTO.Role))
                     continue;  // за винятком ID, ці властивості обробляємо вручну
 
                 var targetProp = typeof(Person).GetProperty(prop.Name);
@@ -76,23 +67,12 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
                     if (!newValue.Equals(currentValue))
                     {
                         targetProp.SetValue(person, newValue);
-                        changesLog.Add($"{prop.Name} змінено з '{currentValue}' на '{newValue}'");
                     }
                 }
             }
         }
 
         dAPoint.Save(); // EF оновить лише змінені поля
-
-        if (actionPersonId.HasValue)
-        {
-            LogAction($"{Name}: Адміністратором змінені дані користувача ({string.Join(", ", changesLog)})", actionPersonId.Value);
-        }
-        else
-        {
-            LogAction($"{Name}: Користувач змінив свої дані ({string.Join(", ", changesLog)})", person.PersonId);
-        }
-
 
         return true;
     }

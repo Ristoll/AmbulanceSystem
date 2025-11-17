@@ -1,4 +1,4 @@
-﻿using AmbulanceSystem.Core.Entities;
+﻿using Ambulance.Core.Entities;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 
