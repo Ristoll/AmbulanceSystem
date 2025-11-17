@@ -5,6 +5,13 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 
+// фікс для маркерів з сайту
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+});
+
 function Routing({ start, end, onRouteFound }) {
   const map = useMap();
   const routingRef = useRef(null);
@@ -35,6 +42,7 @@ useEffect(() => {
     const distance = route.summary.totalDistance; // метри
     const duration = route.summary.totalTime; // секунди
 
+    console.log("ROUTE FOUND:", distance, duration);
     if (onRouteFound) {
       onRouteFound({ distance, duration });
     }
@@ -47,10 +55,10 @@ useEffect(() => {
     // знімаємо слухач перед наступним effect
     routingRef.current.off("routesfound", handleRoutesFound);
   };
-}, [map, start, end, onRouteInfo]);
+}, [map, start, end, onRouteFound]);
 }
 
-export default function CallMap({ startAddress, endAddress }) {
+export default function CallMap({ startAddress, endAddress, onRouteFound  }) {
   const mapRef = useRef();
   const [startPos, setStartPos] = useState(null);
   const [endPos, setEndPos] = useState(null);
@@ -102,7 +110,7 @@ export default function CallMap({ startAddress, endAddress }) {
           </Marker>
         )}
 
-        {startPos && endPos && <Routing start={startPos} end={endPos} />}
+        {startPos && endPos && <Routing start={startPos} end={endPos} onRouteFound={onRouteFound}/>}
       </MapContainer>
     </div>
   );

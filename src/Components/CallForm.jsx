@@ -3,8 +3,8 @@ import './CallForm.css';
 import CallMap from './CallMap';
 
 function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
-  const [routeDistance, setRouteDistance] = useState(null); // не зубвай що в метрах
-  const [routeDuration, setRouteDuration] = useState(null); // секундах
+  const [routeDistance, setRouteDistance] = useState(null);
+  const [routeDuration, setRouteDuration] = useState(null);
   const [callData, setCallData] = useState({
     patientId: null,
     phone: '',
@@ -35,15 +35,22 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
     { value: 3, label: 'Висока', description: 'Екстрений виклик', className: 'high' }
   ];
 
-  // перевірка формату адреси (місто, вулиця, номер будинку)
-  const addressPattern = /^(.+),\s*(вул\.|пров\.|просп\.|бульв\.|пл\.)?\s*(.+),\s*(\d+[a-zA-Z]?)$/i;
-  if (!addressPattern.test(address)) {
-    setAddressError('Будь ласка, введіть повну адресу у форматі: "Місто, вул. Назва, номер"');
-    return false;
-  }
+  // Виправлена функція validateAddress
+  const validateAddress = (address) => {
+    if (!address) {
+      setAddressError('');
+      return true;
+    }
+
+    // перевірка формату адреси (місто, вулиця, номер будинку)
+    const addressPattern = /^(.+),\s*(вул\.|пров\.|просп\.|бульв\.|пл\.)?\s*(.+),\s*(\d+[a-zA-Z]?)$/i;
+    if (!addressPattern.test(address)) {
+      setAddressError('Будь ласка, введіть повну адресу у форматі: "Місто, вул. Назва, номер"');
+      return false;
+    }
     
-  setAddressError('');
-  return true;
+    setAddressError('');
+    return true;
   };
 
   const getHospitalAddress = () => {
@@ -270,12 +277,13 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       <div className="map-placeholder">
         {callData.address && hospitalAddress ? (
           <CallMap
-           startAddress={callData.address}
-           endAddress={hospitalAddress}
-           onRouteFound={({ distance, duration }) => {
+            startAddress={callData.address}
+            endAddress={hospitalAddress}
+            onRouteFound={({ distance, duration }) => {
               setRouteDistance(distance);
-              setRouteDuration(duration);}}
-                />
+              setRouteDuration(duration);
+            }}
+          />
         ) : (
           <div className="map-placeholder-text">
             {!callData.address && !hospitalAddress ? (
@@ -290,21 +298,20 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       </div>
 
       <div className="distribution-info">
-       <div className="info-row">
-        <span>Орієнтовний час прибуття:</span>
-        <span className="time-value">
-          {routeDuration ? Math.round(routeDuration / 60) + " хв" : "~ ..."}
-        </span>
+        <div className="info-row">
+          <span>Орієнтовний час прибуття:</span>
+          <span className="time-value">
+            {routeDuration ? Math.round(routeDuration / 60) + " хв" : "~ ..."}
+          </span>
+        </div>
+
+        <div className="info-row">
+          <span>Відстань до лікарні:</span>
+          <span className="distance-value">
+            {routeDistance ? (routeDistance / 1000).toFixed(1) + " км" : "~ ..."}
+          </span>
+        </div>
       </div>
-
-      <div className="info-row">
-       <span>Відстань до лікарні:</span>
-       <span className="distance-value">
-         {routeDistance ? (routeDistance / 1000).toFixed(1) + " км" : "~ ..."} {/*до 1 після коми*/}
-       </span>
-     </div>
-</div>
-
 
       <div className="form-actions">
         <button type="button" className="cancel-btn" onClick={onClose}>
@@ -321,5 +328,6 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       </div>
     </div>
   );
+}
 
 export default CallForm;

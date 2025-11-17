@@ -1,43 +1,39 @@
 import { useState } from 'react';
 import './AuthForm.css';
 
-function AuthForm({ type }) {
-  const [email, setEmail] = useState('');
+function AuthForm({ onLogin }) {
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // щоб пусті не пускало при перезавантаженні сторінки (як в гайді написано - тоді відправляється форма браузером за замовченням)
+    if (onLogin) {
+      onLogin(login, password);
+    }
+  };
 
   return (
     <div className="auth-form">
-      <h2>{type === 'login' ? 'Увійти' : 'Реєстрація'}</h2>
-      <form>
+      <h2>Увійти</h2>
+      <form onSubmit={handleSubmit}> {/*стандартна механіка для полів вводу*/}
         <div className="input-group">
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            value={login}
+            onChange={e => setLogin(e.target.value)}
+            placeholder="Логін"
           />
         </div>
         <div className="input-group">
           <input
             type="password"
-            placeholder="Пароль"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            placeholder="Пароль"
           />
         </div>
-        {type === 'register' && (
-          <div className="input-group">
-            <input
-              type="password"
-              placeholder="Підтвердження пароля"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-            />
-          </div>
-        )}
-        <button type="submit" className={type === 'login' ? 'btn-login' : 'btn-register'}>
-          {type === 'login' ? 'Увійти' : 'Зареєструватися'}
+        <button type="submit" className="btn-login">
+          Увійти
         </button>
       </form>
     </div>
