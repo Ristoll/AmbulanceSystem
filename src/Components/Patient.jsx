@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthService } from "../api/services/AuthService.js";
 import CallItem from './CallItem';
 import './Patient.css';
 
 function Patient() {
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState('map');
+  const [activeTab, setActiveTab] = useState('medical');
 
   const [calls] = useState([
     {
@@ -22,11 +23,6 @@ function Patient() {
       createdAt: new Date().toLocaleString(),
       status: 'Оброблено'
     }
-  ]);
-
-  const [doctors] = useState([
-    { id: 1, name: 'Д-р Олег Петров', specialty: 'Кардіолог', phone: '+380631112233' },
-    { id: 2, name: 'Д-р Наталія Стеценко', specialty: 'Терапевт', phone: '+380631114455' }
   ]);
 
   // Дані медичної картки
@@ -77,7 +73,7 @@ function Patient() {
     }
   });
 
-  const calculateAge = (birthDate) => {
+  const calculateAge = (birthDate) => { // тимчасова для отримання віку з дати народження персони
     const today = new Date();
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
@@ -88,16 +84,16 @@ function Patient() {
     return age;
   };
 
+  const handleLogout = () => {
+    if (window.confirm('Ви впевнені, що хочете вийти з кабінету?')) {
+      AuthService.deleteUserData();
+      navigate('/start');
+    }
+  };
+
   return (
     <div className="patient">
       <div className="tabs">
-        <button
-          className={activeTab === 'map' ? 'active' : ''}
-          onClick={() => setActiveTab('map')}
-        >
-          Карта та лікарі
-        </button>
-
         <button
           className={activeTab === 'medical' ? 'active' : ''}
           onClick={() => setActiveTab('medical')}
@@ -112,36 +108,12 @@ function Patient() {
           Мої виклики
         </button>
 
-        <button className="logout-btn" onClick={() => {
-          if (window.confirm('Вийти?')) navigate('/');
-        }}>
+        <button className="logout-btn" onClick={handleLogout}>
           ⏎ Вийти
         </button>
       </div>
 
       <div className="content">
-        {activeTab === 'map' && (
-          <div className="map-layout">
-            <section className="map-panel">
-              <h3>Карта</h3>
-              <div className="map-placeholder">Тут буде інтерактивна карта</div>
-            </section>
-
-            <aside className="doctors-panel">
-              <h3>Лікарі</h3>
-              <div className="doctors-list">
-                {doctors.map(d => (
-                  <div key={d.id} className="doctor-card">
-                    <div className="doctor-name">{d.name}</div>
-                    <div className="doctor-spec">{d.specialty}</div>
-                    <div className="doctor-phone">{d.phone}</div>
-                  </div>
-                ))}
-              </div>
-            </aside>
-          </div>
-        )}
-
         {activeTab === 'medical' && (
           <div className="medical-card-panel">
             <h3>Медична картка</h3>

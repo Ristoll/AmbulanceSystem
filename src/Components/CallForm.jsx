@@ -35,7 +35,6 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
     { value: 3, label: 'Висока', description: 'Екстрений виклик', className: 'high' }
   ];
 
-  // Виправлена функція validateAddress
   const validateAddress = (address) => {
     if (!address) {
       setAddressError('');
@@ -113,7 +112,7 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       return;
     }
 
-    const submitData = {
+    const submitData = { // прост тимчасова затичка, потім при реалізації змінемо
       patientId: callData.patientId ? parseInt(callData.patientId) : null,
       phone: callData.phone,
       urgencyType: callData.urgencyType,
@@ -121,7 +120,6 @@ function CallForm({ onClose, onSubmit, availableBrigades = [] }) {
       notes: callData.notes,
       brigadeId: callData.selectedBrigadeId,
       hospitalId: callData.hospitalId ? parseInt(callData.hospitalId) : null,
-      startCallTime: new Date()
     };
 
     if (onSubmit) {

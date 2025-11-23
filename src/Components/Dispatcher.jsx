@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthService } from "../api/services/AuthService.js";
 import BrigadeCard from './BrigadeCard';
 import CallForm from './CallForm';
 import NotificationModal from './NotificationModal';
@@ -32,9 +33,9 @@ function Dispatcher() {
 
   const handleSubmitCall = (callData) => {
     const newCall = {
-      id: Date.now(),
+      id: -1,
       ...callData,
-      createdAt: new Date(),
+      createdAt: 1,
       status: 'Новий',
       patient: 'Отримано з ID',
       specification: 'За викликом'
@@ -59,12 +60,13 @@ function Dispatcher() {
   };
 
   const handleEditCall = (callId) => {
-    alert(`Редагування виклику #${callId}`);
+    alert(`Редагування виклику #${callId}`); // тимчасова затичка
   };
 
   const handleLogout = () => {
     if (window.confirm('Ви впевнені, що хочете вийти з кабінету?')) {
-      navigate('/');
+      AuthService.deleteUserData();
+      navigate('/start');
     }
   };
 

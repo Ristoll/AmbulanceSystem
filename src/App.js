@@ -8,9 +8,10 @@ import Dispatcher from './Components/Dispatcher';
 import Patient from './Components/Patient';
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { PersonApiClient } from "./public/apiclients/PersonApiClient.js";
-import { AuthService } from "./public/apiclients/AuthService.js";
-import { LoginRequestModel, AuthResponseModel } from "./public/models/AuthModels.js";
+import { PersonApiClient } from "./api/clients/PersonApiClient.js";
+import { AuthService } from "./api/services/AuthService.js";
+import { AuthResponseModel } from "./api/models/PersonModels/AuthResponseModel.js";
+import { LoginRequestModel } from "./api/models/PersonModels/LoginRequestModel.js";
 
 /* обгортка App для використання хука useNavigate всередині App (без цього не запрацює) */
 function AppWrapper() {
@@ -26,9 +27,15 @@ function App() {
   const navigate = useNavigate(); // тепер працює, бо App всередині Router
   const apiClient = new PersonApiClient(); // створюємо екземпляр API клієнта
 
+   const testhandleLoginSuccess = () => {
+    navigate('/patient');
+   }
+
   // функція для переходу після успішного логіну
-  const handleLoginSuccess = (userRole) => {
-    switch(userRole) {
+  const handleLoginSuccess = () => {
+    const role = AuthService.getUserInfo();
+
+    switch(role.userRole) {
         case "Admin":
             navigate('/admin');
             break;
@@ -46,7 +53,8 @@ function App() {
   // функція для обробки логіну
   const handleLogin = async (login, password) => {
     try {
-      const loginRequest = new LoginRequestModel({ login, password }); // створюємо модель для API
+      const loginRequest = new LoginRequestModel(login, password); // створюємо модель для API
+
       const authResponseData = await apiClient.authenticate(loginRequest); // виклик API
 
       if (!authResponseData) {
@@ -58,9 +66,7 @@ function App() {
 
       // зберігаємо токен і інформацію про юзера у браузері
       AuthService.saveToken(authResponse.jwtToken);
-      AuthService.saveUserInfo({
-            login: authResponse.login,
-            userRole: authResponse.userRole});
+      AuthService.saveUserInfo(authResponse.login, authResponse.userRole);
             
       // закриваємо нашу модалку для логіну та запускаємо успіх
       setLoginOpen(false);
@@ -92,7 +98,7 @@ function App() {
       {/* Модальні вікна */}
       <Modal 
         isOpen={isLoginOpen} 
-        onClose={() => { handleLoginSuccess(); setLoginOpen(false); }} 
+        onClose={() => { testhandleLoginSuccess(); setLoginOpen(false); }} 
         contentClassName="modal-small"
       >
         <AuthForm onLogin={handleLogin} /> {/* передаємо функцію обробки логіну */}

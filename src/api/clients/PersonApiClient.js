@@ -1,4 +1,5 @@
-import { AuthService } from "./AuthService.js";
+import { AuthService } from "../services/AuthService.js";
+import { ApiConfig } from "../services/ApiConfig.js";
 
 export class PersonApiClient {
     constructor(baseUrl = ApiConfig.getBaseUrl()) {
@@ -8,7 +9,10 @@ export class PersonApiClient {
     async request(url, method = "GET", body = null) {
         const headers = AuthService.addBearerHeader({ "Content-Type": "application/json" });
         const options = { method, headers };
-        if (body) options.body = JSON.stringify(body);
+        if (body) {
+            options.body = JSON.stringify(body);
+            console.log(body); // для відладки
+        }
 
         const response = await fetch(`${this.baseUrl}/api/person/${url}`, options);
 
@@ -28,11 +32,11 @@ export class PersonApiClient {
 
     // === AUTH ===
     async authenticate(LoginRequestModel) {
-        return await this.request("authetificate", "POST", { LoginRequestModel});
+        return await this.request("authetificate", "POST", LoginRequestModel);
     }
 
     async changePassword(ChangePasswordRequestModel) {
-        return await this.request("change-password", "POST", { ChangePasswordRequestModel });
+        return await this.request("change-password", "POST", ChangePasswordRequestModel);
     }
 
     async adminResetPassword(targetPersonId, newPassword) {

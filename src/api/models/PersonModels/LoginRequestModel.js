@@ -1,6 +1,7 @@
 export class LoginRequestModel {
-    constructor({ login = "", password = "" } = {}) {
-        this.login = login;
-        this.password = password;
+    constructor(Login, Password) {
+        console.log('Authenticate called with:', { Login, Password });
+        this.Login = Login;
+        this.Password = Password;
     }
 }
