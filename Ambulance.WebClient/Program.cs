@@ -24,10 +24,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-// --- Додавання SignalR ---
+// --- SignalR ---
 builder.Services.AddSignalR();
 
-// --- Налаштування JWT аутентифікації ---
+// --- налаштування JWT ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
