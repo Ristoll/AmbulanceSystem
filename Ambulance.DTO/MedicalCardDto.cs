@@ -13,6 +13,3 @@ public class MedicalCardDto
     public List<string> ChronicDiseases { get; set; } = new List<string>();
     public List<MedicalRecordDto> MedicalRecords { get; set; } = new List<MedicalRecordDto>();
 }
-
-
-

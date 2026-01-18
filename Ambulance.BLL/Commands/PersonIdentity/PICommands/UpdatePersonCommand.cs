@@ -1,99 +1,132 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using Ambulance.Core.Entities;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
+using AmbulanceSystem.DAL;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
 public class UpdatePersonCommand : AbstrCommandWithDA<bool>
 {
-    private readonly int? actionPersonId;
-    private readonly PersonUpdateDTO upPersonModel;
+    private readonly PersonUpdateDTO model;
+    private readonly IImageService imageService;
 
     public override string Name => "Оновлення Person";
 
-    public UpdatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonUpdateDTO upPersonModel, int? actionPersonId)
+    public UpdatePersonCommand(
+        IUnitOfWork operateUnitOfWork,
+        IMapper mapper,
+        PersonUpdateDTO model,
+        IImageService imageService)
         : base(operateUnitOfWork, mapper)
     {
-        if (actionPersonId.HasValue)
-        {
-            ValidateIn(actionPersonId.Value);
-            this.actionPersonId = actionPersonId;
-        }
-
-        this.upPersonModel = upPersonModel;
+        this.model = model ?? throw new ArgumentNullException(nameof(model));
+        this.imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
     }
 
     public override bool Execute()
     {
-        var person = dAPoint.PersonRepository.GetById(upPersonModel.PersonId);
+        if (model.PersonId == null)
+            throw new InvalidOperationException("Ідентифікатор користувача не вказано");
 
-        if (person == null)
-            throw new InvalidOperationException("Користувача не знайдено");
+        var person = dAPoint.PersonRepository.GetById(model.PersonId.Value)
+            ?? throw new InvalidOperationException("Користувача не знайдено");
 
-        List<string> changesLog = new List<string>();
+        UpdateGender(person);
+        UpdateRole(person);
+        UpdateImage(person);
+        UpdateScalarFields(person);
 
-        // обробка гендеру окремо
-        if (!string.IsNullOrEmpty(upPersonModel.Gender))
+        dAPoint.Save();
+        return true;
+    }
+
+    private void UpdateGender(Person person)
+    {
+        if (!string.IsNullOrWhiteSpace(model.Gender))
         {
-            var newGender = EnumConverters.ParseUserGender(upPersonModel.Gender);
-
-            if (newGender != person.Gender)
+            var gender = EnumConverters.ParseUserGender(model.Gender);
+            if (gender != person.Gender)
             {
-                changesLog.Add($"Gender змінено з '{person.Gender}' на '{newGender}'");
-                person.Gender = newGender;
+                person.Gender = gender;
             }
         }
+    }
 
-        // обробка ролі окремо
-        if (upPersonModel.RoleId.HasValue)
+    private void UpdateRole(Person person)
+    {
+        if (!string.IsNullOrWhiteSpace(model.Role))
         {
-            var roleEntity = dAPoint.UserRoleRepository.GetById(upPersonModel.RoleId.Value);
-
-            if (roleEntity == null)
-                throw new ArgumentException($"Роль з Id '{upPersonModel.RoleId}' не знайдена");
-
-            person.UserRole = roleEntity;
+            var role = EnumConverters.ParseUserRole(model.Role);
+            if (role != person.UserRole)
+            {
+                person.UserRole = role;
+            }
         }
+    }
 
+    private void UpdateImage(Person person)
+    {
+        if (model.Image == null || model.Image.Bytes == null || model.Image.Bytes.Length == 0)
+            return;
+
+        var extension = NormalizeExtension(model.Image.ContentType);
+        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + extension);
+
+        File.WriteAllBytes(tempFile, model.Image.Bytes);
+
+        try
+        {
+            var relativePath = imageService.SaveImage(tempFile);
+            person.ImageUrl = relativePath;
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    private void UpdateScalarFields(Person person)
+    {
         foreach (var prop in typeof(PersonUpdateDTO).GetProperties())
         {
-            var newValue = prop.GetValue(upPersonModel);
+            if (prop.Name is
+                nameof(PersonUpdateDTO.PersonId) or
+                nameof(PersonUpdateDTO.Role) or
+                nameof(PersonUpdateDTO.Gender) or
+                nameof(PersonUpdateDTO.Image))
+                continue;
 
-            if (newValue != null)
+            var newValue = prop.GetValue(model);
+            if (newValue == null) continue;
+
+            var targetProp = typeof(Person).GetProperty(prop.Name);
+            if (targetProp == null || !targetProp.CanWrite) continue;
+
+            var currentValue = targetProp.GetValue(person);
+
+            if (!Equals(currentValue, newValue))
             {
-                if (prop.Name is nameof(PersonUpdateDTO.PersonId)
-                    or nameof(PersonUpdateDTO.Gender)
-                    or nameof(PersonUpdateDTO.RoleId))
-                    continue;  // за винятком ID, ці властивості обробляємо вручну
-
-                var targetProp = typeof(Person).GetProperty(prop.Name);
-
-                if (targetProp != null && targetProp.CanWrite)  // додаткова перевірка на запис
-                {
-                    var currentValue = targetProp.GetValue(person);
-
-                    if (!newValue.Equals(currentValue))
-                    {
-                        targetProp.SetValue(person, newValue);
-                        changesLog.Add($"{prop.Name} змінено з '{currentValue}' на '{newValue}'");
-                    }
-                }
+                targetProp.SetValue(person, newValue);
             }
         }
+    }
 
-        dAPoint.Save(); // EF оновить лише змінені поля
+    private static string NormalizeExtension(string? contentType)
+    {
+        if (string.IsNullOrWhiteSpace(contentType))
+            return ".jpg";
 
-        if (actionPersonId.HasValue)
+        // якщо прийшло "image/jpeg"
+        if (contentType.Contains('/'))
         {
-            LogAction($"{Name}: Адміністратором змінені дані користувача ({string.Join(", ", changesLog)})", actionPersonId.Value);
-        }
-        else
-        {
-            LogAction($"{Name}: Користувач змінив свої дані ({string.Join(", ", changesLog)})", person.PersonId);
+            var ext = contentType.Split('/').Last();
+            return "." + ext.Replace("jpeg", "jpg");
         }
 
-
-        return true;
+        return contentType.StartsWith('.')
+            ? contentType.ToLowerInvariant()
+            : "." + contentType.ToLowerInvariant();
     }
 }

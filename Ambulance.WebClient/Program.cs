@@ -1,25 +1,34 @@
 using Ambulance.BLL;
 using Ambulance.ExternalServices;
+using Ambulance.WebAPI.Hubs;
+using BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddControllers();
+BLLInitializer.AddAutoMapperToServices(builder.Services);
+BLLInitializer.AddCommandDependenciesToServices(builder.Services);
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// --- CORS ---
+builder.Services.AddCors(options =>
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // –Ω–∞—à —Ñ—Ä–æ–Ω—Ç–µ–Ω–¥
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
+// --- SignalR ---
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<NotificationService>();
+
+// --- –Ω–∞–ª–∞—à—Ç—É–≤–∞–Ω–Ω—è JWT ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,18 +40,38 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = false, // ÔÓÍË˘Ó ÌÂ ÔÂÂ‚≥ˇ∫ÏÓ ˜‡Ò ÊËÚÚˇ ÚÓÍÂÌ‡
-        ValidateIssuerSigningKey = true, // Ô≥‰ÔËÒ ÚÓÍÂÌ‡ ·Û‰Â ÔÂÂ‚≥ˇÚËÒˇ
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode)) // ÍÎ˛˜ ‰Îˇ ÔÂÂ‚≥ÍË Ô≥‰ÔËÒÛ ÚÓÍÂÌ‡
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTService.secretcode))
+    };
+
+    // —Ü–µ –¥–ª—è SignalR - –æ—Ç—Ä–∏–º–∞–Ω–Ω—è —Ç–æ–∫–µ–Ω—É –∑ query string
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+            {
+                context.Token = accessToken; // –≤—Å—Ç–∞–Ω–æ–≤–ª—é—î–º–æ —Ç–æ–∫–µ–Ω –¥–ª—è –∞—É—Ç–µ–Ω—Ç–∏—Ñ—ñ–∫–∞—Ü—ñ—ó
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
-app.UseHttpsRedirection();
+var app = builder.Build();
 
-app.UseStaticFiles();
-app.UseAntiforgery();
+app.UseCors("AllowReactApp");
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

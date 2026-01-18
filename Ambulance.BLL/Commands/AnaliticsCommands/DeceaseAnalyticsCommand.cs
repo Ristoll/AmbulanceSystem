@@ -1,29 +1,44 @@
-﻿using Ambulance.BLL.Models;
-using AmbulanceSystem.Core;
+﻿using AmbulanceSystem.Core;
 using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Ambulance.BLL.Commands.AnaliticsCommands;
-
-public class DeceaseAnalyticsCommand : AbstrCommandWithDA<List<DecAllergAnalyticsDTO>>
+namespace Ambulance.BLL.Commands.AnaliticsCommands
 {
-    private readonly DateTime from;
-    private readonly DateTime to;
-
-    public override string Name => "Аналітика хронічних захворювань";
-
-    public DeceaseAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
-        : base(operateUnitOfWork, mapper)
+    public class DeceaseAnalyticsCommand : AbstrCommandWithDA<Dictionary<string, int>>
     {
-        if (from > to)
-            throw new ArgumentException("'From' не може бути більше за 'To'.");
+        public override string Name => "Аналітика хронічних захворювань";
 
-        this.from = from;
-        this.to = to;
-    }
+        public DeceaseAnalyticsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper)
+            : base(operateUnitOfWork, mapper) { }
 
-    public override List<DecAllergAnalyticsDTO> Execute()
-    {
-        // уточнити щодо часу записів захворювань та алергій
-        return new List<DecAllergAnalyticsDTO>();
+        public override Dictionary<string, int> Execute()
+        {
+            // Беремо всі зв'язки пацієнтів з хронічними захворюваннями
+            var patientDiseases = dAPoint.PatientChronicDeceaseRepository
+                .GetAll()
+                .ToList();
+
+            // Дістаємо всі хронічні захворювання для lookup по ID
+            var diseasesLookup = dAPoint.ChronicDeceaseRepository
+                .GetAll()
+                .ToDictionary(d => d.ChronicDeceaseId, d => d.Name);
+
+            // Групуємо по назві захворювання і рахуємо кількість пацієнтів
+            var result = patientDiseases
+                .GroupBy(pcd => diseasesLookup.ContainsKey(pcd.ChronicDeceaseId)
+                                ? diseasesLookup[pcd.ChronicDeceaseId]
+                                : "Unknown")
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Count(),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+            return result;
+        }
     }
 }
+
+

@@ -11,5 +11,12 @@ public static class DALInitializer
         services.AddDbContext<AmbulanceDbContext>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // реєстрація сервісу для збереження-клонування зображень
+        services.AddSingleton<IImageService>(provider =>
+        {
+            var basePath = Path.Combine(AppContext.BaseDirectory, "Images");
+            return new ImageService("Persons", basePath);
+        });
     }
 }

@@ -10,36 +10,41 @@ public class UnitOfWork : IUnitOfWork
 
     private readonly AmbulanceDbContext context;
     private readonly IGenericRepository<Person>? personRepository;
-    private readonly IGenericRepository<UserRole>? userRoleRepository;
     private readonly IGenericRepository<BrigadeMember>? brigadeMemberRepository;
     private readonly IGenericRepository<Allergy>? allergyRepository;
     private readonly IGenericRepository<Brigade>? brigadeRepository;
+    private readonly IGenericRepository<BrigadeMemberRole>? brigadeMemberRoleRepository;
+    private readonly IGenericRepository<MemberSpecializationType>? brigadeMemberSpecializationTypeRepository;
     private readonly IGenericRepository<BrigadeItem>? brigadeItemRepository;
+    private readonly IGenericRepository<BrigadeType>? brigadeTypeRepository;
     private readonly IGenericRepository<Call>? callRepository;
     private readonly IGenericRepository<ChronicDecease>? chronicDeceaseRepository;
     private readonly IGenericRepository<PatientChronicDecease>? patientChronicDeceaseRepository;
+    private readonly IGenericRepository<PatientAllergy>? patientAllergyRepository;
     private readonly IGenericRepository<Hospital>? hospitalRepository;
-    private readonly IGenericRepository<ActionLog>? logRepository;
     private readonly IGenericRepository<MedicalRecord>? medicalRecordRepository;
     private readonly IGenericRepository<MedicalCard>? medicalCardRepository;
     private readonly IGenericRepository<Item>? itemRepository;
 
     public IGenericRepository<Person> PersonRepository => personRepository ?? new GenericRepository<Person>(context);
-    public IGenericRepository<UserRole> UserRoleRepository => userRoleRepository ?? new GenericRepository<UserRole>(context);
     public IGenericRepository<BrigadeMember> BrigadeMemberRepository => brigadeMemberRepository ?? new GenericRepository<BrigadeMember>(context);
+    public IGenericRepository<BrigadeMemberRole> BrigadeMemberRoleRepository => brigadeMemberRoleRepository ?? new GenericRepository<BrigadeMemberRole>(context);
+    public IGenericRepository<MemberSpecializationType> BrigadeMemberSpecializationTypeRepository => brigadeMemberSpecializationTypeRepository ?? new GenericRepository<MemberSpecializationType>(context);
     public IGenericRepository<Allergy> BidRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
     public IGenericRepository<Brigade> BrigadeRepository => brigadeRepository ?? new GenericRepository<Brigade>(context);
+    public IGenericRepository<BrigadeType> BrigadeTypeRepository => brigadeTypeRepository ?? new GenericRepository<BrigadeType>(context);
     public IGenericRepository<Allergy> AllergyRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
     public IGenericRepository<BrigadeItem> BrigadeItemRepository => brigadeItemRepository ?? new GenericRepository<BrigadeItem>(context);
     public IGenericRepository<Call> CallRepository => callRepository ?? new GenericRepository<Call>(context);
     public IGenericRepository<ChronicDecease> ChronicDeceaseRepository => chronicDeceaseRepository ?? new GenericRepository<ChronicDecease>(context);
     public IGenericRepository<PatientChronicDecease> PatientChronicDeceaseRepository => patientChronicDeceaseRepository ?? new GenericRepository<PatientChronicDecease>(context);
+    public IGenericRepository<PatientAllergy> PatientAllergyRepository => patientAllergyRepository ?? new GenericRepository<PatientAllergy>(context);
     public IGenericRepository<Hospital> HospitalRepository => hospitalRepository ?? new GenericRepository<Hospital>(context);
-    public IGenericRepository<ActionLog> ActionLogRepository => logRepository ?? new GenericRepository<ActionLog>(context);
     public IGenericRepository<MedicalRecord> MedicalRecordRepository => medicalRecordRepository ?? new GenericRepository<MedicalRecord>(context);
     public IGenericRepository<MedicalCard> MedicalCardRepository => medicalCardRepository ?? new GenericRepository<MedicalCard>(context);
     public IGenericRepository<Item> ItemRepository => itemRepository ?? new GenericRepository<Item>(context);
-
+    public IGenericRepository<ItemType> ItemTypeRepository => new GenericRepository<ItemType>(context);
+   
     public UnitOfWork(AmbulanceDbContext context)
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));

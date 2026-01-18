@@ -1,51 +1,54 @@
-﻿using Ambulance.BLL.Models;
-using Ambulance.Core;
+﻿using Ambulance.Core;
 using AmbulanceSystem.Core;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-public class CallAnalyticsCommand : AbstrCommandWithDA<CallAnalyticsDTO>
+public class CallAnalyticsCommand : AbstrCommandWithDA<Dictionary<DateTime, int>>
 {
-    private readonly DateTime from;
-    private readonly DateTime to;
-
     public override string Name => "Аналітика дзвінків";
 
-    public CallAnalyticsCommand (IUnitOfWork operateUnitOfWork, IMapper mapper, DateTime from, DateTime to)
+    public CallAnalyticsCommand (IUnitOfWork operateUnitOfWork, IMapper mapper)
         : base(operateUnitOfWork, mapper)
     {
-        if (from > to)
-            throw new ArgumentException("From не може бути більше за to");
-
-        this.from = from;
-        this.to = to;
     }
 
-    public override CallAnalyticsDTO Execute()
+    public override Dictionary<DateTime, int> Execute()
+{
+    var calls = dAPoint.CallRepository.GetAll().ToList();
+
+    // 1. Знаходимо понеділок поточного тижня
+    var today = DateTime.Today;
+    int delta = DayOfWeek.Monday - today.DayOfWeek;
+    if (delta > 0) delta -= 7; // якщо сьогодні неділя — сюди зайде
+    var monday = today.AddDays(delta).Date;
+
+    var sunday = monday.AddDays(6).Date;
+
+    // 2. Фільтруємо лише виклики цього тижня
+    var weekCalls = calls
+        .Where(c => c.StartCallTime.HasValue &&
+                    c.StartCallTime.Value.Date >= monday &&
+                    c.StartCallTime.Value.Date <= sunday)
+        .ToList();
+
+    // 3. Групуємо за датою
+    var grouped = weekCalls
+        .GroupBy(c => c.StartCallTime!.Value.Date)
+        .ToDictionary(
+            g => g.Key,
+            g => g.Count()
+        );
+
+    // 4. Створюємо словник **на всі 7 днів**, навіть якщо 0 викликів
+    var result = new Dictionary<DateTime, int>();
+
+    for (int i = 0; i < 7; i++)
     {
-        var calls = dAPoint.CallRepository.GetAll()
-            .Where(c => c.StartCallTime >= from && c.StartCallTime <= to)
-            .ToList();
-
-        var completed = calls.Count(c => c.CompletionTime != null);
-
-        var avgResponse = calls
-            .Where(c => c.ArrivalTime != null && c.StartCallTime != null)
-            .Select(c => (c.ArrivalTime!.Value - c.StartCallTime!.Value).TotalMinutes) // до хвилин
-            .DefaultIfEmpty(0) // якщо немає викликів це 0, щоб уникнути помилки
-            .Average();
-
-        var byUrgency = calls
-            .GroupBy(c => c.UrgencyType)
-            .ToDictionary(g => g.Key, g => g.Count()); // тимчасове рішення --- перепитати щодо сутності
-
-        return new CallAnalyticsDTO
-        {
-            TotalCalls = calls.Count,
-            CompletedCalls = completed,
-            AverageResponseMinutes = avgResponse,
-            CallsByUrgency = byUrgency
-        };
+        var date = monday.AddDays(i);
+        result[date] = grouped.ContainsKey(date) ? grouped[date] : 0;
     }
+
+    return result;
+}
 }

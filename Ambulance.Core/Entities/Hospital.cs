@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 
-namespace AmbulanceSystem.Core.Entities;
+namespace Ambulance.Core.Entities;
 
 public partial class Hospital
 {
@@ -19,7 +18,7 @@ public partial class Hospital
 
     [StringLength(200)]
     [Unicode(false)]
-    public Point? Location { get; set; }
+    public string? Location { get; set; }
 
     [StringLength(200)]
     [Unicode(false)]

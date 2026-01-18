@@ -1,34 +1,51 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace Ambulance.ExternalServices;
 
 public static class PasswordHasher
 {
+    private const int saltLenght = 16; //16 байтів (128 біт)
+    private const int keyLenght = 32;  //32 байти (256 біт)
+    private const int iterationsNumber = 1000; //кількість ітерацій перехешування
+
     public static string HashPassword(string password)
     {
-        byte[] salt = RandomNumberGenerator.GetBytes(16);
+        //генерим випадкову сіль
+        byte[] salt = RandomNumberGenerator.GetBytes(saltLenght);
 
-        // стврорення хешу на основі пароля та солі
-        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
-        byte[] hash = pbkdf2.GetBytes(32);
+        //хешуємо пароль разом із сіллю
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterationsNumber,
+            HashAlgorithmName.SHA256,
+            keyLenght
+        );
 
-        return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
+        //повертаємо сіль + пароль(взагаліто можна форматувати масив байтів через розміри вище та потім їх перевіряти, але для наявності зроблю через точку)
+        return $"{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
     }
 
     public static bool VerifyPassword(string password, string storedHash)
     {
-        var parts = storedHash.Split(':');
-
+        var parts = storedHash.Split('.');
         if (parts.Length != 2)
         {
             return false;
         }
 
-        var salt = Convert.FromBase64String(parts[0]);
-        var expectedHash = Convert.FromBase64String(parts[1]);
+        byte[] salt = Convert.FromBase64String(parts[0]);
+        byte[] hash = Convert.FromBase64String(parts[1]);
 
-        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
-        var actualHash = pbkdf2.GetBytes(32);
+        byte[] newHash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterationsNumber,
+            HashAlgorithmName.SHA256,
+            keyLenght
+        );
 
-        // перевіряємо всі байти хешу на відповідність (щоб зловмисник не міг відстежити який саме байт неправильний)
-        return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
+        return CryptographicOperations.FixedTimeEquals(hash, newHash);
     }
 }

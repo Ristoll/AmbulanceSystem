@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace AmbulanceSystem.Core.Entities;
+namespace Ambulance.Core.Entities;
 
 public partial class MedicalCard
 {
@@ -42,6 +42,6 @@ public partial class MedicalCard
     public virtual ICollection<PatientChronicDecease> PatientChronicDeceases { get; set; } = new List<PatientChronicDecease>();
 
     [ForeignKey("PersonId")]
-    [InverseProperty("MedicalCards")]
+    [InverseProperty("MedicalCard")]
     public virtual Person Person { get; set; } = null!;
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace AmbulanceSystem.Core.Entities;
+namespace Ambulance.Core.Entities;
 
 [Keyless]
 public partial class BrigadeItem
@@ -18,7 +18,7 @@ public partial class BrigadeItem
     [Column("ItemID")]
     public int ItemId { get; set; }
 
-    public int? Quantity { get; set; }
+    public int Quantity { get; set; }
 
     public DateOnly? ExpiryDate { get; set; }
 

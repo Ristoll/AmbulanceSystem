@@ -1,4 +1,5 @@
 ﻿using Ambulance.DTO.PersonModels;
+using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
 using AutoMapper;
 
@@ -8,20 +9,20 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
 {
     override public string Name => "Зміна паролю Person";
     private readonly ChangePasswordRequest changePasswordModel;
-    private readonly int personId;
+    private readonly int userId;
 
-    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordRequest changePasswordModel, int personId)
+    public ChangePasswordCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, ChangePasswordRequest changePasswordModel, int userId)
         : base(operateUnitOfWork, mapper)
     {
-        ValidateIn(changePasswordModel, personId);
+        ValidateIn(changePasswordModel);
 
         this.changePasswordModel = changePasswordModel;
-        this.personId = personId;
+        this.userId = userId;
     }
 
     public override bool Execute()
     {
-        var person = dAPoint.PersonRepository.GetById(personId);
+        var person = dAPoint.PersonRepository.GetById(userId);
 
         if (person == null)
             throw new InvalidOperationException("Користувача не знайдено");
@@ -35,15 +36,12 @@ public class ChangePasswordCommand : AbstrCommandWithDA<bool>
         person.PasswordHash = PasswordHasher.HashPassword(changePasswordModel.NewPassword);
 
         dAPoint.Save(); // EF автоматично згенерує UPDATE тільки для PasswordHash
-        LogAction($"{Name}: Був змінений пароль: {person.Login}", personId);
 
         return true;
     }
 
-    private void ValidateIn(ChangePasswordRequest changePasswordModel, int personId)
+    private void ValidateIn(ChangePasswordRequest changePasswordModel)
     {
-        base.ValidateIn(personId); // перевірка існування personId
-
         ArgumentNullException.ThrowIfNull(changePasswordModel, "Модель зміни паролю відсутня");
 
         if (string.IsNullOrWhiteSpace(changePasswordModel.OldPassword))

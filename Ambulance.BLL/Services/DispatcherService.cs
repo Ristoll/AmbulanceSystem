@@ -4,81 +4,96 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Services
 {
     public class DispatcherService
     {
-        //брати локацію з моделі бригади
-
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly HttpClient httpClient;
 
-        public DispatcherService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DispatcherService(IUnitOfWork unitOfWork, IMapper mapper, HttpClient httpClient)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.httpClient = httpClient;
         }
-        public List<TimeSpan> GetArrivalTimesForSelectedTeams(List<BrigadeDto> selectedTeams, double callLat, double callLon)
-        {
-            var etaList = new List<TimeSpan>();
 
-            foreach (var team in selectedTeams)
+        // Геокодування адреси хворого
+        public async Task<(double Lat, double Lon)> GeocodeAddressAsync(string address)
+        {
+            string url = $"https://nominatim.openstreetmap.org/search?format=json&q={Uri.EscapeDataString(address)}";
+            var results = await httpClient.GetFromJsonAsync<List<NominatimResult>>(url);
+
+            if (results != null && results.Count > 0)
             {
-                if (team.Latitude.HasValue && team.Longitude.HasValue)
-                {
-                    var eta = CalculateEta(team.Latitude.Value, team.Longitude.Value, callLat, callLon);
-                    etaList.Add(eta);
-                }
+                return (double.Parse(results[0].Lat), double.Parse(results[0].Lon));
             }
 
-            return etaList.OrderBy(t => t).ToList();
+            throw new Exception("Адреса не знайдена");
         }
 
-        public List<BrigadeDto> GetBestTeamsByTypeAndEta(int brigadeTypeId, double callLat, double callLon, int numberOfTeamsToAssign = 1)
+        // Розрахунок маршруту через OSRM
+        public async Task<(double DistanceKm, TimeSpan Duration)> CalculateRouteAsync(double fromLat, double fromLon, double toLat, double toLon)
+        {
+            string url = $"https://router.project-osrm.org/route/v1/driving/{fromLon},{fromLat};{toLon},{toLat}?overview=false";
+            var response = await httpClient.GetFromJsonAsync<OSRMResponse>(url);
+
+            if (response != null && response.Routes != null && response.Routes.Any())
+            {
+                var route = response.Routes.First();
+                return (route.Distance / 1000, TimeSpan.FromSeconds(route.Duration));
+            }
+
+            throw new Exception("Не вдалося розрахувати маршрут");
+        }
+
+        // Вибір кращих бригад за типом та ETA
+        public async Task<List<BrigadeDto>> GetBestTeamsByTypeAndEtaAsync(int brigadeTypeId, double callLat, double callLon, int numberOfTeamsToAssign = 1)
         {
             var teams = unitOfWork.BrigadeRepository.GetAll();
-
             var freeTeams = mapper.Map<List<BrigadeDto>>(teams
-                .Where(b => b.BrigadeStateId == 1
-                         && b.BrigadeTypeId == brigadeTypeId));
+                .Where(b => b.BrigadeTypeId == brigadeTypeId));
 
-            if (!freeTeams.Any())
-                return new List<BrigadeDto>();
-
-            foreach (var team in freeTeams)
+            var tasks = freeTeams.Select(async team =>
             {
                 if (team.Latitude.HasValue && team.Longitude.HasValue)
                 {
-                    team.EstimatedArrival = CalculateEta(team.Latitude.Value, team.Longitude.Value, callLat, callLon);
+                    var eta = await CalculateRouteAsync(team.Latitude.Value, team.Longitude.Value, callLat, callLon);
+                    team.EstimatedArrival = eta.Duration;
+                    team.EstimatedDistanceKm = eta.DistanceKm;
                 }
-            }
+            }).ToList();
+
+            await Task.WhenAll(tasks);
 
             return freeTeams
                 .OrderBy(t => t.EstimatedArrival)
                 .Take(numberOfTeamsToAssign)
                 .ToList();
         }
+    }
 
-        private double ToRadians(double angle) => angle * Math.PI / 180;
+    // DTO для десеріалізації Nominatim
+    public class NominatimResult
+    {
+        public string Lat { get; set; } = string.Empty;
+        public string Lon { get; set; } = string.Empty;
+    }
 
-        private double DistanceInKm(double lat1, double lon1, double lat2, double lon2)
-        {
-            double R = 6371;
-            double dLat = ToRadians(lat2 - lat1);
-            double dLon = ToRadians(lon2 - lon1);
-            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                       Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
-                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            return R * c;
-        }
+    // DTO для десеріалізації OSRM
+    public class OSRMResponse
+    {
+        public List<OSRMRoute> Routes { get; set; } = new();
+    }
 
-        public TimeSpan CalculateEta(double teamLat, double teamLon, double callLat, double callLon, double avgSpeedKmH = 50)
-        {
-            double distance = DistanceInKm(teamLat, teamLon, callLat, callLon);
-            double hours = distance / avgSpeedKmH;
-            return TimeSpan.FromHours(hours);
-        }
+    public class OSRMRoute
+    {
+        public double Distance { get; set; }
+        public double Duration { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
+using AmbulanceSystem.DAL;
 using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
@@ -7,25 +8,46 @@ namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileDTO>
 {
     private readonly int personId;
+    private readonly IImageService imageService;
 
     public override string Name => "Отримання профілю користувача";
 
-    public GetPersonProfileCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, int personId)
+    public GetPersonProfileCommand(
+        IUnitOfWork operateUnitOfWork,
+        IMapper mapper,
+        int personId,
+        IImageService imageService)
         : base(operateUnitOfWork, mapper)
     {
-        ValidateIn(personId);
-
         this.personId = personId;
+        this.imageService = imageService;
     }
 
     public override PersonProfileDTO Execute()
     {
-        var person = dAPoint.PersonRepository.GetById(personId);
+        var person = dAPoint.PersonRepository.GetById(personId)
+            ?? throw new InvalidOperationException("Користувача не знайдено");
 
-        if (person == null)
-            throw new InvalidOperationException("Користувача не знайдено");
+        var dto = mapper.Map<PersonProfileDTO>(person);
 
-        var result = mapper.Map<PersonProfileDTO>(person);
-        return result;
+        // додаємо ImageDto вручну
+        if (!string.IsNullOrWhiteSpace(person.ImageUrl))
+        {
+            dto.Image = LoadImageDto(person.ImageUrl);
+        }
+
+        return dto;
+    }
+
+    private ImageDto LoadImageDto(string relativePath)
+    {
+        var bytes = imageService.LoadImage(relativePath);
+        var extension = Path.GetExtension(relativePath);
+
+        return new ImageDto
+        {
+            Bytes = bytes,
+            ContentType = extension
+        };
     }
 }

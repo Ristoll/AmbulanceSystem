@@ -6,4 +6,5 @@ public class AuthResponse
 
     public string Login { get; set; } = null!;
     public string UserRole { get; set; } = null!;
+    public int PersonId { get; set; }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace AmbulanceSystem.Core.Entities;
+namespace Ambulance.Core.Entities;
 
 public partial class Brigade
 {
@@ -12,8 +12,9 @@ public partial class Brigade
     [Column("BrigadeID")]
     public int BrigadeId { get; set; }
 
-    [Column("BrigadeStateID")]
-    public int BrigadeStateId { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string BrigadeState { get; set; } = null!;
 
     [Column("BrigadeTypeID")]
     public int BrigadeTypeId { get; set; }
@@ -26,10 +27,6 @@ public partial class Brigade
 
     [InverseProperty("Brigade")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
-
-    [ForeignKey("BrigadeStateId")]
-    [InverseProperty("Brigades")]
-    public virtual BrigadeState BrigadeState { get; set; } = null!;
 
     [ForeignKey("BrigadeTypeId")]
     [InverseProperty("Brigades")]

@@ -1,4 +1,5 @@
-﻿using AmbulanceSystem.Core.Entities;
+﻿using Ambulance.Core.Entities;
+using AmbulanceSystem.Core.Entities;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 
@@ -8,6 +9,7 @@ public class HospitalProfile : Profile
 {
     public HospitalProfile()
     {
-        CreateMap<Hospital, HospitalDto>().ReverseMap();
+        CreateMap<Hospital, HospitalDto>()
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Location));
     }
 }

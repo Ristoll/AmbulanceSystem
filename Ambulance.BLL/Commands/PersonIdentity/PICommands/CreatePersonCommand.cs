@@ -1,4 +1,5 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using Ambulance.Core.Entities;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
@@ -6,48 +7,34 @@ using System.Text.RegularExpressions;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
-public class CreatePersonCommand : AbstrCommandWithDA <bool>
+public class CreatePersonCommand : AbstrCommandWithDA <int>
 {
     override public string Name => "Створення Person";
     private readonly PersonCreateRequest createUserModel;
-    private readonly int personId;
 
-    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateRequest createUserModel, int personId)
+    public CreatePersonCommand(IUnitOfWork operateUnitOfWork, IMapper mapper, PersonCreateRequest createUserModel)
         : base(operateUnitOfWork, mapper)
     {
-        ValidateIn(createUserModel, personId);
+        ValidateIn(createUserModel);
 
         this.createUserModel = createUserModel;
-        this.personId = personId;
     }
 
-    public override bool Execute()
+    public override int Execute()
     {
         var newPerson = mapper.Map<Person>(createUserModel);
 
-        var roleEntity = dAPoint.UserRoleRepository
-            .FirstOrDefault(r => r.Name == createUserModel.Role);
-
-        if (roleEntity == null)
-            throw new ArgumentException($"Роль '{createUserModel.Role}' не знайдена");
-
-        newPerson.UserRole = roleEntity;
+        newPerson.UserRole = EnumConverters.ParseUserRole(newPerson.UserRole); // грубо контрактом виставляємо роль
+        newPerson.Gender = EnumConverters.ParseUserGender(newPerson.Gender);
 
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();
 
-        LogAction($"{Name}: Був створений новий Person: {newPerson.Login}", personId);
-        return true;
+        return newPerson.PersonId;
     }
 
-    protected void ValidateIn(PersonCreateRequest createUserModel, int actPersonId)
+    protected void ValidateIn(PersonCreateRequest createUserModel)
     {
-        var existingActionPerson = dAPoint.PersonRepository
-            .FirstOrDefault(p => p.PersonId == actPersonId);
-
-        if (existingActionPerson == null)
-            throw new ArgumentException($"Некоректний виконавець дії '{actPersonId}'");
-
         var errors = new List<string>();
 
         if (string.IsNullOrWhiteSpace(createUserModel.Name))
