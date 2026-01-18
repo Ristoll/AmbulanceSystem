@@ -1,0 +1,95 @@
+.brigade-card {
+  display: flex;
+  flex-direction: row; /* щоб зліва було зображення а зправа текст*/
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 5px solid transparent;
+}
+
+.brigade-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #e11d48;
+}
+
+.brigade-image {
+  width: 80px;
+  height: 80px;
+  margin-right: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brigade-image img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.brigade-info {
+  flex: 1;
+}
+
+.brigade-title {
+  font-size: 1.2rem;
+  color: #001e3c;
+  margin-bottom: 4px;
+}
+
+.brigade-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.status-free {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-busy,
+.status-unknown{
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-break,
+.status-offline{
+  background: #fee2e2;
+  color: #ff039e;
+}
+
+.brigade-type {
+  color: #667676e8;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.brigade-members {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .brigade-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brigade-image {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+}

@@ -1,0 +1,160 @@
+.call-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.call-item:hover .call-main {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.call-main {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.call-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.call-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.call-brigades ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 4px 0 0 0;
+}
+
+.call-brigades li {
+  margin-bottom: 4px;
+}
+
+.call-title h4 {
+  margin: 0;
+  color: #001e3c;
+  font-size: 1.2rem;
+}
+
+.call-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-new {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-processed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.call-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-size: 1.1rem;
+}
+
+.edit-btn:hover {
+  background: #f3f4f6;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+}
+
+.call-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-side {
+  width: 100px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #0f172a;
+  padding: 12px 8px;
+}
+
+.call-patient-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.call-patient-info p {
+  margin: 0;
+  color: #374151;
+}
+
+.call-details {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.call-details p {
+  margin: 4px 0;
+  color: #4b5563;
+}
+
+.call-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.call-time {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.search-loading {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
