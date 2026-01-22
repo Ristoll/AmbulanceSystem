@@ -6,42 +6,39 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("MedicalCard")]
 public partial class MedicalCard
 {
     [Key]
-    [Column("MedicalCardID")]
-    public int MedicalCardId { get; set; }
+    [Column("card_id")]
+    public int CardId { get; set; }
+    [Column("creation_date")]
+    public DateOnly CreationDate { get; set; }
 
-    [Column("PersonID")]
-    public int PersonId { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? CreationDate { get; set; }
-
+    [Column("date_of_birth")]
+    public DateOnly DateOfBirth { get; set; }
+    [Column("blood_type")]
     [StringLength(10)]
-    [Unicode(false)]
     public string? BloodType { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
-    public decimal? Height { get; set; }
+    [Column("height")]
+    public int? Height { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
-    public decimal? Weight { get; set; }
+    [Column("weight")]
+    public int? Weight { get; set; }
 
-    [StringLength(500)]
-    [Unicode(false)]
+    [Column("notes")]
     public string? Notes { get; set; }
 
-    [InverseProperty("MedicalCard")]
+    [InverseProperty("card")]
     public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
 
-    [InverseProperty("MedicalCard")]
+    [InverseProperty("card")]
     public virtual ICollection<PatientAllergy> PatientAllergies { get; set; } = new List<PatientAllergy>();
 
-    [InverseProperty("MedicalCard")]
+    [InverseProperty("card")]
     public virtual ICollection<PatientChronicDecease> PatientChronicDeceases { get; set; } = new List<PatientChronicDecease>();
 
-    [ForeignKey("PersonId")]
-    [InverseProperty("MedicalCard")]
-    public virtual Person Person { get; set; } = null!;
+    [InverseProperty("card")]
+    public virtual ICollection<Person> People { get; set; } = new List<Person>();
 }

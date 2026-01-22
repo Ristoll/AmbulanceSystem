@@ -6,25 +6,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
-[Keyless]
+[Table("BrigadeItem")]
 public partial class BrigadeItem
 {
-    [Column("BrigadeItemID")]
+    [Key]
+    [Column("brigade_item_id")]
     public int BrigadeItemId { get; set; }
 
-    [Column("BrigadeID")]
-    public int BrigadeId { get; set; }
-
-    [Column("ItemID")]
+    [Column("item_id")]
     public int ItemId { get; set; }
 
+    [Column("brigade_id")]
+    public int BrigadeId { get; set; }
+
+    [Column("quantity")]
     public int Quantity { get; set; }
 
+    [Column("expiry_date")]
     public DateOnly? ExpiryDate { get; set; }
 
-    [ForeignKey("BrigadeId")]
+    [ForeignKey("brigade_id")]
+    [InverseProperty("BrigadeItems")]
     public virtual Brigade Brigade { get; set; } = null!;
 
-    [ForeignKey("ItemId")]
+    [ForeignKey("item_id")]
+    [InverseProperty("BrigadeItems")]
     public virtual Item Item { get; set; } = null!;
 }

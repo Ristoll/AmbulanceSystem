@@ -1,7 +1,7 @@
-﻿using Ambulance.Core.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Ambulance.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AmbulanceSystem.DAL;
 
@@ -24,25 +24,15 @@ public partial class AmbulanceDbContext : DbContext
 
     public virtual DbSet<BrigadeMember> BrigadeMembers { get; set; }
 
-    public virtual DbSet<BrigadeMemberRole> BrigadeMemberRoles { get; set; }
-
-    public virtual DbSet<BrigadeType> BrigadeTypes { get; set; }
-
     public virtual DbSet<Call> Calls { get; set; }
 
     public virtual DbSet<ChronicDecease> ChronicDeceases { get; set; }
 
-    public virtual DbSet<Hospital> Hospitals { get; set; }
-
     public virtual DbSet<Item> Items { get; set; }
-
-    public virtual DbSet<ItemType> ItemTypes { get; set; }
 
     public virtual DbSet<MedicalCard> MedicalCards { get; set; }
 
     public virtual DbSet<MedicalRecord> MedicalRecords { get; set; }
-
-    public virtual DbSet<MemberSpecializationType> MemberSpecializationTypes { get; set; }
 
     public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
 
@@ -50,181 +40,124 @@ public partial class AmbulanceDbContext : DbContext
 
     public virtual DbSet<Person> People { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Program Files\\Microsoft SQL Server\\MSSQL16.SQLEXPRESS\\MSSQL\\DATA\\AmbulanceDB.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True", x => x.UseNetTopologySuite());
+    public virtual DbSet<SpecializationType> SpecializationTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Allergy>(entity =>
         {
-            entity.HasKey(e => e.AllergyId).HasName("PK__Allergie__A49EBE62A43266C6");
+            entity.HasKey(e => e.AllergyId).HasName("PK__Allergie__ACDD0692D29233C3");
         });
 
         modelBuilder.Entity<Brigade>(entity =>
         {
-            entity.HasKey(e => e.BrigadeId).HasName("PK__Brigades__BEF4D27AB40797CC");
-
-            entity.HasOne(d => d.BrigadeType).WithMany(p => p.Brigades)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Brigades__Brigad__628FA481");
-
-            entity.HasOne(d => d.CurrentCall).WithMany(p => p.Brigades)
-                .HasConstraintName("FK__Brigades__Curren__6477ECF3");
-
-            entity.HasOne(d => d.Hospital).WithMany(p => p.Brigades)
-                .HasConstraintName("FK__Brigades__Hospit__6383C8BA");
+            entity.HasKey(e => e.BrigadeId).HasName("PK__Brigade__54869992ED3C89B4");
         });
 
         modelBuilder.Entity<BrigadeItem>(entity =>
         {
-            entity.HasOne(d => d.Brigade).WithMany()
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeIt__Briga__70DDC3D8");
+            entity.HasKey(e => e.BrigadeItemId).HasName("PK__BrigadeI__957E46059F50EA91");
 
-            entity.HasOne(d => d.Item).WithMany()
+            entity.HasOne(d => d.Brigade).WithMany(p => p.BrigadeItems).HasConstraintName("FK_BrigadeItem_Brigade");
+
+            entity.HasOne(d => d.Item).WithMany(p => p.BrigadeItems)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeIt__ItemI__71D1E811");
+                .HasConstraintName("FK_BrigadeItem_Item");
         });
 
         modelBuilder.Entity<BrigadeMember>(entity =>
         {
-            entity.HasKey(e => e.BrigadeMemberId).HasName("PK__BrigadeM__C9F8EBE06D601AF5");
+            entity.HasKey(e => e.BrigadeMemberId).HasName("PK__BrigadeM__B3853E0BE3C35E3F");
 
-            entity.HasOne(d => d.Brigade).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__BrigadeMe__Briga__68487DD7");
+            entity.HasOne(d => d.Brigade).WithMany(p => p.BrigadeMembers).HasConstraintName("FK_BrigadeMember_Brigade");
 
-            entity.HasOne(d => d.BrigadeMemberRole).WithMany(p => p.BrigadeMembers)
+            entity.HasOne(d => d.Person).WithMany(p => p.BrigadeMembers).HasConstraintName("FK_BrigadeMember_Person");
+            entity.HasOne(d => d.SpecializationType).WithMany(p => p.BrigadeMembers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__Briga__693CA210");
-
-            entity.HasOne(d => d.MemberSpecializationType).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BrigadeMe__Membe__6A30C649");
-
-            entity.HasOne(d => d.Person).WithMany(p => p.BrigadeMembers)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__BrigadeMe__Perso__6754599E");
-        });
-
-        modelBuilder.Entity<BrigadeMemberRole>(entity =>
-        {
-            entity.HasKey(e => e.BrigadeMemberRoleId).HasName("PK__BrigadeM__2D54FB89AA9530CE");
-
-            entity.HasOne(d => d.Person).WithMany(p => p.BrigadeMemberRoles)
-                .HasConstraintName("FK__BrigadeMem__Name__5165187F");
-        });
-
-        modelBuilder.Entity<BrigadeType>(entity =>
-        {
-            entity.HasKey(e => e.BrigadeTypeId).HasName("PK__BrigadeT__05E32278C58BFB09");
+                .HasConstraintName("FK_BrigadeMember_Specialization");
         });
 
         modelBuilder.Entity<Call>(entity =>
         {
-            entity.HasKey(e => e.CallId).HasName("PK__Calls__5180CF8A70EFE4A7");
+            entity.HasKey(e => e.CallId).HasName("PK__Call__427DCE68DFFFF39D");
 
-            entity.Property(e => e.StartCallTime).HasDefaultValueSql("(getdate())");
+            entity.HasOne(d => d.Dispatcher).WithMany(p => p.Calldispatchers)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Call_Dispatcher");
 
-            entity.HasOne(d => d.Dispatcher).WithMany(p => p.CallDispatchers)
-                .HasForeignKey(d => d.DispatcherId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK__Calls__Dispatche__59063A47");
+            entity.HasOne(d => d.MedicalRecord).WithMany(p => p.Calls)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Call_MedicalRecord");
 
-            entity.HasOne(d => d.Hospital).WithMany(p => p.Calls)
-                .HasConstraintName("FK__Calls__HospitalI__59FA5E80");
-
-            entity.HasOne(d => d.Patient).WithMany(p => p.CallPatients)
-                .HasForeignKey(d => d.PatientId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK__Calls__PatientID__5812160E");
+            entity.HasOne(d => d.Person).WithMany(p => p.Callpeople)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Call_Person");
         });
 
         modelBuilder.Entity<ChronicDecease>(entity =>
         {
-            entity.HasKey(e => e.ChronicDeceaseId).HasName("PK__ChronicD__19BE9B6916B29BE5");
-        });
-
-        modelBuilder.Entity<Hospital>(entity =>
-        {
-            entity.HasKey(e => e.HospitalId).HasName("PK__Hospital__38C2E58FDE64DAC2");
+            entity.HasKey(e => e.ChronicDeceaseId).HasName("PK__ChronicD__CC454C416F9881EA");
         });
 
         modelBuilder.Entity<Item>(entity =>
         {
-            entity.HasKey(e => e.ItemId).HasName("PK__Items__727E83EBA35769A6");
-
-            entity.HasOne(d => d.ItemType).WithMany(p => p.Items)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Items__ItemTypeI__5EBF139D");
-        });
-
-        modelBuilder.Entity<ItemType>(entity =>
-        {
-            entity.HasKey(e => e.ItemTypeId).HasName("PK__ItemType__F51540DB163B591A");
+            entity.HasKey(e => e.ItemId).HasName("PK__Item__52020FDDD807B781");
         });
 
         modelBuilder.Entity<MedicalCard>(entity =>
         {
-            entity.HasKey(e => e.MedicalCardId).HasName("PK__MedicalC__931EC2360894FD4D");
+            entity.HasKey(e => e.CardId).HasName("PK__MedicalC__BDF201DDD6DE50A7");
 
             entity.Property(e => e.CreationDate).HasDefaultValueSql("(getdate())");
-
-            entity.HasOne(d => d.Person).WithOne(p => p.MedicalCard)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__MedicalCa__Perso__3D5E1FD2");
         });
 
         modelBuilder.Entity<MedicalRecord>(entity =>
         {
-            entity.HasKey(e => e.MedicalRecordId).HasName("PK__MedicalR__4411BBC27CC55CD7");
+            entity.HasKey(e => e.RecordId).HasName("PK__MedicalR__BFCFB4DDBB8FC0EC");
 
-            entity.Property(e => e.DataTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.DateTime).HasDefaultValueSql("(sysdatetime())");
 
             entity.HasOne(d => d.BrigadeMember).WithMany(p => p.MedicalRecords)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MedicalRe__Briga__6EF57B66");
+                .HasConstraintName("FK_MedicalRecord_BrigadeMember");
 
-            entity.HasOne(d => d.MedicalCard).WithMany(p => p.MedicalRecords)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__MedicalRe__Medic__6E01572D");
-        });
-
-        modelBuilder.Entity<MemberSpecializationType>(entity =>
-        {
-            entity.HasKey(e => e.SpecializationTypeId).HasName("PK__MemberSp__69C4C25D7081A584");
+            entity.HasOne(d => d.Card).WithMany(p => p.MedicalRecords).HasConstraintName("FK_MedicalRecord_Card");
         });
 
         modelBuilder.Entity<PatientAllergy>(entity =>
         {
-            entity.HasKey(e => e.PatientAllergyId).HasName("PK__PatientA__2844415DD694106F");
+            entity.HasKey(e => e.PatientAllergyId).HasName("PK__PatientA__81BD324EE81ADF56");
 
             entity.HasOne(d => d.Allergy).WithMany(p => p.PatientAllergies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PatientAl__Aller__4316F928");
+                .HasConstraintName("FK_PatientAllergies_Allergy");
 
-            entity.HasOne(d => d.MedicalCard).WithMany(p => p.PatientAllergies)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__PatientAl__Medic__4222D4EF");
+            entity.HasOne(d => d.Card).WithMany(p => p.PatientAllergies).HasConstraintName("FK_PatientAllergies_Card");
         });
 
         modelBuilder.Entity<PatientChronicDecease>(entity =>
         {
-            entity.HasKey(e => e.PatientChronicDeceaseId).HasName("PK__PatientC__8EBED7D74ED10B33");
+            entity.HasKey(e => e.PatientChronicDeceaseId).HasName("PK__PatientC__3E123485EC545A7A");
+
+            entity.HasOne(d => d.Card).WithMany(p => p.PatientChronicDeceases).HasConstraintName("FK_PatientChronic_Card");
 
             entity.HasOne(d => d.ChronicDecease).WithMany(p => p.PatientChronicDeceases)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PatientCh__Chron__48CFD27E");
-
-            entity.HasOne(d => d.MedicalCard).WithMany(p => p.PatientChronicDeceases)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__PatientCh__Medic__47DBAE45");
+                .HasConstraintName("FK_PatientChronic_Decease");
         });
 
         modelBuilder.Entity<Person>(entity =>
         {
-            entity.HasKey(e => e.PersonId).HasName("PK__People__AA2FFB85F329FA5E");
+            entity.HasKey(e => e.PersonId).HasName("PK__Person__543848DF56D493C5");
+
+            entity.HasOne(d => d.Card).WithMany(p => p.People)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Person_Card");
+        });
+
+        modelBuilder.Entity<SpecializationType>(entity =>
+        {
+            entity.HasKey(e => e.SpecializationTypeId).HasName("PK__Speciali__81BB5F3F819B8D98");
         });
 
         OnModelCreatingPartial(modelBuilder);

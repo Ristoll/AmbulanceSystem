@@ -6,16 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Index("name", Name = "UQ__ChronicD__72E12F1B3666CB21", IsUnique = true)]
 public partial class ChronicDecease
 {
     [Key]
-    [Column("ChronicDeceaseID")]
+    [Column("chronic_decease_id")]
     public int ChronicDeceaseId { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
+    [Column("name")]
+    [StringLength(100)]
     public string Name { get; set; } = null!;
 
-    [InverseProperty("ChronicDecease")]
+    [InverseProperty("chronic_decease")]
     public virtual ICollection<PatientChronicDecease> PatientChronicDeceases { get; set; } = new List<PatientChronicDecease>();
 }

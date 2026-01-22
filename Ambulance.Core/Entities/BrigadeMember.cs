@@ -6,40 +6,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("BrigadeMember")]
 public partial class BrigadeMember
 {
     [Key]
-    [Column("BrigadeMemberID")]
+    [Column("brigade_member_id")]
     public int BrigadeMemberId { get; set; }
 
-    [Column("PersonID")]
+    [Column("person_id")]
     public int PersonId { get; set; }
 
-    [Column("BrigadeID")]
+    [Column("brigade_id")]
     public int BrigadeId { get; set; }
 
-    [Column("BrigadeMemberRoleID")]
-    public int BrigadeMemberRoleId { get; set; }
+    [Column("specialization_type_id")]
+    public int SpecializationTypeId { get; set; }
 
-    [Column("MemberSpecializationTypeID")]
-    public int MemberSpecializationTypeId { get; set; }
+    [InverseProperty("brigade_member")]
+    public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
 
-    [ForeignKey("BrigadeId")]
+    [ForeignKey("brigade_id")]
     [InverseProperty("BrigadeMembers")]
     public virtual Brigade Brigade { get; set; } = null!;
 
-    [ForeignKey("BrigadeMemberRoleId")]
-    [InverseProperty("BrigadeMembers")]
-    public virtual BrigadeMemberRole BrigadeMemberRole { get; set; } = null!;
-
-    [InverseProperty("BrigadeMember")]
-    public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
-
-    [ForeignKey("MemberSpecializationTypeId")]
-    [InverseProperty("BrigadeMembers")]
-    public virtual MemberSpecializationType MemberSpecializationType { get; set; } = null!;
-
-    [ForeignKey("PersonId")]
+    [ForeignKey("person_id")]
     [InverseProperty("BrigadeMembers")]
     public virtual Person Person { get; set; } = null!;
+    [ForeignKey("specialization_type_id")]
+    [InverseProperty("BrigadeMembers")]
+    public virtual SpecializationType SpecializationType { get; set; } = null!;
 }

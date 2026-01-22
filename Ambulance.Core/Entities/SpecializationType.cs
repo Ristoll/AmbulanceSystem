@@ -6,16 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
-public partial class MemberSpecializationType
+[Table("SpecializationType")]
+[Index("name", Name = "UQ__Speciali__72E12F1B6C4E6858", IsUnique = true)]
+public partial class SpecializationType
 {
     [Key]
-    [Column("SpecializationTypeID")]
+    [Column("specialization_type_id")]
     public int SpecializationTypeId { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
+    [Column("name")]
+    [StringLength(100)]
     public string Name { get; set; } = null!;
 
-    [InverseProperty("MemberSpecializationType")]
+    [InverseProperty("specialization_type")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
 }

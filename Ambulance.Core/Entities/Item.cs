@@ -6,29 +6,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("Item")]
 public partial class Item
 {
     [Key]
-    [Column("ItemID")]
+    [Column("item_id")]
     public int ItemId { get; set; }
 
-    [Column("ItemTypeID")]
-    public int ItemTypeId { get; set; }
+    [Column("item_type")]
+    [StringLength(50)]
+    public string ItemType { get; set; } = null!;
 
+    [Column("unit_type")]
+    [StringLength(50)]
+    public string UnitType { get; set; } = null!;
+    [Column("name")]
     [StringLength(100)]
-    [Unicode(false)]
-    public string? UnitType { get; set; }
+    public string Name { get; set; } = null!;
 
-    [StringLength(100)]
-    [Unicode(false)]
-    public string? Name { get; set; }
-
-    [Column("Image_Url")]
-    [StringLength(200)]
-    [Unicode(false)]
+    [Column("image_url")]
+    [StringLength(255)]
     public string? ImageUrl { get; set; }
 
-    [ForeignKey("ItemTypeId")]
-    [InverseProperty("Items")]
-    public virtual ItemType ItemType { get; set; } = null!;
+    [InverseProperty("item")]
+    public virtual ICollection<BrigadeItem> BrigadeItems { get; set; } = new List<BrigadeItem>();
 }

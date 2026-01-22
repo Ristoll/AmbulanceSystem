@@ -6,43 +6,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("MedicalRecord")]
 public partial class MedicalRecord
 {
     [Key]
-    [Column("MedicalRecordID")]
-    public int MedicalRecordId { get; set; }
+    [Column("record_id")]
+    public int RecordId { get; set; }
 
-    [Column("MedicalCardID")]
-    public int MedicalCardId { get; set; }
+    [Column("card_id")]
+    public int CardId { get; set; }
 
-    [Column("BrigadeMemberID")]
+    [Column("brigade_member_id")]
     public int BrigadeMemberId { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? DataTime { get; set; }
+    [Column("date_time")]
+    public DateTime DateTime { get; set; }
 
-    [StringLength(500)]
-    [Unicode(false)]
-    public string? Diagnoses { get; set; }
+    [Column("notes")]
+    public string? Notes { get; set; }
 
-    [StringLength(500)]
-    [Unicode(false)]
-    public string? Symptoms { get; set; }
-
-    [StringLength(500)]
-    [Unicode(false)]
-    public string? Treatment { get; set; }
-
-    [Column("Image_Url")]
-    [StringLength(200)]
-    [Unicode(false)]
+    [Column("image_url")]
+    [StringLength(255)]
     public string? ImageUrl { get; set; }
+    
+    [InverseProperty("medical_record")]
+    public virtual ICollection<Call> Calls { get; set; } = new List<Call>();
 
-    [ForeignKey("BrigadeMemberId")]
+    [ForeignKey("brigade_member_id")]
     [InverseProperty("MedicalRecords")]
     public virtual BrigadeMember BrigadeMember { get; set; } = null!;
 
-    [ForeignKey("MedicalCardId")]
+    [ForeignKey("card_id")]
     [InverseProperty("MedicalRecords")]
-    public virtual MedicalCard MedicalCard { get; set; } = null!;
+    public virtual MedicalCard Card { get; set; } = null!;
 }

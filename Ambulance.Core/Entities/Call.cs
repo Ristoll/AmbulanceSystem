@@ -6,58 +6,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("Call")]
 public partial class Call
 {
     [Key]
-    [Column("CallID")]
+    [Column("call_id")]
     public int CallId { get; set; }
 
-    [Column("PatientID")]
-    public int? PatientId { get; set; }
+    [Column("person_id")]
+    public int PersonId { get; set; }
 
-    [Column("DispatcherID")]
-    public int? DispatcherId { get; set; }
+    [Column("dispatcher_id")]
+    public int DispatcherId { get; set; }
 
-    [Column("HospitalID")]
-    public int? HospitalId { get; set; }
+    [Column("medical_record_id")]
+    public int? MedicalRecordId { get; set; }
 
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? Phone { get; set; }
+    [Column("urgency_type")]
+    [StringLength(50)]
+    public string UrgencyType { get; set; } = null!;
 
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? Address { get; set; }
+    [Column("call_address")]
+    [StringLength(255)]
+    public string CallAddress { get; set; } = null!;
 
-    [Column(TypeName = "datetime")]
-    public DateTime? StartCallTime { get; set; }
+    [Column("destination_address")]
+    [StringLength(255)]
+    public string? DestinationAddress { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? EndCallTime { get; set; }
+    [Column("call_state")]
+    [StringLength(50)]
+    public string CallState { get; set; } = null!;
 
-    [Column(TypeName = "datetime")]
-    public DateTime? ArrivalTime { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? CompletionTime { get; set; }
-
-    [Unicode(false)]
-    public string? Notes { get; set; }
-
-    public int UrgencyType { get; set; }
-
-    [InverseProperty("CurrentCall")]
-    public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
-
-    [ForeignKey("DispatcherId")]
-    [InverseProperty("CallDispatchers")]
+    [ForeignKey("dispatcher_id")]
+    [InverseProperty("Calldispatchers")]
     public virtual Person Dispatcher { get; set; } = null!;
 
-    [ForeignKey("HospitalId")]
+    [ForeignKey("medical_record_id")]
     [InverseProperty("Calls")]
-    public virtual Hospital? Hospital { get; set; }
-
-    [ForeignKey("PatientId")]
-    [InverseProperty("CallPatients")]
-    public virtual Person Patient { get; set; } = null!;
+    public virtual MedicalRecord? MedicalRecord { get; set; }
+    [ForeignKey("person_id")]
+    [InverseProperty("Callpeople")]
+    public virtual Person Person { get; set; } = null!;
 }

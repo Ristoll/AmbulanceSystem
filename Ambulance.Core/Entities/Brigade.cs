@@ -6,37 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.Core.Entities;
 
+[Table("Brigade")]
 public partial class Brigade
 {
     [Key]
-    [Column("BrigadeID")]
+    [Column("brigade_id")]
     public int BrigadeId { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string BrigadeState { get; set; } = null!;
-
-    [Column("BrigadeTypeID")]
-    public int BrigadeTypeId { get; set; }
-
-    [Column("HospitalID")]
-    public int? HospitalId { get; set; }
-
-    [Column("CurrentCallID")]
+    [Column("current_call_id")]
     public int? CurrentCallId { get; set; }
 
-    [InverseProperty("Brigade")]
+    [Column("brigade_state")]
+    [StringLength(50)]
+    public string BrigadeState { get; set; } = null!;
+    
+    [Column("brigade_type")]
+    [StringLength(50)]
+    public string BrigadeType { get; set; } = null!;
+
+    [InverseProperty("brigade")]
+    public virtual ICollection<BrigadeItem> BrigadeItems { get; set; } = new List<BrigadeItem>();
+
+    [InverseProperty("brigade")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
-
-    [ForeignKey("BrigadeTypeId")]
-    [InverseProperty("Brigades")]
-    public virtual BrigadeType BrigadeType { get; set; } = null!;
-
-    [ForeignKey("CurrentCallId")]
-    [InverseProperty("Brigades")]
-    public virtual Call? CurrentCall { get; set; }
-
-    [ForeignKey("HospitalId")]
-    [InverseProperty("Brigades")]
-    public virtual Hospital? Hospital { get; set; }
 }

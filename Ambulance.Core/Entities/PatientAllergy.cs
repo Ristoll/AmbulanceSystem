@@ -9,20 +9,20 @@ namespace Ambulance.Core.Entities;
 public partial class PatientAllergy
 {
     [Key]
-    [Column("PatientAllergyID")]
+    [Column("patient_allergy_id")]
     public int PatientAllergyId { get; set; }
 
-    [Column("MedicalCardID")]
-    public int MedicalCardId { get; set; }
+    [Column("card_id")]
+    public int CardId { get; set; }
 
-    [Column("AllergyID")]
+    [Column("allergy_id")]
     public int AllergyId { get; set; }
 
-    [ForeignKey("AllergyId")]
+    [ForeignKey("allergy_id")]
     [InverseProperty("PatientAllergies")]
     public virtual Allergy Allergy { get; set; } = null!;
 
-    [ForeignKey("MedicalCardId")]
+    [ForeignKey("card_id")]
     [InverseProperty("PatientAllergies")]
-    public virtual MedicalCard MedicalCard { get; set; } = null!;
+    public virtual MedicalCard Card { get; set; } = null!;
 }

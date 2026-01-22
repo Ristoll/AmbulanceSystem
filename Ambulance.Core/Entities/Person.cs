@@ -3,73 +3,71 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 
 namespace Ambulance.Core.Entities;
 
 [Table("Person")]
+[Index("login", Name = "UQ__Person__7838F272A5D00C77", IsUnique = true)]
+[Index("email", Name = "UQ__Person__AB6E616454B41C00", IsUnique = true)]
 public partial class Person
 {
     [Key]
-    [Column("PersonID")]
+    [Column("person_id")]
     public int PersonId { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string? Name { get; set; }
+    [Column("card_id")]
+    public int? CardId { get; set; }
 
+    [Column("login")]
     [StringLength(50)]
-    [Unicode(false)]
-    public string? Surname { get; set; }
+    public string Login { get; set; } = null!;
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string? MiddleName { get; set; }
+    [Column("password_hash")]
+    [StringLength(255)]
+    public string PasswordHash { get; set; } = null!;
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string? Login { get; set; }
-
+    [Column("phone_number")]
     [StringLength(20)]
-    [Unicode(false)]
-    public string PhoneNumber { get; set; } = null!;
+    public string? PhoneNumber { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
-
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? Gender { get; set; }
-
-    [Unicode(false)]
-    public string? PasswordHash { get; set; }
-
+    [Column("email")]
     [StringLength(100)]
-    [Unicode(false)]
     public string? Email { get; set; }
 
-    public Geometry? Address { get; set; }
-
-    [Column("Image_Url")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? ImageUrl { get; set; }
-
-    [StringLength(30)]
-    [Unicode(false)]
+    [Column("user_role")]
+    [StringLength(50)]
     public string UserRole { get; set; } = null!;
 
-    [InverseProperty("Person")]
-    public virtual ICollection<BrigadeMemberRole> BrigadeMemberRoles { get; set; } = new List<BrigadeMemberRole>();
+    [Column("name")]
+    [StringLength(50)]
+    public string Name { get; set; } = null!;
 
-    [InverseProperty("Person")]
+    [Column("surname")]
+    [StringLength(50)]
+    public string Surname { get; set; } = null!;
+
+    [Column("middle_name")]
+    [StringLength(50)]
+    public string? MiddleName { get; set; }
+
+    [Column("gender")]
+    [StringLength(10)]
+    public string? Gender { get; set; }
+
+    [Column("image_url")]
+    [StringLength(255)]
+    public string? ImageUrl { get; set; }
+
+    [InverseProperty("person")]
     public virtual ICollection<BrigadeMember> BrigadeMembers { get; set; } = new List<BrigadeMember>();
 
-    [InverseProperty("Dispatcher")]
-    public virtual ICollection<Call> CallDispatchers { get; set; } = new List<Call>();
+    [InverseProperty("dispatcher")]
+    public virtual ICollection<Call> Calldispatchers { get; set; } = new List<Call>();
 
-    [InverseProperty("Patient")]
-    public virtual ICollection<Call> CallPatients { get; set; } = new List<Call>();
+    [InverseProperty("person")]
+    public virtual ICollection<Call> Callpeople { get; set; } = new List<Call>();
 
-    [InverseProperty("Person")]
-    public virtual MedicalCard? MedicalCard { get; set; }
+    [ForeignKey("card_id")]
+    [InverseProperty("People")]
+    public virtual MedicalCard? Card { get; set; }
 }
