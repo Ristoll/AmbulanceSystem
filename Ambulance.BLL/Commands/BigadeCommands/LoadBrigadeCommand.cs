@@ -23,9 +23,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
             var brigade = dAPoint.BrigadeRepository.GetById(brigadeId);
             if (brigade == null)
                 throw new Exception($"Бригада з ID {brigadeId} не знайдена");
-            var brigadeType = dAPoint.BrigadeTypeRepository.GetById(brigade.BrigadeTypeId);
             var brigadeDto = mapper.Map<BrigadeDto>(brigade);
-            brigadeDto.BrigadeTypeName = brigadeType != null ? brigadeType.Name : "Не вказано"; 
             return brigadeDto;
         }
     }

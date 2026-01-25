@@ -21,14 +21,13 @@ namespace Ambulance.BLL.Commands.BigadeCommands
 
         public override BrigadeDto Execute()
         {
-            var brigadeRepo = dAPoint.BrigadeRepository;
-            var brigade = brigadeRepo.GetById(brigadeDto.BrigadeId);
+            var brigade = dAPoint.BrigadeRepository.GetById(brigadeDto.BrigadeId);
 
             if (brigade == null)
                 throw new Exception("Brigade not found");
 
             mapper.Map(brigadeDto, brigade);
-            brigadeRepo.Update(brigade);
+            dAPoint.BrigadeRepository.Update(brigade);
             dAPoint.Save();
 
             return mapper.Map<BrigadeDto>(brigade);

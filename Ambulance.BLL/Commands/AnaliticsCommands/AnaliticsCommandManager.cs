@@ -18,9 +18,9 @@ public class AnaliticsCommandManager : AbstractCommandManager
         var command = new ResourcesAnalyticsCommand(unitOfWork, mapper);
         return command.Execute();
     }
-    public Dictionary<DateTime, int> GetCallAnalytics()
+    public Dictionary<int, int> GetCallAnalytics(AnalyticsPeriod period, DateTime startDate)
     {
-        var command = new CallAnalyticsCommand(unitOfWork, mapper);
+        var command = new CallAnalyticsCommand(unitOfWork, mapper, period, startDate);
         return command.Execute();
     }
     public Dictionary<string, int>  GetDeceaseAnalytics()

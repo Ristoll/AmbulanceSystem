@@ -58,7 +58,6 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
                 MiddleName = newPerson.MiddleName,
                 PhoneNumber = newPerson.PhoneNumber,
                 Gender = newPerson.Gender,
-                DateOfBirth = newPerson.DateOfBirth != null ? DateOnly.FromDateTime(newPerson.DateOfBirth.Value) : null,
                 PasswordHash = PasswordHasher.HashPassword(newPerson.PhoneNumber), // встановлюємо пароль як номер телефону тимчасово
                 UserRole = UserRole.Patient.ToString()
             };
@@ -95,32 +94,27 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         Console.WriteLine("DEBUG PatientId " + patient.PersonId);
 
         // створюємо медкартку, якщо її не існує
-        var medCard = dAPoint.MedicalCardRepository.FirstOrDefault(mc => mc.PersonId == patient.PersonId);
+        var medCard = dAPoint.PersonRepository.GetById(patient.PersonId)?
+            .Card;
         if (medCard == null)
         {
-            if (medCard == null)
+            var newCard = new MedicalCard
             {
-                var newCard = new MedicalCard
-                {
-                    PersonId = patient.PersonId,
-                    CreationDate = DateTime.Now
-                };
+                CreationDate = DateOnly.FromDateTime(DateTime.Now)
+            };
 
-                dAPoint.MedicalCardRepository.Add(newCard);
-            }
+            dAPoint.MedicalCardRepository.Add(newCard);
         }
 
         var call = new Call
         {
-            StartCallTime = callDto.StartCallTime,
-            EndCallTime = DateTime.Now,
+            CallAt = callDto.StartCallTime,
             Notes = callDto.Notes,
-            HospitalId = callDto.HospitalId,
             DispatcherId = callDto.DispatcherId,
             UrgencyType = callDto.UrgencyType,
-            Phone = callDto.Phone,
-            Address = callDto.Address,
-            PatientId = patient.PersonId
+            PhoneNumber = callDto.Phone,
+            CallAddress = callDto.Address,
+            PersonId = patient.PersonId
         };
 
         dAPoint.CallRepository.Add(call);

@@ -1,4 +1,5 @@
-﻿using AmbulanceSystem.Core;
+﻿using Ambulance.Core.Entities;
+using AmbulanceSystem.Core;
 using AmbulanceSystem.DTO;
 using AutoMapper;
 using AutoMapper.Execution;
@@ -15,7 +16,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
         private readonly int brigadeId;
         public override string Name => "Завантаження всіх членів бригади";
 
-        public LoadAllBrigadeMembersCommand(int brigadeId, IUnitOfWork unitOfWork, IMapper mapper)
+        public LoadAllBrigadeMembersCommand(int brigadeId,IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
         {
             this.brigadeId = brigadeId;
@@ -32,12 +33,10 @@ namespace Ambulance.BLL.Commands.BigadeCommands
             {
                 var dto = mapper.Map<BrigadeMemberDto>(m);
 
-                // Підтягуємо роль
-                var role = dAPoint.BrigadeMemberRoleRepository.GetById(m.BrigadeMemberRoleId);
-                dto.RoleName = role != null ? role.Name : "Не вказано";
+                dto.RoleName = m.RoleName;
 
                 // Підтягуємо спеціалізацію
-                var specialization = dAPoint.BrigadeMemberSpecializationTypeRepository.GetById(m.MemberSpecializationTypeId);
+                var specialization = dAPoint.SpecializationTypeRepository.GetById(m.SpecializationTypeId);
                 dto.SpecializationTypeName = specialization != null ? specialization.Name : "Не вказано";
                 var person = dAPoint.PersonRepository.GetById(m.PersonId);
                 dto.PersonFullName = person != null ? $"{person.Surname} {person.Name} {person.MiddleName}" : "Не вказано";

@@ -29,8 +29,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
                 var dto = mapper.Map<BrigadeDto>(b);
 
                 // Підтягуємо тип бригади
-                var type = dAPoint.BrigadeTypeRepository.GetById(b.BrigadeTypeId);
-                dto.BrigadeTypeName = type != null ? type.Name : "Не вказано";
+                dto.BrigadeTypeName = b.BrigadeType.ToString();
 
                 return dto;
             }).ToList();

@@ -22,6 +22,9 @@ public partial class BrigadeMember
     [Column("specialization_type_id")]
     public int SpecializationTypeId { get; set; }
 
+    [Column("role_name")]
+    public string RoleName { get; set; } = string.Empty;
+
     [InverseProperty("brigade_member")]
     public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
 

@@ -29,13 +29,8 @@ namespace Ambulance.BLL.Commands.BigadeCommands
 
             // Мапимо на DTO
             var memberDto = mapper.Map<BrigadeMemberDto>(member);
-
-            // Підтягуємо роль
-            var role = dAPoint.BrigadeMemberRoleRepository.GetById(member.BrigadeMemberRoleId);
-            memberDto.RoleName = role != null ? role.Name : "Не вказано";
-
             // Підтягуємо спеціалізацію
-            var specialization = dAPoint.BrigadeMemberSpecializationTypeRepository.GetById(member.MemberSpecializationTypeId);
+            var specialization = dAPoint.SpecializationTypeRepository.GetById(member.SpecializationTypeId);
             memberDto.SpecializationTypeName = specialization != null ? specialization.Name : "Не вказано";
             var person = dAPoint.PersonRepository.GetById(member.PersonId);
             memberDto.PersonFullName = person != null ? $"{person.Surname} {person.Name} {person.MiddleName}" : "Не вказано";

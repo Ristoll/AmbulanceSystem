@@ -21,7 +21,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
         public override string Execute()
         {
             var member = dAPoint.BrigadeMemberRepository.GetById(brigadeMemberId);
-            var specializationType = dAPoint.BrigadeMemberSpecializationTypeRepository.GetById(member.MemberSpecializationTypeId);
+            var specializationType = dAPoint.SpecializationTypeRepository.GetById(member.SpecializationTypeId);
             return specializationType.Name;
         }
 

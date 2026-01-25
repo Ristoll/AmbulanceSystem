@@ -38,6 +38,16 @@ public partial class Call
     [StringLength(50)]
     public string CallState { get; set; } = null!;
 
+    [Column("call_at", TypeName = "datetime2")]
+    public DateTime CallAt { get; set; } = DateTime.UtcNow;
+
+    [Column("notes")]
+    public string? Notes { get; set; } = string.Empty;
+
+    [Column("phone_number")]
+    [StringLength(13)]
+    public string? PhoneNumber { get; set; } = string.Empty;
+
     [ForeignKey("dispatcher_id")]
     [InverseProperty("Calldispatchers")]
     public virtual Person Dispatcher { get; set; } = null!;
