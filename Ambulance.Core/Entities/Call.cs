@@ -58,4 +58,6 @@ public partial class Call
     [ForeignKey("person_id")]
     [InverseProperty("Callpeople")]
     public virtual Person Person { get; set; } = null!;
+
+    public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
 }

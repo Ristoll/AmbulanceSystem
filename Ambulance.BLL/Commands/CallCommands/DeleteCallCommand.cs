@@ -1,9 +1,7 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities.StandartEnums;
+﻿using Ambulance.Core.Entities.StandartEnums;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.CallCommands
 {
@@ -23,7 +21,6 @@ namespace Ambulance.BLL.Commands.CallCommands
         {
             var call = dAPoint.CallRepository
                 .GetQueryable()
-                .Include(x => x.Brigades)
                 .FirstOrDefault(x => x.CallId == callId);
 
             ArgumentNullException.ThrowIfNull(call);

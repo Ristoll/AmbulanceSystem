@@ -24,7 +24,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public override MedicalRecordDto Execute()
         {
             var medicalRecord = dAPoint.MedicalRecordRepository
-                .FirstOrDefault(mr => mr.MedicalRecordId == medicalRecordId);
+                .FirstOrDefault(mr => mr.RecordId == medicalRecordId);
             if (medicalRecord == null)
                 throw new InvalidOperationException($"Медичний запис з ID {medicalRecordId} не знайдено");
             return mapper.Map<MedicalRecordDto>(medicalRecord);

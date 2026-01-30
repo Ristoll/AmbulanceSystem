@@ -24,7 +24,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public override List<MedicalRecordDto> Execute()
         {
             var medicalRecords = dAPoint.MedicalRecordRepository
-                .GetAll().Where(mr => mr.MedicalCardId == medicalCardId);
+                .GetAll().Where(mr => mr.CardId == medicalCardId);
             return mapper.Map<List<MedicalRecordDto>>(medicalRecords);
         }
 

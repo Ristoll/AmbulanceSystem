@@ -24,11 +24,10 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public override MedicalCardDto Execute()
         {
             var medicalCard = dAPoint.MedicalRecordRepository
-                .FirstOrDefault(mr => mr.MedicalCardId == medicalCardId);
+                .FirstOrDefault(mr => mr.CardId == medicalCardId);
             if (medicalCard == null)
                 throw new InvalidOperationException($"Медичну картку з ID {medicalCardId} не знайдено");
             return mapper.Map<MedicalCardDto>(medicalCard);
         }
-
     }
 }

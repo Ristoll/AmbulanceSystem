@@ -32,16 +32,19 @@ namespace Ambulance.BLL.Commands.ItemCommands
             var brigadeItemsDtos = brigadeItems.Select(i =>
             {
                 var dto = mapper.Map<BrigadeItemDto>(i);
+
                 var item = dAPoint.ItemRepository.GetById(i.ItemId);
-                dto.ItemName = item?.Name ?? "";
-                dto.UnitType = item?.UnitType ?? "";
-                var itemType = dAPoint.ItemTypeRepository.GetById(item.ItemTypeId);
-                dto.ItemType = itemType?.Name ?? "";
+                if (item != null)
+                {
+                    dto.ItemName = item.Name;
+                    dto.UnitType = item.UnitType;
+                    dto.ItemType = item.ItemType;
+                }
+
                 return dto;
             }).ToList();
 
-            return brigadeItemsDtos; // ← повертаємо вже заповнений список
+            return brigadeItemsDtos;
         }
-
     }
 }

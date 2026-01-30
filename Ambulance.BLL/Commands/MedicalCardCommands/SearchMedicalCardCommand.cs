@@ -8,27 +8,27 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
     public class SearchMedicalCardCommand : AbstrCommandWithDA<bool>
     {
-        private readonly int personId;
+        private readonly int cardId;
 
-        public SearchMedicalCardCommand(int personId, IUnitOfWork operateUnitOfWork, IMapper mapper) 
+        public SearchMedicalCardCommand(int cardId, IUnitOfWork operateUnitOfWork, IMapper mapper) 
             :base(operateUnitOfWork, mapper)
         {
-            this.personId = personId;
+            this.cardId = cardId;
         }
 
         public override string Name => "Пошук медичної картки";
 
         public override bool Execute()
         {
-            var medicalCard = dAPoint.MedicalCardRepository
-                .FirstOrDefault(mc => mc.PersonId == personId);
+            var medicalCard = dAPoint.PersonRepository
+                .FirstOrDefault(mc => mc.CardId == cardId);
             if (medicalCard != null)
             {
                 return true;
             }
             else
             {
-                throw new ArgumentNullException($"{Name}: Медична картка не знайдена для особи з ID {personId}");
+                throw new ArgumentNullException($"{Name}: Медична картка не знайдена");
             }
         }
     }

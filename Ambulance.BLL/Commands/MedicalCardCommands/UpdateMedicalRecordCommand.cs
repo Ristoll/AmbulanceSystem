@@ -21,7 +21,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public override bool Execute()
         {
             var existingRecord = dAPoint.MedicalRecordRepository
-                .FirstOrDefault(mc => mc.MedicalRecordId == medicalRecordDto.MedicalRecordId);
+                .FirstOrDefault(mc => mc.RecordId == medicalRecordDto.MedicalRecordId);
             
             if (existingRecord == null)
                 throw new InvalidOperationException($"Медичний запис для пацієнта не знайдено");
