@@ -19,8 +19,7 @@ public class SearchItemCommand : AbstrCommandWithDA<bool>
     {
         var item = dAPoint.ItemRepository.FirstOrDefault(i => i.ItemId == itemId);
 
-        if (item == null)
-            throw new ArgumentNullException($"{Name}: Медикамент не знайдений з ID {itemId}");
+        ArgumentNullException.ThrowIfNull(item, $"{Name}: Медикамент не знайдений з ID {itemId}");
 
         return true;
     }

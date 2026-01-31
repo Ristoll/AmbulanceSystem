@@ -29,8 +29,8 @@ public class LoadBrigadeItemsCommand : AbstrCommandWithDA<List<BrigadeItemDto>>
             var item = dAPoint.ItemRepository.GetById(i.ItemId);
             dto.ItemName = item?.Name ?? "";
             dto.UnitType = item?.UnitType ?? "";
-            var itemType = dAPoint.ItemTypeRepository.GetById(item.ItemTypeId);
-            dto.ItemType = itemType?.Name ?? "";
+            //var itemType = dAPoint.ItemTypeRepository.GetById(item.ItemTypeId); запитати в Крістіни
+            //dto.ItemType = itemType?.Name ?? ""; запитати в Крістіни
             return dto;
         }).ToList();
 

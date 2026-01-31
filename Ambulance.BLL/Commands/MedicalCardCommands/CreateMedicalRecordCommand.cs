@@ -12,8 +12,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public CreateMedicalRecordCommand(MedicalRecordDto medicalRecordDto, IUnitOfWork operateUnitOfWork, IMapper mapper) 
             : base(operateUnitOfWork, mapper)
         {
-            if (medicalRecordDto == null)
-                throw new ArgumentNullException("DTO медичного запису null");
+            ArgumentNullException.ThrowIfNull(medicalRecordDto, "DTO медичного запису null");
 
             this.medicalRecordDto = medicalRecordDto;
         }
@@ -25,6 +24,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
             var medicalRecordEntity = mapper.Map<MedicalRecord>(medicalRecordDto);
             dAPoint.MedicalRecordRepository.Add(medicalRecordEntity);
             dAPoint.Save();
+
             return true;
         }
     }

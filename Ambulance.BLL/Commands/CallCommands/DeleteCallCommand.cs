@@ -1,47 +1,45 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities.StandartEnums;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Ambulance.Core.Entities.StandartEnums;
 
-//namespace Ambulance.BLL.Commands.CallCommands
-//{
-//    public class DeleteCallCommand : AbstrCommandWithDA<bool>
-//    {
-//        private readonly int callId;
+namespace Ambulance.BLL.Commands.CallCommands;
 
-//        public override string Name => "Видалення виклику";
+public class DeleteCallCommand : AbstrCommandWithDA<bool>
+{
+    private readonly int callId;
 
-//        public DeleteCallCommand(int callId, IUnitOfWork unitOfWork, IMapper mapper)
-//            : base(unitOfWork, mapper)
-//        {
-//            this.callId = callId;
-//        }
+    public override string Name => "Видалення виклику";
 
-//        public override bool Execute()
-//        {
-//            var call = dAPoint.CallRepository
-//                .GetQueryable()
-//                .Include(x => x.Brigades)
-//                .FirstOrDefault(x => x.CallId == callId);
+    public DeleteCallCommand(int callId, IUnitOfWork unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
+    {
+        this.callId = callId;
+    }
 
-//            ArgumentNullException.ThrowIfNull(call);
+    public override bool Execute()
+    {
+        var call = dAPoint.CallRepository
+            .FirstOrDefault(x => x.CallId == callId);
 
-//            foreach (var brigade in call.Brigades.ToList())
-//            {
-//                brigade.CurrentCallId = null;
-//                brigade.BrigadeState = BrigadeState.Free.ToString();
+        ArgumentNullException.ThrowIfNull(call, $"Дзвінок з ID {callId} не знайдений");
 
-//                dAPoint.BrigadeRepository.Update(brigade);
-//            }
+        var callBrigades = dAPoint.BrigadeRepository
+            .GetQueryable()
+            .Where(b => b.CurrentCallId == callId);
 
-//            dAPoint.Save(); // спочатку оновлюємо бригади
+        foreach (var brigade in callBrigades)
+        {
+            brigade.CurrentCallId = null;
+            brigade.BrigadeState = BrigadeState.Free.ToString();
 
-//            dAPoint.CallRepository.Remove(callId);
-//            dAPoint.Save(); // потім видаляємо виклик
+            dAPoint.BrigadeRepository.Update(brigade);
+        }
 
-//            return true;
-//        }
-//    }
-//}
+        dAPoint.Save(); // спочатку оновлюємо бригади
+
+        dAPoint.CallRepository.Remove(callId);
+        dAPoint.Save(); // потім видаляємо виклик
+
+        return true;
+    }
+}

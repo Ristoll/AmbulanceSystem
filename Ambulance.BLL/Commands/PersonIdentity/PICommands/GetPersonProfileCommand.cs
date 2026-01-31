@@ -25,8 +25,9 @@ public class GetPersonProfileCommand : AbstrCommandWithDA<PersonProfileDTO>
 
     public override PersonProfileDTO Execute()
     {
-        var person = dAPoint.PersonRepository.GetById(personId)
-            ?? throw new InvalidOperationException("Користувача не знайдено");
+        var person = dAPoint.PersonRepository.GetById(personId);
+
+        ArgumentNullException.ThrowIfNull(person, $"Користувача з ID {personId} не знайдено");
 
         var dto = mapper.Map<PersonProfileDTO>(person);
 

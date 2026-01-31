@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ambulance.Core.Entities;
+﻿namespace Ambulance.Core.Entities;
 
 public partial class Hospital
 {

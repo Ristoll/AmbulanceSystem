@@ -12,8 +12,7 @@ public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
     public CreateMedicalCardCommand(MedicalCardDto medicalCardDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
         : base(operateUnitOfWork, mapper)
     {
-        if (medicalCardDto == null)
-            throw new ArgumentNullException("DTO медичної картки null");
+        ArgumentNullException.ThrowIfNull(medicalCardDto, "DTO медичної картки null");
 
         this.medicalCardDto = medicalCardDto;
     }

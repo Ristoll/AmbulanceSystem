@@ -21,8 +21,7 @@ public class LoadMedicalCardCommand : AbstrCommandWithDA<MedicalCardDto>
         var medicalCard = dAPoint.MedicalRecordRepository
             .FirstOrDefault(mr => mr.CardId == medicalCardId);
 
-        if (medicalCard == null)
-            throw new InvalidOperationException($"Медичну картку з ID {medicalCardId} не знайдено");
+        ArgumentNullException.ThrowIfNull(medicalCard, $"Медичну картку з ID {medicalCardId} не знайдено");
 
         return mapper.Map<MedicalCardDto>(medicalCard);
     }

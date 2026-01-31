@@ -1,30 +1,31 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities;
 
-namespace Ambulance.BLL.Commands.ItemCommands
+namespace Ambulance.BLL.Commands.ItemCommands;
+
+public class CreateItemCommand : AbstrCommandWithDA<bool>
 {
-    public class CreateItemCommand : AbstrCommandWithDA<bool>
+    private readonly ItemDto itemDto;
+
+    public CreateItemCommand(ItemDto itemDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        : base(operateUnitOfWork, mapper)
     {
-        private readonly ItemDto itemDto;
+        if (itemDto == null)
+            throw new ArgumentNullException("DTO медикаменту = null");
 
-        public CreateItemCommand(ItemDto itemDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
-            : base(operateUnitOfWork, mapper)
-        {
-            this.itemDto = itemDto;
-        }
+        this.itemDto = itemDto;
+    }
 
-        public override string Name => "Створення медикаменту";
+    public override string Name => "Створення медикаменту";
 
-        public override bool Execute()
-        {
-            var item = mapper.Map<Item>(itemDto);
-            dAPoint.ItemRepository.Add(item);
-            dAPoint.Save();
+    public override bool Execute()
+    {
+        var item = mapper.Map<Item>(itemDto);
+        dAPoint.ItemRepository.Add(item);
+        dAPoint.Save();
 
-            return true;
-        }
+        return true;
     }
 }

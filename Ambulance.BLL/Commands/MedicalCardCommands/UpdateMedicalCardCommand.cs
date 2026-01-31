@@ -11,6 +11,8 @@ public class UpdateMedicalCardCommand : AbstrCommandWithDA<bool>
     public UpdateMedicalCardCommand(MedicalCardDto medicalCardDto, IUnitOfWork unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
+        ArgumentNullException.ThrowIfNull(medicalCardDto, "DTO медичної картки null");
+
         this.medicalCardDto = medicalCardDto;
     }
 
@@ -21,8 +23,7 @@ public class UpdateMedicalCardCommand : AbstrCommandWithDA<bool>
         var existingCard= dAPoint.MedicalCardRepository
             .FirstOrDefault(p => p.CardId == medicalCardDto.PatientId);
 
-        if (existingCard == null)
-            throw new InvalidOperationException($"Медичну картку для пацієнта {medicalCardDto.PatientId} не знайдено");
+        ArgumentNullException.ThrowIfNull(existingCard, $"Медичну картку для пацієнта {medicalCardDto.PatientId} не знайдено");
 
         mapper.Map(medicalCardDto, existingCard);
 

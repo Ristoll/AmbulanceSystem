@@ -36,8 +36,7 @@ internal class LoadPatientDataCommand : AbstrCommandWithDA<PatientDto>
                         .ThenInclude(bm => bm.Person)
             .FirstOrDefault(p => p.PersonId == personId && p.UserRole == UserRole.Patient.ToString());
 
-        if (person == null)
-            throw new InvalidOperationException("Пацієнта не знайдено");
+        ArgumentNullException.ThrowIfNull(person, "Пацієнт не знайдений");
 
         // через складність, виклики додаємо окремо
         var calls = dAPoint.CallRepository

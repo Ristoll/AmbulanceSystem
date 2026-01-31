@@ -14,13 +14,10 @@ public class CallDto
 
     public string? Phone { get; set; }
     public int UrgencyType { get; set; }
-    public string? Address { get; set; }
-    public string? Notes { get; set; }
+    public string Address { get; set; } = null!;
 
-    public DateTime? StartCallTime { get; set; }
-    public DateTime? EndCallTime { get; set; }
-    public DateTime? ArrivalTime { get; set; }
-    public DateTime? CompletionTime { get; set; }
+    public DateTime StartCallTime { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     public List<BrigadeDto>? AssignedBrigades { get; set; }
 

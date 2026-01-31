@@ -20,8 +20,7 @@ public class SearchMedicalCardCommand : AbstrCommandWithDA<bool>
         var medicalCard = dAPoint.MedicalCardRepository
             .FirstOrDefault(mc => mc.PatientId == personId);
 
-        if(medicalCard == null)
-            throw new ArgumentNullException($"{Name}: Медична картка не знайдена для особи з ID {personId}");
+        ArgumentNullException.ThrowIfNull(medicalCard, $"{Name}: Медична картка не знайдена для особи з ID {personId}");
 
         return true;
     }

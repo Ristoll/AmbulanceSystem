@@ -20,10 +20,7 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
     {
         var person = dAPoint.PersonRepository.GetById(deletePersonId);
 
-        if (person == null)
-        {
-            throw new ArgumentException($"Персона з ID {deletePersonId} не знайдена в системі");
-        }
+        ArgumentNullException.ThrowIfNull(person, $"Персона з ID {deletePersonId} не знайдена в системі");
 
         // оновлюємо всі дзвінки, де ця особа пацієнт
         var patientCalls = dAPoint.CallRepository

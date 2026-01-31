@@ -33,6 +33,13 @@ namespace Ambulance.BLL.Commands.CallCommands
             var command = new LoadCallCommand(unitOfWork, mapper, callId);
             return ExecuteCommand(command, "Не вдалося завантажити виклик")!;
         }
+
+        public List<UrgencyTypeDto> LoadUrgencyTypesCommand()
+        {
+            var command = new LoadUrgencyTypesCommand(unitOfWork, mapper);
+            return ExecuteCommand(command, "Не вдалося отримати список рівнів терміновості");
+        }
+        
         public List<CallDto> LoadCallsCommand()
         {
             var command = new LoadCallsCommand(unitOfWork, mapper);
