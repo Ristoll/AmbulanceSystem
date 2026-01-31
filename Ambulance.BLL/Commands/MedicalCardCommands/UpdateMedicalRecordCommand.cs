@@ -21,11 +21,6 @@ public class UpdateMedicalRecordCommand : AbstrCommandWithDA<bool>
         var existingRecord = dAPoint.MedicalRecordRepository
             .FirstOrDefault(mc => mc.RecordId == medicalRecordDto.MedicalRecordId);
 
-        public override bool Execute()
-        {
-            var existingRecord = dAPoint.MedicalRecordRepository
-                .FirstOrDefault(mc => mc.RecordId == medicalRecordDto.MedicalRecordId);
-            
             if (existingRecord == null)
                 throw new InvalidOperationException($"Медичний запис для пацієнта не знайдено");
 

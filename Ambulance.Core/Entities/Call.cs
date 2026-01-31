@@ -28,14 +28,6 @@ public partial class Call
     public virtual Hospital? Hospital { get; set; }
 
     public virtual MedicalRecord? MedicalRecord { get; set; }
-<<<<<<< HEAD
-    [ForeignKey("person_id")]
-    [InverseProperty("Callpeople")]
-    public virtual Person Person { get; set; } = null!;
-
-    public virtual ICollection<Brigade> Brigades { get; set; } = new List<Brigade>();
-=======
 
     public virtual Person? Person { get; set; }
->>>>>>> SumnaDitina
 }

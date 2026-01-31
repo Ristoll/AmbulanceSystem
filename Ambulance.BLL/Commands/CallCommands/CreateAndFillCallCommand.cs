@@ -99,21 +99,12 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         var call = new Call
         {
             CallAt = callDto.StartCallTime,
-<<<<<<< HEAD
-            Notes = callDto.Notes,
-            DispatcherId = callDto.DispatcherId,
-            UrgencyType = callDto.UrgencyType,
-            PhoneNumber = callDto.Phone,
-            CallAddress = callDto.Address,
-            PersonId = patient.PersonId
-=======
             HospitalId = callDto.HospitalId,
             DispatcherId = callDto.DispatcherId,
             UrgencyType = ((UrgencyType)callDto.UrgencyType).ToString(),
             CallAddress = callDto.Address,
             PersonId = patient.PersonId,
             CallState = CallState.New.ToString()
->>>>>>> SumnaDitina
         };
 
         dAPoint.CallRepository.Add(call);
