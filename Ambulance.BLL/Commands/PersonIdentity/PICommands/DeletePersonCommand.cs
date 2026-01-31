@@ -1,6 +1,6 @@
-﻿using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
-using AutoMapper;
+﻿using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
@@ -19,6 +19,7 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
     public override bool Execute()
     {
         var person = dAPoint.PersonRepository.GetById(deletePersonId);
+
         if (person == null)
         {
             throw new ArgumentException($"Персона з ID {deletePersonId} не знайдена в системі");
@@ -27,21 +28,24 @@ public class DeletePersonCommand : AbstrCommandWithDA<bool>
         // оновлюємо всі дзвінки, де ця особа пацієнт
         var patientCalls = dAPoint.CallRepository
             .GetQueryable()
-            .Where(c => c.PatientId == deletePersonId);
+            .Where(c => c.PersonId == deletePersonId);
 
         foreach (var call in patientCalls)
         {
-            call.PatientId = null;
+            call.PersonId = null;
         }
 
         // оновлюємо всі дзвінки, де ця особа диспетчер
-        var dispatcherCalls = dAPoint.CallRepository
-            .GetQueryable()
-            .Where(c => c.DispatcherId == deletePersonId);
-
-        foreach (var call in dispatcherCalls)
+        if(person.UserRole == UserRole.Dispatcher.ToString())
         {
-            call.DispatcherId = null;
+            var dispatcherCalls = dAPoint.CallRepository
+                 .GetQueryable()
+                 .Where(c => c.DispatcherId == deletePersonId);
+
+            foreach (var call in dispatcherCalls)
+            {
+                call.DispatcherId = null;
+            }
         }
 
         dAPoint.Save();

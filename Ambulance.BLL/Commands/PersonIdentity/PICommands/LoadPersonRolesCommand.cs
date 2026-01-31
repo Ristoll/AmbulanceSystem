@@ -1,7 +1,6 @@
-﻿using Ambulance.Core.Entities;
-using Ambulance.Core.Entities.StandartEnums;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AutoMapper;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 

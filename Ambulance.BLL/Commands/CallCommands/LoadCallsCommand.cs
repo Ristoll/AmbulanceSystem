@@ -21,12 +21,12 @@ namespace Ambulance.BLL.Commands.CallCommands
         {
             var calls = dAPoint.CallRepository
                 .GetQueryable()
-                .Include(x => x.Patient)
+                //.Include(x => x.Patient)
                 .Include(x => x.Dispatcher)
-                .Include(x => x.Hospital)
-                .Include(x => x.Brigades)
-                   .ThenInclude(x => x.BrigadeType)
-                .OrderByDescending(x => x.StartCallTime)
+                //.Include(x => x.Hospital)
+                //.Include(x => x.Brigades)
+                //   .ThenInclude(x => x.BrigadeType)
+                //.OrderByDescending(x => x.StartCallTime)
                 .ToList();
 
             if (!calls.Any())

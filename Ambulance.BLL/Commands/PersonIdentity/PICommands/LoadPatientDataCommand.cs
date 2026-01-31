@@ -1,15 +1,9 @@
-﻿using Ambulance.Core.Entities;
-using Ambulance.Core.Entities.StandartEnums;
-using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.DTO;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ambulance.DTO.PersonModels;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
@@ -23,7 +17,7 @@ internal class LoadPatientDataCommand : AbstrCommandWithDA<PatientDto>
         this.personId = personId;
     }
 
-    public override string Name => "Отримання даних пацієнита";
+    public override string Name => "Отримання даних пацієнта";
 
     public override PatientDto Execute()
     {
@@ -48,13 +42,10 @@ internal class LoadPatientDataCommand : AbstrCommandWithDA<PatientDto>
         // через складність, виклики додаємо окремо
         var calls = dAPoint.CallRepository
             .GetQueryable()
-            .Include(x => x.Patient)
+            .Include(x => x.Person)
             .Include(x => x.Dispatcher)
             .Include(x => x.Hospital)
-            .Include(x => x.Brigades)
-               .ThenInclude(x => x.BrigadeType)
-            .Where(x => x.PatientId == person.PersonId)
-            .OrderByDescending(x => x.StartCallTime); // для фронтенду найновіші зверху
+            .Where(x => x.PersonId == person.PersonId);
 
         var dto = mapper.Map<PatientDto>(person);
 

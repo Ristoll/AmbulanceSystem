@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.Core", "Ambulance.Core\Ambulance.Core.csproj", "{337CC3A8-2CEE-413E-838A-3299CAFF5A50}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.WebAPI", "Ambulance.WebClient\Ambulance.WebAPI.csproj", "{3293D098-A50D-9518-B0DB-75C9818EEB61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambulance.ExternalServices", "Ambulance.ExternalServices\Ambulance.ExternalServices.csproj", "{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPoligon", "TestPoligon\TestPoligon.csproj", "{207D902B-DDF4-4217-9CA4-27FC495B6D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDCF3592-3EEE-5F05-0FA6-C45B6C4E91F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{207D902B-DDF4-4217-9CA4-27FC495B6D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{207D902B-DDF4-4217-9CA4-27FC495B6D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{207D902B-DDF4-4217-9CA4-27FC495B6D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{207D902B-DDF4-4217-9CA4-27FC495B6D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

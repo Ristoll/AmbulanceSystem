@@ -2,9 +2,9 @@
 
 public enum UserRole
 {
+    Unknown, // standart value
     Patient,
     Dispatcher,
     Admin,
-    BrigadeMan,
-    Unknown
+    BrigadeMan
 }

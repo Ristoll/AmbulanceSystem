@@ -1,9 +1,10 @@
-﻿using Ambulance.Core.Entities;
-using Ambulance.DTO.PersonModels;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DAL;
-using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.DTO.PersonModels;
+using Ambulance.Core.Entities;
+using AmbulanceSystem.Core.Entities;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
@@ -46,7 +47,7 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
     {
         if (!string.IsNullOrWhiteSpace(model.Gender))
         {
-            var gender = EnumConverters.ParseUserGender(model.Gender);
+            var gender = model.Gender.ToEnumString(Gender.Other);
             if (gender != person.Gender)
             {
                 person.Gender = gender;
@@ -58,7 +59,7 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
     {
         if (!string.IsNullOrWhiteSpace(model.Role))
         {
-            var role = EnumConverters.ParseUserRole(model.Role);
+            var role = model.Role.ToEnumString(UserRole.Unknown);
             if (role != person.UserRole)
             {
                 person.UserRole = role;

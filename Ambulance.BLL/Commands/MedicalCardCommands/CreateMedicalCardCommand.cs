@@ -1,33 +1,33 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities;
 
-namespace Ambulance.BLL.Commands.MedicalCardCommands
+namespace Ambulance.BLL.Commands.MedicalCardCommands;
+
+public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
 {
-    public class CreateMedicalCardCommand : AbstrCommandWithDA<bool>
+    private readonly MedicalCardDto medicalCardDto;
+
+    public CreateMedicalCardCommand(MedicalCardDto medicalCardDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        : base(operateUnitOfWork, mapper)
     {
-        private readonly MedicalCardDto medicalCardDto;
+        if (medicalCardDto == null)
+            throw new ArgumentNullException("DTO медичної картки null");
 
-        public CreateMedicalCardCommand(MedicalCardDto medicalCardDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
-            : base(operateUnitOfWork, mapper)
-        {
-            this.medicalCardDto = medicalCardDto;
-        }
+        this.medicalCardDto = medicalCardDto;
+    }
 
-        public override string Name => "Створення медичної картки";
+    public override string Name => "Створення медичної картки";
 
-        public override bool Execute()
-        {
-            var medicalCard = mapper.Map<MedicalCard>(medicalCardDto);
+    public override bool Execute()
+    {
+        var medicalCard = mapper.Map<MedicalCard>(medicalCardDto);
 
-            dAPoint.MedicalCardRepository.Add(medicalCard);
-            dAPoint.Save();
+        dAPoint.MedicalCardRepository.Add(medicalCard);
+        dAPoint.Save();
 
-            return true;
-        }
+        return true;
     }
 }
 

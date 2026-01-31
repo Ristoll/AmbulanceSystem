@@ -9,7 +9,7 @@ public class HospitalProfile : Profile
 {
     public HospitalProfile()
     {
-        CreateMap<Hospital, HospitalDto>()
-            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Location));
+        //CreateMap<Hospital, HospitalDto>()
+        //    .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Location));
     }
 }

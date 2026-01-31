@@ -1,7 +1,7 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.DAL;
-using AutoMapper;
+using Ambulance.DTO.PersonModels;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 

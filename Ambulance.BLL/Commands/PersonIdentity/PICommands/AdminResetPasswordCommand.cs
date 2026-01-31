@@ -1,6 +1,6 @@
-﻿using Ambulance.ExternalServices;
+﻿using AutoMapper;
+using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
-using AutoMapper;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
@@ -8,7 +8,6 @@ public class AdminResetPasswordCommand : AbstrCommandWithDA<bool>
 {
     private readonly int targetPersonId;
     private readonly string newPassword;
-    private readonly int adminId;
 
     public override string Name => "Скидання паролю адміністратором";
 

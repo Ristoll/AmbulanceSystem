@@ -35,18 +35,18 @@ public class AnaliticsController : Controller
     }
     [HttpGet]
     [Route("calls")]
-    public IActionResult GetCallAnalitics()
-    {
-        try
-        {
-            var analiticsData = manager.GetCallAnalytics();
-            return Ok(analiticsData);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //public IActionResult GetCallAnalitics()
+    //{
+    //    try
+    //    {
+    //        var analiticsData = manager.GetCallAnalytics();
+    //        return Ok(analiticsData);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
     [HttpGet]
     [Route("deceases")]
     public IActionResult GetDeceaseAnalitics()

@@ -18,11 +18,11 @@ public class AnaliticsCommandManager : AbstractCommandManager
         var command = new ResourcesAnalyticsCommand(unitOfWork, mapper);
         return command.Execute();
     }
-    public Dictionary<DateTime, int> GetCallAnalytics()
-    {
-        var command = new CallAnalyticsCommand(unitOfWork, mapper);
-        return command.Execute();
-    }
+    //public Dictionary<DateTime, int> GetCallAnalytics()
+    //{
+    //    var command = new CallAnalyticsCommand(unitOfWork, mapper);
+    //    return command.Execute();
+    //}
     public Dictionary<string, int>  GetDeceaseAnalytics()
     {
         var command = new DeceaseAnalyticsCommand(unitOfWork, mapper);

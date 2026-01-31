@@ -1,9 +1,10 @@
-﻿using Ambulance.Core.Entities;
-using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
+using Ambulance.Core.Entities;
+using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.Core.Entities;
-using AutoMapper;
 using System.Text.RegularExpressions;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 
@@ -24,8 +25,8 @@ public class CreatePersonCommand : AbstrCommandWithDA <int>
     {
         var newPerson = mapper.Map<Person>(createUserModel);
 
-        newPerson.UserRole = EnumConverters.ParseUserRole(newPerson.UserRole); // грубо контрактом виставляємо роль
-        newPerson.Gender = EnumConverters.ParseUserGender(newPerson.Gender);
+        newPerson.UserRole = newPerson.UserRole.ToEnumString(UserRole.Unknown); // грубо контрактом виставляємо роль
+        newPerson.Gender = newPerson.Gender.ToEnumString(Gender.Other);
 
         dAPoint.PersonRepository.Add(newPerson);
         dAPoint.Save();

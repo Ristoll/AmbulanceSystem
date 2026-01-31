@@ -1,14 +1,6 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AmbulanceSystem.Core;
 
 namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
@@ -18,14 +10,14 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
             : base(unitOfWork, mapper)
         {
         }
+
         public override string Name => "Завантаження медичних записів";
+
         public override List<MedicalCardDto> Execute()
         {
-            var medicalCards = dAPoint.MedicalCardRepository
-                .GetAll()
-                .ToList();
+            var medicalCards = dAPoint.MedicalCardRepository.GetAll();
+
             return mapper.Map<List<MedicalCardDto>>(medicalCards);
         }
-
     }
 }
