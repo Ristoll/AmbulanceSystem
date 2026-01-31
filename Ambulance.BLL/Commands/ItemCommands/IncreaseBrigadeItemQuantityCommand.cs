@@ -1,10 +1,5 @@
-﻿using AmbulanceSystem.Core;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using AmbulanceSystem.Core;
 
 namespace Ambulance.BLL.Commands.ItemCommands
 {
@@ -24,7 +19,9 @@ namespace Ambulance.BLL.Commands.ItemCommands
 
         public override bool Execute()
         {
-            var brigadeItem = dAPoint.BrigadeItemRepository.FirstOrDefault(bi => bi.BrigadeItemId == brigadeItemId);
+            var brigadeItem = dAPoint.BrigadeItemRepository
+                .FirstOrDefault(bi => bi.BrigadeItemId == brigadeItemId);
+
             if (brigadeItem != null && brigadeItem.Quantity > 0)
             {
                 brigadeItem.Quantity += quantity;

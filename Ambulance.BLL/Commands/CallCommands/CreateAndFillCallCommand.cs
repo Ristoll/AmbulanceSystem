@@ -1,18 +1,10 @@
-﻿using Ambulance.BLL.Commands.BigadeCommands;
-using Ambulance.BLL.Commands.MedicalCardCommands;
-using Ambulance.BLL.Commands.PersonIdentity;
-using Ambulance.Core;
+﻿using AutoMapper;
+using Ambulance.DTO;
+using AmbulanceSystem.DTO;
+using AmbulanceSystem.Core;
+using Ambulance.ExternalServices;
 using Ambulance.Core.Entities;
 using Ambulance.Core.Entities.StandartEnums;
-using Ambulance.DTO;
-using Ambulance.DTO.PersonModels;
-using Ambulance.ExternalServices;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
-using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Linq;
 
 namespace Ambulance.BLL.Commands.CallCommands;
 
@@ -30,6 +22,11 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         IMapper mapper)
         : base(unitOfWork, mapper)
     {
+        ArgumentNullException.ThrowIfNull(callDto, "DTO дзвінка = null");
+
+        if(callDto.PatientId.HasValue && newPerson != null)
+            throw new ArgumentException("Не можна одночасно передавати і ID пацієнта, і дані для створення нового пацієнта");
+
         this.callDto = callDto;
         this.newPerson = newPerson;
     }
@@ -42,10 +39,7 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         {
             patient = dAPoint.PersonRepository.GetById(callDto.PatientId.Value);
 
-            if (patient == null)
-                throw new InvalidOperationException($"Пацієнт з ID {callDto.PatientId.Value} не знайдено");
-
-            if (patient.UserRole != UserRole.Patient.ToString())
+            if (patient.UserRole != UserRole.Patient.ToString()) // запитати у Крістіни щодо гнучкості, можливо прибрати
                 throw new InvalidOperationException("Знайдена чи створена людина не пацієнт");
         }
 
@@ -66,8 +60,8 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
             dAPoint.Save();
 
             patient = dAPoint.PersonRepository
-                .FirstOrDefault(p => p.PhoneNumber == newPatient.PhoneNumber // отримуємо доданого за нмоером телефону, бо віну нікальний
-                  && p.UserRole == UserRole.Patient.ToString());
+                .FirstOrDefault(p => p.PhoneNumber == newPatient.PhoneNumber // отримуємо доданого за номером телефону, бо він унікальний
+                  && p.UserRole == UserRole.Patient.ToString()); // запитати у Крістіни щодо гнучкості, можливо прибрати
         }
         else if (patient == null)
         {
@@ -87,20 +81,18 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         }
 
         if (patient == null || patient.PersonId <= 0)
-        {
             throw new InvalidOperationException("Помилка: пацієнт не був коректно створений у базі");
-        }
-
-        Console.WriteLine("DEBUG PatientId " + patient.PersonId);
 
         // створюємо медкартку, якщо її не існує
-        var medCard = dAPoint.PersonRepository.GetById(patient.PersonId)?
-            .Card;
+        var medCard = dAPoint.MedicalCardRepository.FirstOrDefault(mc => mc.PatientId == patient.PersonId);
+
         if (medCard == null)
         {
             var newCard = new MedicalCard
             {
-                CreationDate = DateOnly.FromDateTime(DateTime.Now)
+                PatientId = patient.PersonId,
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                DateOfBirth = callDto.DateOfBirth != null ? DateOnly.FromDateTime(callDto.DateOfBirth.Value) : DateOnly.MinValue
             };
 
             dAPoint.MedicalCardRepository.Add(newCard);
@@ -109,12 +101,12 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
         var call = new Call
         {
             CallAt = callDto.StartCallTime,
-            Notes = callDto.Notes,
+            HospitalId = callDto.HospitalId,
             DispatcherId = callDto.DispatcherId,
-            UrgencyType = callDto.UrgencyType,
-            PhoneNumber = callDto.Phone,
+            UrgencyType = ((UrgencyType)callDto.UrgencyType).ToString(),
             CallAddress = callDto.Address,
-            PersonId = patient.PersonId
+            PersonId = patient.PersonId,
+            CallState = CallState.New.ToString()
         };
 
         dAPoint.CallRepository.Add(call);

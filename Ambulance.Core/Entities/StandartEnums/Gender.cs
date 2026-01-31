@@ -2,7 +2,7 @@
 
 public enum Gender
 {
+    Other, // standart value
     Woman,
-    Man,
-    Other // теоретично може бути щось інше, наприклад, гермафродит
+    Man
 }

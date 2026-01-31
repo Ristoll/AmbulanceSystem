@@ -1,15 +1,8 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
-using Ambulance.Core.Entities.StandartEnums;
-using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ambulance.Core.Entities;
+using Ambulance.DTO.PersonModels;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.CallCommands;
 
@@ -43,12 +36,12 @@ internal class SearchPatientCommand : AbstrCommandWithDA<IEnumerable<PersonProfi
         if (keywords.Length > 0)
         {
             query = query.Where(c => keywords.Any(k =>
-            (c.Name != null && c.Name.Contains(k)) ||
+                (c.Name != null && c.Name.Contains(k)) ||
                 (c.Surname != null && c.Surname.Contains(k)) ||
                 (c.MiddleName != null && c.MiddleName.Contains(k)) ||
                 (c.PhoneNumber != null && c.PhoneNumber.Contains(k)) ||
                 (c.Email != null && c.Email.Contains(k)) ||
-                (c.Login != null && c.Login.Contains(k))));// бо коментарі - основа анонімних клієнтів
+                (c.Login != null && c.Login.Contains(k))));
         }
 
         var patients = query.ToList();

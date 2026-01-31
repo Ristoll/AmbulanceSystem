@@ -1,14 +1,7 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities;
 
 namespace Ambulance.BLL.Commands.MedicalCardCommands
 {
@@ -19,6 +12,8 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
         public CreateMedicalRecordCommand(MedicalRecordDto medicalRecordDto, IUnitOfWork operateUnitOfWork, IMapper mapper) 
             : base(operateUnitOfWork, mapper)
         {
+            ArgumentNullException.ThrowIfNull(medicalRecordDto, "DTO медичного запису null");
+
             this.medicalRecordDto = medicalRecordDto;
         }
 
@@ -29,6 +24,7 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
             var medicalRecordEntity = mapper.Map<MedicalRecord>(medicalRecordDto);
             dAPoint.MedicalRecordRepository.Add(medicalRecordEntity);
             dAPoint.Save();
+
             return true;
         }
     }

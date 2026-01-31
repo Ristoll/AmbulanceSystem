@@ -30,59 +30,59 @@ public class CallController : Controller
         this.hubContext = hubContext;
     }
 
-    [HttpDelete("delete-call/{callId}")]
-    public IActionResult DeleteCall(int callId)
-    {
-        try
-        {
-            bool result = manager.DeleteCallCommand(callId);
-            return result ? Ok() : BadRequest("Не вдалося видалити виклик");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //[HttpDelete("delete-call/{callId}")]
+    //public IActionResult DeleteCall(int callId)
+    //{
+    //    try
+    //    {
+    //        bool result = manager.DeleteCallCommand(callId);
+    //        return result ? Ok() : BadRequest("Не вдалося видалити виклик");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
 
-    [HttpPost("create-and-fill-call")]
-    public async Task<IActionResult> CreateAndFillCall([FromBody] FillCallFullRequest request)
-    {
-        try
-        {
-            var callDto = request.Call;
-            var patientData = request.Person;
+    //[HttpPost("create-and-fill-call")]
+    //public async Task<IActionResult> CreateAndFillCall([FromBody] FillCallFullRequest request)
+    //{
+    //    try
+    //    {
+    //        var callDto = request.Call;
+    //        var patientData = request.Person;
 
-            callDto.DispatcherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    //        callDto.DispatcherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            int callId = manager.CreateAndFillCallCommand(callDto, patientData);
+    //        int callId = manager.CreateAndFillCallCommand(callDto, patientData);
 
-            // повідомлення бригадам
-            string notificationText = "Отримано новий виклик! Пішли працювати!!!";
+    //        // повідомлення бригадам
+    //        string notificationText = "Отримано новий виклик! Пішли працювати!!!";
 
-            var brigadeMembers = request.Call.AssignedBrigades?
-                .Where(b => b.Members != null)
-                .SelectMany(b => b.Members!)
-                .ToList();
+    //        var brigadeMembers = request.Call.AssignedBrigades?
+    //            .Where(b => b.Members != null)
+    //            .SelectMany(b => b.Members!)
+    //            .ToList();
 
-            if (brigadeMembers != null && brigadeMembers.Any())
-            {
-                foreach (var brigadeMember in brigadeMembers)
-                {
-                    if (brigadeMember?.BrigadeMemberId != null)
-                    {
-                        await hubContext.Clients.User(brigadeMember.BrigadeMemberId.ToString())
-                            .SendAsync("ReceiveNotification", notificationText);
-                    }
-                }
-            }
+    //        if (brigadeMembers != null && brigadeMembers.Any())
+    //        {
+    //            foreach (var brigadeMember in brigadeMembers)
+    //            {
+    //                if (brigadeMember?.BrigadeMemberId != null)
+    //                {
+    //                    await hubContext.Clients.User(brigadeMember.BrigadeMemberId.ToString())
+    //                        .SendAsync("ReceiveNotification", notificationText);
+    //                }
+    //            }
+    //        }
 
-            return Ok(callId);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //        return Ok(callId);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
 
     [HttpGet("load-call")]
     public IActionResult LoadCall([FromQuery] int callId)
@@ -112,19 +112,19 @@ public class CallController : Controller
         }
     }
 
-    [HttpGet("load-hospitals")]
-    public IActionResult LoadHospitalsCommand()
-    {
-        try
-        {
-            var hospitals = manager.LoadHospitalsCommand();
-            return Ok(hospitals);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //[HttpGet("load-hospitals")]
+    //public IActionResult LoadHospitalsCommand()
+    //{
+    //    try
+    //    {
+    //        var hospitals = manager.LoadHospitalsCommand();
+    //        return Ok(hospitals);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
 
     [HttpGet("search-person/{text?}")]
     public IActionResult SearchPatient(string? text)

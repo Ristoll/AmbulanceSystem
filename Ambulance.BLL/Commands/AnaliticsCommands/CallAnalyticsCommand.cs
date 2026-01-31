@@ -5,150 +5,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Ambulance.BLL.Commands.AnaliticsCommands
-{
-    public class CallAnalyticsCommand : AbstrCommandWithDA<Dictionary<int, int>>
-    {
-        public override string Name => "Аналітика дзвінків";
+namespace Ambulance.BLL.Commands.AnaliticsCommands;
 
-        private readonly AnalyticsPeriod _period;
-        private readonly DateTime _startDate;
+//public class CallAnalyticsCommand : AbstrCommandWithDA<Dictionary<DateTime, int>>
+//{
+//    public override string Name => "Аналітика дзвінків";
 
-        public CallAnalyticsCommand(
-            IUnitOfWork operateUnitOfWork,
-            IMapper mapper,
-            AnalyticsPeriod period,
-            DateTime startDate)
-            : base(operateUnitOfWork, mapper)
-        {
-            _period = period;
-            _startDate = startDate;
-        }
+//    public CallAnalyticsCommand (IUnitOfWork operateUnitOfWork, IMapper mapper)
+//        : base(operateUnitOfWork, mapper)
+//    {
+//    }
 
-        public override Dictionary<int, int> Execute()
-        {
-            var range = _period switch
-            {
-                AnalyticsPeriod.Week => GetWeekRange(_startDate),
-                AnalyticsPeriod.Month => GetMonthRange(_startDate),
-                AnalyticsPeriod.Year => GetYearRange(_startDate),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+//    public override Dictionary<DateTime, int> Execute()
+//{
+//    var calls = dAPoint.CallRepository.GetAll().ToList();
 
-            List<Call> calls = dAPoint.CallRepository.GetAll()
-                .Where(c =>
-                            c.CallAt.Date >= range.from &&
-                            c.CallAt.Date <= range.to)
-                .ToList();
+//    // 1. Знаходимо понеділок поточного тижня
+//    var today = DateTime.Today;
+//    int delta = DayOfWeek.Monday - today.DayOfWeek;
+//    if (delta > 0) delta -= 7; // якщо сьогодні неділя — сюди зайде
+//    var monday = today.AddDays(delta).Date;
 
-            return _period switch
-            {
-                AnalyticsPeriod.Week => GetWeekAnalytics(calls, range.from),
-                AnalyticsPeriod.Month => GetMonthAnalytics(calls, range.from),
-                AnalyticsPeriod.Year => GetYearAnalytics(calls),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+//    var sunday = monday.AddDays(6).Date;
 
-        private (DateTime from, DateTime to) GetWeekRange(DateTime date)
-        {
-            int delta = DayOfWeek.Monday - date.DayOfWeek;
-            if (delta > 0) delta -= 7;
+//    //// 2. Фільтруємо лише виклики цього тижня
+//    //var weekCalls = calls
+//    //    .Where(c => c.StartCallTime.HasValue &&
+//    //                c.StartCallTime.Value.Date >= monday &&
+//    //                c.StartCallTime.Value.Date <= sunday)
+//    //    .ToList();
 
-            var monday = date.AddDays(delta).Date;
-            var sunday = monday.AddDays(6).Date;
+//    //// 3. Групуємо за датою
+//    //var grouped = weekCalls
+//    //    .GroupBy(c => c.StartCallTime!.Value.Date)
+//    //    .ToDictionary(
+//    //        g => g.Key,
+//    //        g => g.Count()
+//    //    );
 
-            return (monday, sunday);
-        }
+//    // 4. Створюємо словник **на всі 7 днів**, навіть якщо 0 викликів
+//    var result = new Dictionary<DateTime, int>();
 
-        private (DateTime from, DateTime to) GetMonthRange(DateTime date)
-        {
-            var from = new DateTime(date.Year, date.Month, 1);
-            var to = from.AddMonths(1).AddDays(-1);
+//    for (int i = 0; i < 7; i++)
+//    {
+//        var date = monday.AddDays(i);
+//        result[date] = grouped.ContainsKey(date) ? grouped[date] : 0;
+//    }
 
-            return (from, to);
-        }
-
-        private (DateTime from, DateTime to) GetYearRange(DateTime date)
-        {
-            var from = new DateTime(date.Year, 1, 1);
-            var to = new DateTime(date.Year, 12, 31);
-
-            return (from, to);
-        }
-
-        private Dictionary<int, int> GetWeekAnalytics(List<Call> calls, DateTime weekStart)
-        {
-            var weekEnd = weekStart.AddDays(6);
-
-            var weekCalls = calls
-                .Where(c => c.CallAt!.Date >= weekStart &&
-                            c.CallAt!.Date <= weekEnd)
-                .ToList();
-
-            var grouped = weekCalls
-                .GroupBy(c => (int)c.CallAt!.DayOfWeek)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var result = new Dictionary<int, int>();
-
-            // ключі: 1..7 (Пн..Нд)
-            for (int i = 1; i <= 7; i++)
-            {
-                result[i] = grouped.ContainsKey(i) ? grouped[i] : 0;
-            }
-
-            return result;
-        }
-
-        private Dictionary<int, int> GetMonthAnalytics(List<Call> calls, DateTime monthStart)
-        {
-            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-
-            var monthCalls = calls
-                .Where(c => c.CallAt!.Date >= monthStart &&
-                            c.CallAt!.Date <= monthEnd)
-                .ToList();
-
-            var grouped = monthCalls
-                .GroupBy(c => c.CallAt!.Day)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var result = new Dictionary<int, int>();
-
-            int daysInMonth = DateTime.DaysInMonth(monthStart.Year, monthStart.Month);
-
-            for (int day = 1; day <= daysInMonth; day++)
-            {
-                result[day] = grouped.ContainsKey(day) ? grouped[day] : 0;
-            }
-
-            return result;
-        }
-
-        private Dictionary<int, int> GetYearAnalytics(List<Call> calls)
-        {
-            var year = DateTime.Today.Year;
-            var from = new DateTime(year, 1, 1);
-            var to = new DateTime(year, 12, 31);
-
-            var yearCalls = calls
-                .Where(c => c.CallAt!.Date >= from &&
-                            c.CallAt!.Date <= to)
-                .ToList();
-
-            var grouped = yearCalls
-                .GroupBy(c => c.CallAt!.Month)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var result = new Dictionary<int, int>();
-
-            for (int month = 1; month <= 12; month++)
-            {
-                result[month] = grouped.ContainsKey(month) ? grouped[month] : 0;
-            }
-
-            return result;
-        }
-    }
-}
+//    return result;
+//}
+//}

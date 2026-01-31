@@ -1,10 +1,9 @@
-﻿using Ambulance.BLL.Commands.PersonIdentity;
-using Ambulance.BLL.Commands.PersonIdentity.PICommands;
-using Ambulance.Core.Entities;
-using Ambulance.DTO.PersonModels;
-using AmbulanceSystem.Core;
+﻿using AutoMapper;
 using AmbulanceSystem.DAL;
-using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.DTO.PersonModels;
+using Ambulance.BLL.Commands.PersonIdentity;
+using Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
 namespace Ambulance.BLL.Commands;
 

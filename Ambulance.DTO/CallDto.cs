@@ -11,12 +11,12 @@ public class CallDto
     public int? PatientId { get; set; }
     public int DispatcherId { get; set; }
 
-    public string? Phone { get; set; } = string.Empty;
-    public string UrgencyType { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string? Notes { get; set; } = string.Empty;
+    public string? Phone { get; set; }
+    public int UrgencyType { get; set; }
+    public string Address { get; set; } = null!;
 
-    public DateTime StartCallTime { get; set; } = DateTime.UtcNow;
+    public DateTime StartCallTime { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     public List<BrigadeDto>? AssignedBrigades { get; set; }
 
