@@ -21,7 +21,8 @@ public class UpdateMedicalRecordCommand : AbstrCommandWithDA<bool>
         var existingRecord = dAPoint.MedicalRecordRepository
             .FirstOrDefault(mc => mc.RecordId == medicalRecordDto.MedicalRecordId);
 
-        ArgumentNullException.ThrowIfNull(existingRecord, "Медичний запис для пацієнта не знайдено");
+            if (existingRecord == null)
+                throw new InvalidOperationException($"Медичний запис для пацієнта не знайдено");
 
         mapper.Map(medicalRecordDto, existingRecord);
 

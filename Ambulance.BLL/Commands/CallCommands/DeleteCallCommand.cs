@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using Ambulance.Core.Entities.StandartEnums;
 using AmbulanceSystem.Core;
 using AmbulanceSystem.Core.Entities;
@@ -8,6 +9,11 @@ using AutoMapper;
 using AmbulanceSystem.Core;
 using Ambulance.Core.Entities.StandartEnums;
 >>>>>>> SumnaDitina
+=======
+using AutoMapper;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities.StandartEnums;
+>>>>>>> 2b9d3932
 
 namespace Ambulance.BLL.Commands.CallCommands;
 
@@ -41,8 +47,6 @@ public class DeleteCallCommand : AbstrCommandWithDA<bool>
 
             dAPoint.BrigadeRepository.Update(brigade);
         }
-
-        dAPoint.Save(); // спочатку оновлюємо бригади
 
         dAPoint.CallRepository.Remove(callId);
         dAPoint.Save(); // потім видаляємо виклик

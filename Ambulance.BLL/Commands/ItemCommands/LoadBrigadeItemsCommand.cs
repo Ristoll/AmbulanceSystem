@@ -10,31 +10,35 @@ public class LoadBrigadeItemsCommand : AbstrCommandWithDA<List<BrigadeItemDto>>
 
     public override string Name => "Завантаження медикаментів бригади";
 
-    public LoadBrigadeItemsCommand(int brigadeId, IUnitOfWork unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper)
-    {
-        this.brigadeId = brigadeId;
-    }
-
-    public override List<BrigadeItemDto> Execute()
-    {
-        var brigadeItems = dAPoint.BrigadeItemRepository
-            .GetQueryable()
-            .Where(x => x.BrigadeId == brigadeId)
-            .ToList();
-
-        var brigadeItemsDtos = brigadeItems.Select(i =>
+        public LoadBrigadeItemsCommand(int brigadeId, IUnitOfWork unitOfWork, IMapper mapper)
+            : base(unitOfWork, mapper)
         {
-            var dto = mapper.Map<BrigadeItemDto>(i);
-            var item = dAPoint.ItemRepository.GetById(i.ItemId);
-            dto.ItemName = item?.Name ?? "";
-            dto.UnitType = item?.UnitType ?? "";
-            //var itemType = dAPoint.ItemTypeRepository.GetById(item.ItemTypeId); запитати в Крістіни
-            //dto.ItemType = itemType?.Name ?? ""; запитати в Крістіни
-            return dto;
-        }).ToList();
+            this.brigadeId = brigadeId;
+        }
 
-        return brigadeItemsDtos; // повертаємо вже заповнений список
+        public override List<BrigadeItemDto> Execute()
+        {
+            var brigadeItems = dAPoint.BrigadeItemRepository
+                .GetAll()
+                .Where(x => x.BrigadeId == brigadeId)
+                .ToList();
+
+            var brigadeItemsDtos = brigadeItems.Select(i =>
+            {
+                var dto = mapper.Map<BrigadeItemDto>(i);
+
+                var item = dAPoint.ItemRepository.GetById(i.ItemId);
+                if (item != null)
+                {
+                    dto.ItemName = item.Name;
+                    dto.UnitType = item.UnitType;
+                    dto.ItemType = item.ItemType;
+                }
+
+                return dto;
+            }).ToList();
+
+            return brigadeItemsDtos;
+        }
     }
 
-}

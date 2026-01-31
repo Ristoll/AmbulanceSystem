@@ -10,6 +10,7 @@ public class CallDto
     public int CallId { get; set; }
     public int? PatientId { get; set; }
     public int DispatcherId { get; set; }
+    public int? HospitalId { get; set; }
 
     public string? Phone { get; set; }
     public int UrgencyType { get; set; }

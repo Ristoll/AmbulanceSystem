@@ -84,15 +84,13 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
             throw new InvalidOperationException("Помилка: пацієнт не був коректно створений у базі");
 
         // створюємо медкартку, якщо її не існує
-        var medCard = dAPoint.MedicalCardRepository.FirstOrDefault(mc => mc.PatientId == patient.PersonId);
-
+        var medCard = dAPoint.PersonRepository.GetById(patient.PersonId)?
+            .Card;
         if (medCard == null)
         {
             var newCard = new MedicalCard
             {
-                PatientId = patient.PersonId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                DateOfBirth = callDto.DateOfBirth != null ? DateOnly.FromDateTime(callDto.DateOfBirth.Value) : DateOnly.MinValue
+                CreationDate = DateOnly.FromDateTime(DateTime.Now)
             };
 
             dAPoint.MedicalCardRepository.Add(newCard);
