@@ -1,12 +1,6 @@
-﻿using Ambulance.Core.Entities.StandartEnums;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.BigadeCommands
 {

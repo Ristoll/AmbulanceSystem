@@ -2,8 +2,8 @@
 using Ambulance.DTO;
 using AmbulanceSystem.DTO;
 using AmbulanceSystem.Core;
-using Ambulance.ExternalServices;
 using Ambulance.Core.Entities;
+using Ambulance.ExternalServices;
 using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.CallCommands;
@@ -84,8 +84,8 @@ public class CreateAndFillCallCommand : AbstrCommandWithDA<int>
             throw new InvalidOperationException("Помилка: пацієнт не був коректно створений у базі");
 
         // створюємо медкартку, якщо її не існує
-        var medCard = dAPoint.PersonRepository.GetById(patient.PersonId)?
-            .Card;
+        var medCard = dAPoint.MedicalCardRepository.FirstOrDefault(mc => mc.PatientId == patient.PersonId);
+
         if (medCard == null)
         {
             var newCard = new MedicalCard

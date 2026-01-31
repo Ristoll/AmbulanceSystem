@@ -1,6 +1,6 @@
-﻿using AmbulanceSystem.Core;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
+using AmbulanceSystem.Core;
 
 namespace Ambulance.BLL.Commands.BigadeCommands
 {

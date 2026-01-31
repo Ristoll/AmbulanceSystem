@@ -1,7 +1,7 @@
-﻿using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
+using AmbulanceSystem.Core;
+
 
 namespace Ambulance.BLL.Commands.BigadeCommands
 {
@@ -27,24 +27,6 @@ namespace Ambulance.BLL.Commands.BigadeCommands
             {
                 var dto = mapper.Map<BrigadeMemberDto>(m);
 
-<<<<<<< HEAD
-//                // Підтягуємо роль
-//                var role = dAPoint.BrigadeMemberRoleRepository.GetById(m.BrigadeMemberRoleId);
-//                dto.RoleName = role != null ? role.Name : "Не вказано";
-
-//                // Підтягуємо спеціалізацію
-//                var specialization = dAPoint.BrigadeMemberSpecializationTypeRepository.GetById(m.MemberSpecializationTypeId);
-//                dto.SpecializationTypeName = specialization != null ? specialization.Name : "Не вказано";
-//                var person = dAPoint.PersonRepository.GetById(m.PersonId);
-//                dto.PersonFullName = person != null ? $"{person.Surname} {person.Name} {person.MiddleName}" : "Не вказано";
-//                return dto;
-//            }).ToList();
-
-//            return memberDtos;
-//        }
-//    }
-//}
-=======
                 var specialization = dAPoint.SpecializationTypeRepository.GetById(m.SpecializationTypeId);
                 dto.SpecializationTypeName = specialization != null ? specialization.Name : "Не вказано";
                 var person = dAPoint.PersonRepository.GetById(m.PersonId);
@@ -56,4 +38,3 @@ namespace Ambulance.BLL.Commands.BigadeCommands
         }
     }
 }
->>>>>>> 2b9d3932

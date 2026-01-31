@@ -1,8 +1,5 @@
-﻿using AmbulanceSystem.Core;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AutoMapper;
+using AmbulanceSystem.Core;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands
 {

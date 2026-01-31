@@ -3,7 +3,6 @@ using AmbulanceSystem.Core;
 
 namespace Ambulance.BLL.Commands.ItemCommands;
 
-// запитати Крістіну, команда на заміну двох Increase - Decrease
 internal class ChangeBrigadeItemQuantityCommand : AbstrCommandWithDA<bool>
 {
     private readonly int brigadeItemId;
@@ -31,7 +30,7 @@ internal class ChangeBrigadeItemQuantityCommand : AbstrCommandWithDA<bool>
 
         brigadeItem.Quantity += quantity;
 
-        if (brigadeItem.Quantity < 0) // запитати Крістіну щодо constaint на рівні БД
+        if (brigadeItem.Quantity < 0)
             brigadeItem.Quantity = 0;
 
         dAPoint.BrigadeItemRepository.Update(brigadeItem);

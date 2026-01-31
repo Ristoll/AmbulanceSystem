@@ -1,6 +1,6 @@
-﻿using Ambulance.DTO;
+﻿using AutoMapper;
+using Ambulance.DTO;
 using AmbulanceSystem.Core;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambulance.BLL.Commands.CallCommands;

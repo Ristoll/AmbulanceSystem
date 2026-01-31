@@ -1,6 +1,6 @@
-﻿using Ambulance.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AutoMapper;
+using Ambulance.Core.Entities;
 
 namespace Ambulance.BLL.Commands.AnaliticsCommands
 {

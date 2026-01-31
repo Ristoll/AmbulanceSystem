@@ -1,19 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-﻿using Ambulance.Core.Entities.StandartEnums;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
-using AutoMapper;
-=======
-﻿using AutoMapper;
-using AmbulanceSystem.Core;
-using Ambulance.Core.Entities.StandartEnums;
->>>>>>> SumnaDitina
-=======
 using AutoMapper;
 using AmbulanceSystem.Core;
 using Ambulance.Core.Entities.StandartEnums;
->>>>>>> 2b9d3932
 
 namespace Ambulance.BLL.Commands.CallCommands;
 

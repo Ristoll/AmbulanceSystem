@@ -1,15 +1,8 @@
-﻿using Ambulance.BLL.Commands.PersonIdentity;
-using Ambulance.BLL.Commands.PersonIdentity.PICommands;
+﻿using AutoMapper;
 using Ambulance.DTO;
-using Ambulance.DTO.PersonModels;
-using AmbulanceSystem.Core;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AmbulanceSystem.Core;
+using Ambulance.DTO.PersonModels;
 
 namespace Ambulance.BLL.Commands.CallCommands
 {
