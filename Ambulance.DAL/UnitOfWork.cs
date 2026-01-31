@@ -22,10 +22,11 @@ public class UnitOfWork : IUnitOfWork
     private readonly IGenericRepository<MedicalRecord>? medicalRecordRepository;
     private readonly IGenericRepository<MedicalCard>? medicalCardRepository;
     private readonly IGenericRepository<Item>? itemRepository;
+    private readonly IGenericRepository<Hospital>? hospitalRepository;
 
     public IGenericRepository<Person> PersonRepository => personRepository ?? new GenericRepository<Person>(context);
     public IGenericRepository<BrigadeMember> BrigadeMemberRepository => brigadeMemberRepository ?? new GenericRepository<BrigadeMember>(context);
-     public IGenericRepository<Allergy> BidRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
+    public IGenericRepository<Allergy> BidRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
     public IGenericRepository<Brigade> BrigadeRepository => brigadeRepository ?? new GenericRepository<Brigade>(context);
     public IGenericRepository<SpecializationType> SpecializationTypeRepository => specializationTypeRepository ?? new GenericRepository<SpecializationType>(context);
     public IGenericRepository<Allergy> AllergyRepository => allergyRepository ?? new GenericRepository<Allergy>(context);
@@ -37,7 +38,8 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<MedicalRecord> MedicalRecordRepository => medicalRecordRepository ?? new GenericRepository<MedicalRecord>(context);
     public IGenericRepository<MedicalCard> MedicalCardRepository => medicalCardRepository ?? new GenericRepository<MedicalCard>(context);
     public IGenericRepository<Item> ItemRepository => itemRepository ?? new GenericRepository<Item>(context);
-    
+    public IGenericRepository<Hospital> HospitalRepository => hospitalRepository ?? new GenericRepository<Hospital>(context);
+ 
     public UnitOfWork(AmbulanceDbContext context)
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));

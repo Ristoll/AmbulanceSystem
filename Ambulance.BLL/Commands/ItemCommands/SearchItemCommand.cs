@@ -1,36 +1,26 @@
-﻿using AmbulanceSystem.Core;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using AmbulanceSystem.Core;
 
-namespace Ambulance.BLL.Commands.ItemCommands
+namespace Ambulance.BLL.Commands.ItemCommands;
+
+public class SearchItemCommand : AbstrCommandWithDA<bool>
 {
-    public class SearchItemCommand : AbstrCommandWithDA<bool>
+    private readonly int itemId;
+
+    public SearchItemCommand(int itemId, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        : base(operateUnitOfWork, mapper)
     {
-        private readonly int itemId;
+        this.itemId = itemId;
+    }
 
-        public SearchItemCommand(int itemId, IUnitOfWork operateUnitOfWork, IMapper mapper)
-            : base(operateUnitOfWork, mapper)
-        {
-            this.itemId = itemId;
-        }
+    public override string Name => "Пошук медикаментy";
 
-        public override string Name => "Пошук медикаментy";
+    public override bool Execute()
+    {
+        var item = dAPoint.ItemRepository.FirstOrDefault(i => i.ItemId == itemId);
 
-        public override bool Execute()
-        {
-            var item = dAPoint.ItemRepository.FirstOrDefault(i => i.ItemId == itemId);
-            if (item != null)
-            {
-                return true;
-            }
-            else
-            {
-                throw new ArgumentNullException($"{Name}: Медикамент не знайдений з ID {itemId}");
-            }
-        }
+        ArgumentNullException.ThrowIfNull(item, $"{Name}: Медикамент не знайдений з ID {itemId}");
+
+        return true;
     }
 }

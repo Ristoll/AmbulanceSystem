@@ -1,37 +1,34 @@
-﻿using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
+using AmbulanceSystem.Core;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Ambulance.BLL.Commands.CallCommands
+namespace Ambulance.BLL.Commands.CallCommands;
+
+public class LoadCallCommand : AbstrCommandWithDA<CallDto?>
 {
-    public class LoadCallCommand : AbstrCommandWithDA<CallDto?>
+    public override string Name => "Отримати виклик за ідентифікатором";
+    private readonly int callId;
+
+    public LoadCallCommand(IUnitOfWork unitOfWork, IMapper mapper,  int callId)
+        : base(unitOfWork, mapper)
     {
-        public override string Name => "Отримати виклик за ідентифікатором";
-        private readonly int callId;
-        public LoadCallCommand(IUnitOfWork unitOfWork, IMapper mapper,  int callId)
-            : base(unitOfWork, mapper)
-        {
-            this.callId = callId;
-        }
-        public override CallDto? Execute()
-        {
-            var call = dAPoint.CallRepository
-                .GetQueryable()
-                .Include(x => x.Patient)
-                .Include(x => x.Dispatcher)
-                .Include(x => x.Hospital)
-                .Include(x => x.Brigades)
-                    .ThenInclude(x => x.BrigadeType)
-                .FirstOrDefault(x => x.CallId == callId);
+        this.callId = callId;
+    }
 
-            if (call == null)
-                return null;
+    public override CallDto? Execute()
+    {
+        var call = dAPoint.CallRepository
+            .GetQueryable()
+            .Include(x => x.Person)
+            .Include(x => x.Dispatcher)
+            .Include(x => x.Hospital)
+            .Include(x => x.MedicalRecord)
+            .FirstOrDefault(x => x.CallId == callId);
 
-            return mapper.Map<CallDto>(call);
-        }
+        if (call == null)
+            return null;
+
+        return mapper.Map<CallDto>(call);
     }
 }

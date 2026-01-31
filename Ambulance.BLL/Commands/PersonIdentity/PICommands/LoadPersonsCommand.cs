@@ -1,13 +1,11 @@
-﻿using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AutoMapper;
+using Ambulance.DTO.PersonModels;
 
 namespace Ambulance.BLL.Commands.PersonIdentity.PICommands;
 
 public class LoadPersonsCommand : AbstrCommandWithDA<List<PersonExtDTO>>
 {
-    private readonly int actionPersonId;
-
     public override string Name => "Отримання всіх Person";
 
     public LoadPersonsCommand(IUnitOfWork operateUnitOfWork, IMapper mapper)

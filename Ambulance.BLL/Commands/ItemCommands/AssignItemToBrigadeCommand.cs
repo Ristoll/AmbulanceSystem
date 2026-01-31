@@ -1,34 +1,31 @@
-﻿using Ambulance.Core.Entities;
-using AmbulanceSystem.Core;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AmbulanceSystem.Core;
+using Ambulance.Core.Entities;
 
-namespace Ambulance.BLL.Commands.ItemCommands
+namespace Ambulance.BLL.Commands.ItemCommands;
+
+public class AssignItemToBrigadeCommand : AbstrCommandWithDA<bool>
 {
-    public class AssignItemToBrigadeCommand : AbstrCommandWithDA<bool>
+    private readonly BrigadeItemDto brigadeItemDto;
+
+    public AssignItemToBrigadeCommand(BrigadeItemDto brigadeItemDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
+        : base(operateUnitOfWork, mapper)
     {
-        private readonly BrigadeItemDto brigadeItemDto;
+        if (brigadeItemDto == null)
+            throw new ArgumentNullException("DTO медикаменту бригади (проміжна таблиця) = null");
 
-        public AssignItemToBrigadeCommand(BrigadeItemDto brigadeItemDto, IUnitOfWork operateUnitOfWork, IMapper mapper)
-            : base(operateUnitOfWork, mapper)
-        {
-            this.brigadeItemDto = brigadeItemDto;
-        }
+        this.brigadeItemDto = brigadeItemDto;
+    }
 
-        public override string Name => "Внесення медикамента до бригади";
+    public override string Name => "Внесення медикамента до бригади";
 
-        public override bool Execute()
-        {
-            var brigadeItem = mapper.Map<BrigadeItem>(brigadeItemDto);
-            dAPoint.BrigadeItemRepository.Add(brigadeItem);
-            dAPoint.Save();
+    public override bool Execute()
+    {
+        var brigadeItem = mapper.Map<BrigadeItem>(brigadeItemDto);
+        dAPoint.BrigadeItemRepository.Add(brigadeItem);
+        dAPoint.Save();
 
-            return true;
-        }
+        return true;
     }
 }

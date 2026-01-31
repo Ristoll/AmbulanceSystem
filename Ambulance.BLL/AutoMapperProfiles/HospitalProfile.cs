@@ -1,7 +1,6 @@
-﻿using Ambulance.Core.Entities;
-using AmbulanceSystem.Core.Entities;
-using AmbulanceSystem.DTO;
-using AutoMapper;
+﻿using AutoMapper;
+using Ambulance.DTO;
+using Ambulance.Core.Entities;
 
 namespace AmbulanceSystem.BLL.AutoMapperProfiles;
 
@@ -9,7 +8,6 @@ public class HospitalProfile : Profile
 {
     public HospitalProfile()
     {
-        CreateMap<Hospital, HospitalDto>()
-            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Location));
+        CreateMap<Hospital, HospitalDto>(); // бригади самі знайдуться
     }
 }

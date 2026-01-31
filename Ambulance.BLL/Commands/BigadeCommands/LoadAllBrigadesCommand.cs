@@ -1,11 +1,6 @@
 ﻿using AmbulanceSystem.Core;
 using AmbulanceSystem.DTO;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ambulance.BLL.Commands.BigadeCommands
 {
@@ -21,7 +16,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
         public override List<BrigadeDto> Execute()
         {
             // Беремо всі бригади
-            var brigades = dAPoint.BrigadeRepository.GetAll();
+           var brigades = dAPoint.BrigadeRepository.GetAll();
 
             // Мапимо на DTO
             var brigadeDtos = brigades.Select(b =>
@@ -32,9 +27,9 @@ namespace Ambulance.BLL.Commands.BigadeCommands
                 dto.BrigadeTypeName = b.BrigadeType.ToString();
 
                 return dto;
-            }).ToList();
+           }).ToList();
 
-            return brigadeDtos;
-        }
+           return brigadeDtos;
+       }
     }
 }

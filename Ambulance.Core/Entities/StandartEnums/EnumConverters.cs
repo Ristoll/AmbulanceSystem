@@ -4,21 +4,17 @@ namespace AmbulanceSystem.Core.Entities;
 
 public static class EnumConverters
 {
-    public static string ParseUserRole(string? role)
-       => !string.IsNullOrEmpty(role) && Enum.TryParse<UserRole>(role, out var r)
-           ? r.ToString()
-           : UserRole.Unknown.ToString();
+    // замінив на рощширення стрінгу для зручності
+    public static string ToEnumString<T>(this string? value, T defaultValue)
+        where T : struct, Enum // struct тут потрібно, щоб додатково зазначити компілятору, 
+        // що це value тип, який не може бути nullable
+    {
+        return Enum.TryParse<T>(value, true, out var result)
+            ? result.ToString()
+            : defaultValue.ToString();
+    }
 
-    public static string ParseUserGender(string? gender)
-        => !string.IsNullOrEmpty(gender) && Enum.TryParse<Gender>(gender, out var g)
-            ? g.ToString()
-            : Gender.Other.ToString();
-
-    public static string ParseBrigadeState(string? state)
-       => !string.IsNullOrEmpty(state) && Enum.TryParse<BrigadeState>(state, out var s)
-           ? s.ToString()
-           : BrigadeState.Unknown.ToString();
-
+    // обговорить с Кристиной
     public static string GetBrigadeStateUkrainian(string stateCode)
     {
         if (Enum.TryParse<BrigadeState>(stateCode, out var state))

@@ -1,8 +1,8 @@
-﻿using Ambulance.Core.Entities.StandartEnums;
-using Ambulance.DTO.PersonModels;
+﻿using AutoMapper;
 using Ambulance.ExternalServices;
 using AmbulanceSystem.Core;
-using AutoMapper;
+using Ambulance.DTO.PersonModels;
+using Ambulance.Core.Entities.StandartEnums;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 

@@ -20,33 +20,33 @@ public class BrigadeController : Controller
         this.mapper = mapper;
     }
 
-    [HttpGet]
-    public IActionResult GetAllBrigades()
-    {
-        try
-        {
-            var brigades = manager.LoadAllBrigades();
-            return Ok(brigades);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpGet]
-    [Route("{brigadeId:int}")]
-    public IActionResult GetBrigadeById(int brigadeId)
-    {
-        try
-        {
-            var brigade = manager.LoadBrigade(brigadeId);
-            return Ok(brigade);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //[HttpGet]
+    //public IActionResult GetAllBrigades()
+    //{
+    //    try
+    //    {
+    //        var brigades = manager.LoadAllBrigades();
+    //        return Ok(brigades);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    //[HttpGet]
+    //[Route("{brigadeId:int}")]
+    //public IActionResult GetBrigadeById(int brigadeId)
+    //{
+    //    try
+    //    {
+    //        var brigade = manager.LoadBrigade(brigadeId);
+    //        return Ok(brigade);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
     [HttpGet]
     [Route("state/{stateName}")]
     public IActionResult GetBrigadesState(string stateName)
@@ -87,70 +87,70 @@ public class BrigadeController : Controller
             return BadRequest(ex.Message);
         }
     }
-    [HttpGet("brigade-type/{brigadeId}")]
-    public IActionResult GetBrigadeType(int brigadeId)
-    {
-        try
-        {
-            var brigadeType = manager.LoadBrigadeType(brigadeId);
-            return Ok(brigadeType);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpGet("brigade-members/{brigadeId}")]
-    public IActionResult GetBrigadeMembers(int brigadeId)
-    {
-        try
-        {
-            var brigadeMembers = manager.LoadAllBrigadeMembers(brigadeId);
-            return Ok(brigadeMembers);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpGet("brigade-member/{brigadeMemberId}")]
-    public IActionResult GetBrigadeMember(int brigadeMemberId)
-    {
-        try
-        {
-            var brigadeMember = manager.LoadBrigadeMember(brigadeMemberId);
-            return Ok(brigadeMember);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpGet("brigade-member-role/{brigadeMemberId}")]
-    public IActionResult GetBrigadeMemberRoleName(int brigadeMemberId)
-    {
-        try
-        {
-            var roleName = manager.LoadBrigadeMemberRoleName(brigadeMemberId);
-            return Ok(roleName);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    [HttpGet("brigade-member-specialization/{brigadeMemberId}")]
-    public IActionResult GetBrigadeMemberSpecializationTypeName(int brigadeMemberId)
-    {
-        try
-        {
-            var specializationTypeName = manager.LoadBrigadeMemberSpecializationTypeName(brigadeMemberId);
-            return Ok(specializationTypeName);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+    //[HttpGet("brigade-type/{brigadeId}")]
+    //public IActionResult GetBrigadeType(int brigadeId)
+    //{
+    //    try
+    //    {
+    //        var brigadeType = manager.LoadBrigadeType(brigadeId);
+    //        return Ok(brigadeType);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    //[HttpGet("brigade-members/{brigadeId}")]
+    //public IActionResult GetBrigadeMembers(int brigadeId)
+    //{
+    //    try
+    //    {
+    //        var brigadeMembers = manager.LoadAllBrigadeMembers(brigadeId);
+    //        return Ok(brigadeMembers);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    //[HttpGet("brigade-member/{brigadeMemberId}")]
+    //public IActionResult GetBrigadeMember(int brigadeMemberId)
+    //{
+    //    try
+    //    {
+    //        var brigadeMember = manager.LoadBrigadeMember(brigadeMemberId);
+    //        return Ok(brigadeMember);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    //[HttpGet("brigade-member-role/{brigadeMemberId}")]
+    //public IActionResult GetBrigadeMemberRoleName(int brigadeMemberId)
+    //{
+    //    try
+    //    {
+    //        var roleName = manager.LoadBrigadeMemberRoleName(brigadeMemberId);
+    //        return Ok(roleName);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    //[HttpGet("brigade-member-specialization/{brigadeMemberId}")]
+    //public IActionResult GetBrigadeMemberSpecializationTypeName(int brigadeMemberId)
+    //{
+    //    try
+    //    {
+    //        var specializationTypeName = manager.LoadBrigadeMemberSpecializationTypeName(brigadeMemberId);
+    //        return Ok(specializationTypeName);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
     
 }

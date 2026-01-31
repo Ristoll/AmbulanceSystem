@@ -1,7 +1,7 @@
-﻿using Ambulance.DTO.PersonModels;
-using Ambulance.ExternalServices;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AutoMapper;
+using Ambulance.ExternalServices;
+using Ambulance.DTO.PersonModels;
 
 namespace Ambulance.BLL.Commands.PersonIdentity;
 

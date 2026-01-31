@@ -1,20 +1,14 @@
-﻿using Ambulance.BLL.Commands.BigadeCommands;
-using Ambulance.Core;
-using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using AutoMapper.Execution;
-using System.Collections.Generic;
-using System.Linq;
+using AmbulanceSystem.Core;
 
-namespace Ambulance.BLL.Commands.ItemCommands
+namespace Ambulance.BLL.Commands.ItemCommands;
+
+public class LoadBrigadeItemsCommand : AbstrCommandWithDA<List<BrigadeItemDto>>
 {
-    public class LoadBrigadeItemsCommand : AbstrCommandWithDA<List<BrigadeItemDto>>
-    {
-        private readonly int brigadeId;
+    private readonly int brigadeId;
 
-        public override string Name => "Завантаження медикаментів бригади";
+    public override string Name => "Завантаження медикаментів бригади";
 
         public LoadBrigadeItemsCommand(int brigadeId, IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
@@ -47,4 +41,4 @@ namespace Ambulance.BLL.Commands.ItemCommands
             return brigadeItemsDtos;
         }
     }
-}
+

@@ -1,19 +1,11 @@
-﻿using Ambulance.Core;
-using Ambulance.Core.Entities;
+﻿using AutoMapper;
 using AmbulanceSystem.Core;
-using AmbulanceSystem.Core.Entities;
 using AmbulanceSystem.DTO;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Ambulance.BLL.Commands.MedicalCardCommands
+namespace Ambulance.BLL.Commands.MedicalCardCommands;
+
+public class LoadMedicalRecordCommand : AbstrCommandWithDA<MedicalRecordDto>
 {
-    public class LoadMedicalRecordCommand : AbstrCommandWithDA<MedicalRecordDto>
-    {
         private readonly int medicalRecordId;
         public LoadMedicalRecordCommand(int medicalRecordId, IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
@@ -29,6 +21,4 @@ namespace Ambulance.BLL.Commands.MedicalCardCommands
                 throw new InvalidOperationException($"Медичний запис з ID {medicalRecordId} не знайдено");
             return mapper.Map<MedicalRecordDto>(medicalRecord);
         }
-
-    }
 }

@@ -2,9 +2,9 @@
 
 public enum BrigadeState
 {
+    Unknown, // standart value
     Free, // Вільна
     OnTheCall, // У виїзді
     OnBreak, // На перерві
-    Offline, // Неактивна
-    Unknown
+    Offline // Неактивна
 }
