@@ -2,7 +2,8 @@
 
 public enum Gender
 {
-    Other, // standart value
+    Unknown = -1, // стандартне value
+    Other,
     Woman,
     Man
 }

@@ -4,6 +4,7 @@ using AmbulanceSystem.Core;
 using Ambulance.DTO.PersonModels;
 using Ambulance.BLL.Commands.PersonIdentity;
 using Ambulance.BLL.Commands.PersonIdentity.PICommands;
+using Ambulance.DTO.EnumOptimDTO;
 
 namespace Ambulance.BLL.Commands;
 
@@ -73,9 +74,15 @@ public class PersonIdentityCommandManager : AbstractCommandManager
         return ExecuteCommand(command, "Не вдалося завантажити список користувачів");
     }
 
-    public List<string> LoadPersonRoles()
+    public List<UserRoleDto> LoadPersonRoles()
     {
         var command = new LoadPersonRolesCommand(unitOfWork, mapper);
         return ExecuteCommand(command, "Не вдалося отримати список ролей користувачів");
+    }
+
+    public List<GenderDto> LoadGenders()
+    {
+        var command = new LoadGendersCommand(unitOfWork, mapper);
+        return ExecuteCommand(command, "Не вдалося отримати список гендерів");
     }
 }

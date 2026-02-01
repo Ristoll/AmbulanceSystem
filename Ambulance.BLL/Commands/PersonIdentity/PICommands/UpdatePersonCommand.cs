@@ -45,14 +45,11 @@ public class UpdatePersonCommand : AbstrCommandWithDA<bool>
 
     private void UpdateGender(Person person)
     {
-        if (!string.IsNullOrWhiteSpace(model.Gender))
-        {
             var gender = model.Gender.ToEnumString(Gender.Other);
             if (gender != person.Gender)
             {
                 person.Gender = gender;
             }
-        }
     }
 
     private void UpdateRole(Person person)

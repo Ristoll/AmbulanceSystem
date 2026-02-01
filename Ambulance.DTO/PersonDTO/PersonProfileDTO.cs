@@ -7,7 +7,7 @@ public class PersonProfileDTO
     public string Surname { get; set; } = null!;
     public string MiddleName { get; set; } = null!;
     public DateOnly? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
+    public int Gender { get; set; } = -1; // -1 це undefined стать
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public string Login { get; set; } = null!;

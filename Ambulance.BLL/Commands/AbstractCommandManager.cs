@@ -19,18 +19,26 @@ public abstract class AbstractCommandManager
 
     protected TResult ExecuteCommand<TResult>(IBaseCommand<TResult> command, string errorMessage)
     {
-        var result = command.Execute();
-
-        if (result is bool success && !success)
+        try
         {
-            throw new InvalidOperationException(errorMessage);
-        }
+            var result = command.Execute();
 
-        if (result == null)
+            if (result is bool success && !success)
+                throw new InvalidOperationException(errorMessage);
+
+            if (result == null)
+                throw new InvalidOperationException(errorMessage);
+
+            return result;
+
+        }
+        catch (ArgumentNullException nullEx)
         {
-            throw new InvalidOperationException(errorMessage);
+            throw new InvalidOperationException($"{errorMessage}. Деталі null-виключення: {nullEx.Message}", nullEx);
         }
-
-        return result;
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"{errorMessage}. Деталі: {ex.Message}", ex);
+        }
     }
 }

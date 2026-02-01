@@ -1,6 +1,7 @@
 ﻿using Ambulance.BLL.Commands;
 using Ambulance.Core.Entities.StandartEnums;
 using Ambulance.DTO;
+using Ambulance.DTO.EnumOptimDTO;
 using Ambulance.DTO.PersonModels;
 using AmbulanceSystem.DAL;
 using AmbulanceSystem.DTO;
@@ -51,7 +52,7 @@ public class PersonController : Controller
     {
         try
         {
-            request.Role = UserRole.Patient.ToString(); // жорстко встановлюємо роль
+            request.Role = (int)UserRole.Patient; // жорстко встановлюємо роль
             var result = manager.CreatePerson(request);
             return Ok(result);
         }
@@ -149,7 +150,7 @@ public class PersonController : Controller
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             updateModel.PersonId = currentUserId; // гарантуємо, що користувач оновлює лише свої дані
-            updateModel.Role =null; // забороняємо змінювати роль через цей метод
+            updateModel.Role = null; // забороняємо змінювати роль через цей метод
             bool result = manager.UpdatePerson(updateModel);
             return result ? Ok() : BadRequest("Не вдалося оновити дані користувача");
         }
@@ -206,11 +207,26 @@ public class PersonController : Controller
 
     [HttpGet("roles")]
     [Authorize]
-    public ActionResult<List<string>> LoadPersonRoles()
+    public ActionResult LoadPersonRoles() // типи ролей користувачів число + назва
     {
         try
         {
             var roles = manager.LoadPersonRoles();
+            return Ok(roles);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("genders")]
+    [Authorize]
+    public ActionResult LoadGenders() // типи гендерів користувачів число + назва
+    {
+        try
+        {
+            var roles = manager.LoadGenders();
             return Ok(roles);
         }
         catch (Exception ex)

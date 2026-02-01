@@ -2,7 +2,7 @@
 
 public enum UserRole
 {
-    Unknown, // standart value
+    Unknown = -1,  // стандартне value
     Patient,
     Dispatcher,
     Admin,

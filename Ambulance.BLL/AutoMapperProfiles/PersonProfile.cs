@@ -12,7 +12,7 @@ public class PersonProfile : Profile
     public PersonProfile()
     {
         CreateMap<Person, PersonExtDTO>()
-            .ForMember(dest => dest.Role,
+            .ForMember(dest => dest.RoleLevel, // для оптимізації передачі даних
                 opt => opt.MapFrom(src => src.UserRole.ToEnumString(UserRole.Unknown)))
             .ForMember(dest => dest.Gender,
                 opt => opt.MapFrom(src => src.Gender.ToEnumString(Gender.Other)));

@@ -10,7 +10,7 @@ namespace Ambulance.BLL.Commands.BigadeCommands
         private readonly int brigadeId;
         public override string Name => "Завантаження всіх членів бригади";
 
-        public LoadAllBrigadeMembersCommand(int brigadeId,IUnitOfWork unitOfWork, IMapper mapper)
+        public LoadAllBrigadeMembersCommand(int brigadeId, IUnitOfWork unitOfWork, IMapper mapper)
             : base(unitOfWork, mapper)
         {
             this.brigadeId = brigadeId;
